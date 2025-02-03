@@ -1,0 +1,32 @@
+{
+    "endpoint": "/api/class/enroll",
+    "method": "POST",
+    "description": "Enroll a student in a class",
+    "request": {
+        "contentType": "application/json",
+        "body": {
+            "user_id": "string",
+            "class_code": "string"
+        }
+    },
+    "response": {
+        "200": {
+            "description": "Student successfully enrolled in class",
+            "body": {
+                "message": "Student has been successfully enrolled in the class",
+                "class_details": {
+                    "class_id": "string",
+                    "language_info": "string",
+                    "teacher_info": "string",
+                    "classmate_info": "string"
+                }
+            }
+        },
+        "400": {
+            "description": "Invalid input or user is not a student",
+            "body": {
+                "error": "Invalid input or user is not allowed to enroll"
+            }
+        }
+    }
+}

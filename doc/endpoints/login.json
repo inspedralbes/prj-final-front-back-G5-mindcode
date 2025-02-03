@@ -1,0 +1,26 @@
+{
+    "endpoint": "/api/login",
+    "method": "POST",
+    "description": "Login",
+    "request": {
+        "contentType": "application/json",
+        "body": {
+            "mail": "string",
+            "password": "string"
+        }
+    },
+    "response": {
+        "201": {
+            "description": "Login successfully",
+            "body": {
+                "user_id": "string",
+                "id_session": "string",
+                "name": "string",
+                "img_profile": "string"
+            }
+        },
+        "400": {
+            "description": "Invalid input"
+        }
+    }
+}

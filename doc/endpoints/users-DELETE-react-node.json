@@ -1,0 +1,22 @@
+{
+    "endpoint": "/api/users",
+    "method": "DELETE",
+    "description": "Delete an existing user",
+    "request": {
+        "contentType": "application/json",
+        "body": {
+            "id": "int"
+        }
+    },
+    "response": {
+        "200": {
+            "description": "User deleted successfully"
+        },
+        "400": {
+            "description": "Invalid input"
+        },
+        "404": {
+            "description": "User not found"
+        }
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "endpoint": "/api/language",
+    "method": "POST",
+    "description": "Create a new language",
+    "request": {
+        "contentType": "application/json",
+        "body": {
+            "name": "string"
+        }
+    },
+    "response": {
+        "201": {
+            "description": "Language created successfully",
+            "body": {
+                "idlanguage": "int",
+                "name": "string"
+            }
+        },
+        "400": {
+            "description": "Invalid input"
+        }
+    }
+}

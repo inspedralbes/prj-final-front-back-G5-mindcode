@@ -1,0 +1,25 @@
+{
+    "endpoint": "/api/associacio",
+    "method": "POST",
+    "description": "Create a new associacio",
+    "request": {
+        "contentType": "application/json",
+        "body": {
+            "nom": "string",
+            "descripcio": "string"
+        }
+    },
+    "response": {
+        "201": {
+            "description": "Associacio created successfully",
+            "body": {
+                "id": "integer",
+                "nom": "string",
+                "descripcio": "string"
+            }
+        },
+        "400": {
+            "description": "Invalid input"
+        }
+    }
+}
