@@ -12,18 +12,26 @@ services:
       - mindcode-mysql
       - mindcode-mongo
     command: sh -c "npm install && nodemon -L index.js"
+    networks:
+      - mindcode-network
   
   mindcode-front:
-    image: node:23-alpine3.20
-    command: sh -c "npm install && npm run dev"
+    build:
+      context: ./front
+      dockerfile: Dockerfile
     volumes:
-      - ./front:/app
-      - /app/node_modules
+      - ./front/src:/app/src
+      - ./front/public:/app/public
     working_dir: /app
     ports: 
       - 5173:3000
+    restart: always
     environment:
       - WATCHPACK_POLLING=true
+    env_file:
+      - ./front/.env
+    networks:
+      - mindcode-network
 
   mindcode-mongo:
     image: mongo
@@ -35,6 +43,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: root
     volumes:
       - mongodb:/data/db
+    networks:
+      - mindcode-network
   mindcode-mongo-express:
     image: mongo-express
     restart: always
@@ -47,6 +57,8 @@ services:
       ME_CONFIG_BASICAUTH: false
     depends_on:
       - mindcode-mongo
+    networks:
+      - mindcode-network
 
   mindcode-mysql:
     image: mysql:9.2
@@ -60,6 +72,8 @@ services:
       - mysqldb:/var/lib/mysql:rw
       - ./db/create.sql:/docker-entrypoint-initdb.d/create.sql
       - ./db/inserts.sql:/docker-entrypoint-initdb.d/inserts.sql
+    networks:
+      - mindcode-network
       
   mindcode-adminer:
     image: adminer
@@ -70,7 +84,13 @@ services:
       ADMINER_DEFAULT_SERVER: mindcode-mysql
     depends_on:
       - mindcode-mysql
+    networks:
+      - mindcode-network
     
+networks:
+  mindcode-network:
+    driver: bridge
+
 volumes:
   mongodb:
   mysqldb:
