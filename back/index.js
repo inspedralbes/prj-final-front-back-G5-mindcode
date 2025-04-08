@@ -21,7 +21,15 @@ admin.initializeApp({
 
 // Create an Express application
 const app = express();
-app.use(cors('*'));
+
+
+
+app.use(cors({
+    origin: "*", 
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true 
+}));
+
 const port = process.env.PORT;
 
 // Parse JSON bodies for this app
@@ -788,6 +796,59 @@ const sendToAI = async (message, language, restriction) => {
 
     return aiResponse;
 };
+
+//users
+
+app.get('/api/user/:id', verifyTokenMiddleware, async (req, res) => {
+    const { id } = req.params;
+    console.log("ID: ", id);
+
+    if (!id) {
+        return res.status(400).json({ error: 'User ID is required' });
+    }
+
+    try {
+        const connection = await createConnection();
+        const [rows] = await connection.execute(
+            'SELECT id, name, gmail FROM USER WHERE id = ?',
+            [id]
+        );
+        await connection.end();
+
+        if (rows.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const user = rows[0];
+        res.status(200).json(user);
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+})
+
+app.put('/api/user', verifyTokenMiddleware, async (req, res) => {
+    const { id, name, gmail } = req.body;
+
+    if (!id || !name || !gmail) {
+        return res.status(400).json({ error: 'User ID, name, and email are required' });
+    }
+
+    try {
+        const connection = await createConnection();
+        await connection.execute(
+            'UPDATE USER SET name = ?, gmail = ? WHERE id = ?',
+            [name, gmail, id]
+        );
+        await connection.end();
+
+        res.status(200).json({ message: 'User updated successfully' });
+    } catch (error) {
+        console.error('Error updating user:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+})
+
 
 app.get('/', (req, res) => {
     res.send('This is the back end!');

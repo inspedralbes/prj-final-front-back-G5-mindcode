@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 // import { useAuthStore } from '../../stores/authStore';
+import { useRouter } from 'next/navigation';
 
 const URL = process.env.NEXT_PUBLIC_URL;
 const Sidebar = ({classInfo, handleSetCurrentLanguage}) => {
@@ -7,6 +8,7 @@ const Sidebar = ({classInfo, handleSetCurrentLanguage}) => {
   const [languages, setLanguages] = useState([]);
   // const classInfo = useAuthStore((state) => state.class_info);
   // const user_info = useAuthStore.getState().user_info
+  const router = useRouter();
 
   useEffect(() => {
     if (classInfo) {
@@ -24,11 +26,17 @@ const Sidebar = ({classInfo, handleSetCurrentLanguage}) => {
     handleSetCurrentLanguage(language);
   };
 
+  const handleRedirect = async () => {
+    router.push('/UserSettings');
+  }
 
   return (
     <div className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white w-1/4 h-full p-4 border-r border-gray-300 dark:border-gray-700">
       <div className="text-center mb-6">
-        <div className="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 mx-auto mb-2"></div>
+        <button 
+          className="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 mx-auto mb-2"
+          onClick={handleRedirect}
+        ></button>
         <h2 className="text-lg font-semibold">ALUMNE</h2>
       </div>
       <nav className="space-y-4">

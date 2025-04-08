@@ -355,4 +355,32 @@ export async function addLanguageToClass(classId, language) {
   }
 }
 
+//export userSettings function
+export async function getUserInfo() {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+    if (!user_info || !user_info.token) {
+      throw new Error("No token provided");
+    }
+
+    const response = await fetch(`${URL}/api/user/${user_info.userId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${user_info.token}`,  
+      },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error getting user info: ${errorText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error in Communication Manager:", error);
+    throw error;
+  }
+}
+
+
 
