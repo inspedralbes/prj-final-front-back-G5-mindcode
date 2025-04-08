@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { getLanguages, addLanguageToClass, createLanguage, updateLanguages } from "services/communicationManager.js";
+import { getLanguages, addLanguageToClass, createLanguage, updateLanguages, deleteLanguage } from "services/communicationManager.js";
 import { useAuthStore } from "../../stores/authStore";
+
 
 const SidebarProf = () => {
   const [openClassId, setOpenClassId] = useState(null);
@@ -26,7 +27,12 @@ const SidebarProf = () => {
 
     try {
       const updatedLanguages = [...languagesByClass[editingLanguage.classId]];
-      updatedLanguages[editingLanguage.index] = editingLanguage.name;
+      const previousLanguage = updatedLanguages[editingLanguage.index];
+      const updatedLanguage = {
+        ...previousLanguage,
+        name: editingLanguage.name,
+      };
+      updatedLanguages[editingLanguage.index] = updatedLanguage;
 
       await updateLanguages(editingLanguage.classId, updatedLanguages);
 
@@ -46,7 +52,11 @@ const SidebarProf = () => {
 
     const initialLanguages = {};
     class_info.forEach((classItem) => {
-      initialLanguages[classItem.class_id] = classItem.language_info.map(lang => lang.name);
+      initialLanguages[classItem.class_id] = classItem.language_info.map(lang => ({
+        idlanguage: lang.idlanguage,
+        name: lang.name,
+        restrictionId: lang.restrictionId,
+      }));
     });
     setLanguagesByClass(initialLanguages);
   }, [class_info]);
@@ -76,13 +86,21 @@ const SidebarProf = () => {
       if (!existingLanguage) {
         console.log(`Language "${newLanguage}" not found in database, creating it...`);
 
+
         const newLangResponse = await createLanguage(newLanguage);
+
         existingLanguage = {
           idlanguage: newLangResponse.idlanguage,
           name: newLangResponse.name,
           restrictionId: Math.floor(Math.random() * 3) + 1,
         };
-      }
+
+      } else {
+        existingLanguage = {
+          ...existingLanguage,
+          restrictionId: Math.floor(Math.random() * 3) + 1,
+        }
+      };
 
       console.log(`Adding language to class ${openClassId}:`, existingLanguage);
 
@@ -90,7 +108,7 @@ const SidebarProf = () => {
 
       setLanguagesByClass((prev) => ({
         ...prev,
-        [openClassId]: [...(prev[openClassId] || []), existingLanguage.name],
+        [openClassId]: [...(prev[openClassId] || []), existingLanguage],
       }));
 
       setNewLanguage("");
@@ -99,6 +117,28 @@ const SidebarProf = () => {
       console.error("Error adding new language:", error);
     }
   };
+
+  // const handleDeleteLanguage = async (classId, langIndex) => {
+  //   const languageToDelete = languagesByClass[classId][langIndex];
+    
+  //   try {
+  //     await deleteLanguage(classId, {
+  //       id: languageToDelete.idlanguage,
+  //       name: languageToDelete.name,
+  //       restrictionId: String(languageToDelete.restrictionId),
+  //     });
+      
+  //     const updatedLanguages = [...languagesByClass[classId]];
+  //     updatedLanguages.splice(langIndex, 1);
+
+  //     setLanguagesByClass((prev) => ({
+  //       ...prev,
+  //       [classId]: updatedLanguages,
+  //     }));
+  //   } catch (error) {
+  //     console.error("Error deleting language:", error);
+  //   } 
+  // }
 
   return (
     <div className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white w-1/4 h-full p-4 border-r border-gray-300 dark:border-gray-700">
@@ -151,14 +191,20 @@ const SidebarProf = () => {
                             ) : (
                               <>
                                 <button className="w-3/4 px-3 py-2 bg-green-500 hover:bg-green-700 rounded-md text-white">
-                                  {lang}
+                                  {lang.name}
                                 </button>
                                 <button
-                                  onClick={() => handleEditLanguage(class_id, index, lang)}
+                                  onClick={() => handleEditLanguage(class_id, index, lang.name)}
                                   className="px-2 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600"
                                 >
                                   ✏️
                                 </button>
+                                {/* <button
+                                  onClick={() => handleDeleteLanguage(class_id, index)}
+                                  className="px-2 py-1 bg-red-500 text-white rounded-md hover:bg-red-600"
+                                >
+                                  
+                                  </button>️ */}
                               </>
                             )}
                           </div>

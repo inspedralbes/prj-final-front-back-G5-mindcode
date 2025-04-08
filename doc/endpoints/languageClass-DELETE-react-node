@@ -1,11 +1,11 @@
 {
     "endpoint": "/api/language/class",
-    "method": "PUT",
-    "description": "Update languages for a given class",
+    "method": "DELETE",
+    "description": "Delete languages for a given class",
     "parameters": {
         "classId": {
             "type": "integer",
-            "description": "The ID of the class to modify languages for"
+            "description": "The ID of the class to delete languages for"
         },
         "languages": {
             "type": "array",
@@ -32,7 +32,7 @@
     },
     "responses": {
         "200": {
-            "description": "Language modified successfully",
+            "description": "Language deleted successfully",
             "body": {
                 "classId": "int",
                 "languages": {
