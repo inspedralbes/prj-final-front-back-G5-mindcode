@@ -59,9 +59,12 @@ const Sidebar = ({classInfo, handleSetCurrentLanguage}) => {
         <button className="w-full px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded-md hover:bg-gray-400 dark:hover:bg-gray-500 text-left">
           ⚙️ Configuració
         </button>
+        <button className="w-full px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded-md hover:bg-gray-400 dark:hover:bg-gray-500 text-left">
+        📝  Formulario  
+        </button>
       </nav>
     </div>
   );
 };
-
+/**Generate form by extracting masseges with AI */
 export default Sidebar;

@@ -205,19 +205,57 @@ export async function sendMessage(body) {
   }
 }
 
-// export async function getStudents(class_id) {
+// obtener pregunta
+// export async function fetchFormQuestions(formId) {
 //   try {
-//     const response = await fetch(`${URL}/api/class/user?class_id=${class_id}`);  
-//     if (!response.ok) {
-//       throw new Error(`Error: ${response.status}`);
-//     }
-//     const data = await response.json();
-//     return data.body;  
+//       const response = await fetch(`/api/form/questions?form_id=${formId}`, {
+//           method: "GET",
+//           headers: {
+//               "Content-Type": "application/json"
+//           }
+//       });
+      
+//       if (!response.ok) {
+//           throw new Error("Failed to fetch form questions");
+//       }
+      
+//       const data = await response.json();
+//       return data;
 //   } catch (error) {
-//     console.error("Error fetching students:", error);
-//     throw error;  
+//       console.error("Error fetching form questions:", error);
+//       return null;
 //   }
 // }
+
+// Fetch from JSON file
+export async function fetchFormQuestions() {
+  try {
+      const response = await fetch("/formQuestions.json"); 
+
+      if (!response.ok) {
+          throw new Error("Failed to fetch form questions");
+      }
+      
+      const data = await response.json();
+      return data;
+  } catch (error) {
+      console.error("Error fetching form questions:", error);
+      return null;
+  }
+}
+export async function getStudents(class_id) {
+  try {
+    const response = await fetch(`${URL}/api/user?class_id=${class_id}`);  
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.body;  
+  } catch (error) {
+    console.error("Error fetching students:", error);
+    throw error;  
+  }
+}
 
 // Languages
 
@@ -320,6 +358,96 @@ export async function updateLanguages(classId, languages) {
   }
 }
 
+export async function getQuiz(id) {
+
+  if(!id){
+    throw new Error('Id is required');
+  }
+  try {
+      const response = await fetch(`${URL}/api/quiz?id=${id}`, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+          }
+      });
+      if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+  } catch (error) {
+      console.error("Error loading quiz:", error);
+      throw error;
+  }
+}
+export async function getQuizToSolve(user_id,quiz_id) {
+
+  if(!user_id | !quiz_id){
+    throw new Error('User_id and quiz_id are required');
+  }
+  try {
+      const response = await fetch(`${URL}/api/quizToSolve?id=${id}`, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+          }
+      });
+      if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+  } catch (error) {
+      console.error("Error loading quiz:", error);
+      throw error;
+  }
+}
+
+export async function getQuiz(id) {
+
+  if(!id){
+    throw new Error('Id is required');
+  }
+  try {
+      const response = await fetch(`${URL}/api/quiz?id=${id}`, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+          }
+      });
+      if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+  } catch (error) {
+      console.error("Error loading quiz:", error);
+      throw error;
+  }
+}
+export async function getQuizToSolve(user_id,quiz_id) {
+
+  if(!user_id | !quiz_id){
+    throw new Error('User_id and quiz_id are required');
+  }
+  try {
+      const response = await fetch(`${URL}/api/quizToSolve?id=${id}`, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+          }
+      });
+      if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+  } catch (error) {
+      console.error("Error loading quiz:", error);
+      throw error;
+  }
+}
+
 export async function addLanguageToClass(classId, language) {
   try {
     const user_info = useAuthStore.getState().user_info;
@@ -354,5 +482,4 @@ export async function addLanguageToClass(classId, language) {
     throw error;
   }
 }
-
 
