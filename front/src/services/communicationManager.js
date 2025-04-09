@@ -357,27 +357,31 @@ export async function updateLanguages(classId, languages) {
     throw error;
   }
 }
-
-export async function getQuiz(id) {
-
-  if(!id){
-    throw new Error('Id is required');
+export async function generateQuiz(messages) {
+  console.log("User token:", user_info.token);
+  if (!Array.isArray(messages) || messages.length === 0) {
+    throw new Error('Messages must be a non-empty array.');
   }
   try {
-      const response = await fetch(`${URL}/api/quiz?id=${id}`, {
-          method: 'GET',
-          headers: {
-              'Content-Type': 'application/json',
-          }
-      });
-      if (!response.ok) {
-          throw new Error(`Error: ${response.status}`);
-      }
-      const data = await response.json();
-      return data;
+    const response = await fetch(`${URL}/api/quiz`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": `Bearer ${user_info.token}`,
+      },
+      body: JSON.stringify({ messages })
+    });
+
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      throw new Error(`Error ${response.status}: ${errorResponse.description || 'Invalid request'}`);
+    }
+
+    const responseData = await response.json();
+    return responseData;
   } catch (error) {
-      console.error("Error loading quiz:", error);
-      throw error;
+    console.error("Fetch error", error);
+    throw error;
   }
 }
 export async function getQuizToSolve(user_id,quiz_id) {
@@ -436,4 +440,3 @@ export async function addLanguageToClass(classId, language) {
     throw error;
   }
 }
-

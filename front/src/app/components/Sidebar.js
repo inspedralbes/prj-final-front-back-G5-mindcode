@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-// import { useAuthStore } from '../../stores/authStore';
+import { useRouter } from 'next/navigation';
 
 const URL = process.env.NEXT_PUBLIC_URL;
 const Sidebar = ({classInfo, handleSetCurrentLanguage}) => {
@@ -7,6 +7,7 @@ const Sidebar = ({classInfo, handleSetCurrentLanguage}) => {
   const [languages, setLanguages] = useState([]);
   // const classInfo = useAuthStore((state) => state.class_info);
   // const user_info = useAuthStore.getState().user_info
+  const router = useRouter();
 
   useEffect(() => {
     if (classInfo) {
@@ -19,11 +20,12 @@ const Sidebar = ({classInfo, handleSetCurrentLanguage}) => {
 
   const handleLanguageClick = async (language) => {
     console.log("Lenguaje seleccionado:", language);
-
-
     handleSetCurrentLanguage(language);
   };
 
+  const handleFormClick = () => {
+    router.push('/UserForm');
+  };
 
   return (
     <div className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white w-1/4 h-full p-4 border-r border-gray-300 dark:border-gray-700">
@@ -59,12 +61,15 @@ const Sidebar = ({classInfo, handleSetCurrentLanguage}) => {
         <button className="w-full px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded-md hover:bg-gray-400 dark:hover:bg-gray-500 text-left">
           ⚙️ Configuració
         </button>
-        <button className="w-full px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded-md hover:bg-gray-400 dark:hover:bg-gray-500 text-left">
-        📝  Formulario  
+        <button 
+          onClick={handleFormClick}
+          className="w-full px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded-md hover:bg-gray-400 dark:hover:bg-gray-500 text-left"
+        >
+          📝 Qüestionari
         </button>
       </nav>
     </div>
   );
 };
-/**Generate form by extracting masseges with AI */
+
 export default Sidebar;
