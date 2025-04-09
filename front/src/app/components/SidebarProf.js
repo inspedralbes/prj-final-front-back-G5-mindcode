@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getLanguages, addLanguageToClass, createLanguage, updateLanguages, deleteLanguage } from "services/communicationManager.js";
+import { getLanguages, addLanguageToClass, createLanguage, updateLanguages, deleteLanguageFronClass } from "services/communicationManager.js";
 import { useAuthStore } from "../../stores/authStore";
 
 
@@ -118,28 +118,33 @@ const SidebarProf = () => {
     }
   };
 
-  // const handleDeleteLanguage = async (classId, langIndex) => {
-  //   const languageToDelete = languagesByClass[classId][langIndex];
+  const handleDeleteLanguage = async (classId, index) => {
+    const languageToDelete = languagesByClass[classId][index];
+  
+    if (!languageToDelete || !languageToDelete.idlanguage) {
+      console.error("No se encontró el lenguaje a eliminar");
+      return;
+    }
     
-  //   try {
-  //     await deleteLanguage(classId, {
-  //       id: languageToDelete.idlanguage,
-  //       name: languageToDelete.name,
-  //       restrictionId: String(languageToDelete.restrictionId),
-  //     });
-      
-  //     const updatedLanguages = [...languagesByClass[classId]];
-  //     updatedLanguages.splice(langIndex, 1);
-
-  //     setLanguagesByClass((prev) => ({
-  //       ...prev,
-  //       [classId]: updatedLanguages,
-  //     }));
-  //   } catch (error) {
-  //     console.error("Error deleting language:", error);
-  //   } 
-  // }
-
+    try {
+      console.log(`Eliminando lenguaje "${languageToDelete.name}" (ID: ${languageToDelete.idlanguage}) de la clase ${classId}`);
+  
+      await deleteLanguageFronClass(classId, languageToDelete.idlanguage);
+  
+      const updatedLanguages = [...languagesByClass[classId]];
+      updatedLanguages.splice(index, 1); 
+  
+      setLanguagesByClass((prev) => ({
+        ...prev,
+        [classId]: updatedLanguages,
+      }));
+  
+      console.log(`Lenguaje eliminado correctamente de la clase ${classId}`);
+    } catch (error) {
+      console.error("Error deleting language:", error.message);
+    }
+  };
+  
   return (
     <div className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white w-1/4 h-full p-4 border-r border-gray-300 dark:border-gray-700">
       <div className="text-center mb-6">
@@ -199,12 +204,12 @@ const SidebarProf = () => {
                                 >
                                   ✏️
                                 </button>
-                                {/* <button
-                                  onClick={() => handleDeleteLanguage(class_id, index)}
-                                  className="px-2 py-1 bg-red-500 text-white rounded-md hover:bg-red-600"
-                                >
-                                  
-                                  </button>️ */}
+                                <button
+                            onClick={() => handleDeleteLanguage(class_id, index)}
+                            className="px-1 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 text-sm"
+                            >
+                            🗑️
+                          </button>
                               </>
                             )}
                           </div>
@@ -234,6 +239,7 @@ const SidebarProf = () => {
                           <button onClick={() => { setShowInput(false); setNewLanguage(""); }} className="px-1 py-1 size-8 bg-red-500 text-white rounded-md hover:bg-red-600 text-sm">
                             ✖
                           </button>
+                         
                         </div>
                       )}
                     </div>

@@ -203,6 +203,7 @@ export async function sendMessage(body) {
 }
 
 // export async function getStudents(class_id) {
+
 //   try {
 //     const response = await fetch(`${URL}/api/class/user?class_id=${class_id}`);  
 //     if (!response.ok) {
@@ -216,7 +217,8 @@ export async function sendMessage(body) {
 //   }
 // }
 
-// Languages
+// LANGUAGES
+
 
 export async function getLanguages() {
   try {
@@ -246,7 +248,6 @@ export async function getLanguages() {
   }
 };
 
-// Languages
 
 export async function createLanguage(name) {
   try {
@@ -317,6 +318,7 @@ export async function addLanguageToClass(classId, language) {
     throw error;
   }
 }
+
 export async function updateLanguages(classId, languages) {
   try {
     if (!classId || !Array.isArray(languages)) {
@@ -345,40 +347,29 @@ export async function updateLanguages(classId, languages) {
   }
 }
 
-// export async function deleteLanguage(classId, languageObject) {
-//   try {
-//     const user_info = useAuthStore.getState().user_info;
+export async function deleteLanguageFronClass(classId, languageId) {
+  try {
+    if (!classId || !languageId) {
+      throw new Error("Class ID and Language ID are required");
+    }
+    const response = await fetch(`${URL}/api/language/class`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${user_info.token}`,
+      },
+      body: JSON.stringify({ classId, languageId }),
+    });
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Error deleting language from class: ${errorText}`);
+      }
 
-//     if (!user_info || !user_info.token) {
-//       throw new Error("No token provided");
-//     }
-
-//     if (!classId || !languageObject || !languageObject.id) {
-//       throw new Error("Valid classId and languageObject are required");
-//     }
-
-//     const response = await fetch(`${URL}/api/language/class`, {
-//       method: "DELETE",
-//       headers: {
-//         "Content-Type": "application/json",
-//         "Authorization": `Bearer ${user_info.token}`,
-//       },
-//       body: JSON.stringify({ classId, languages: [languageObject] }),
-//     });
-
-//     if (!response.ok) {
-//       const errorText = await response.text();
-//       throw new Error(`Error deleting language from class: ${errorText}`);
-//     }
-
-//     const result = await response.json();
-//     console.log("✅ Language deleted successfully:", result);
-//     return result;
-//   } catch (error) {
-//     console.error("❌ Error in Communication Manager:", error);
-//     throw error;
-//   }
-// }
-
-
-
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error in Communication Manager:", error);
+      throw error;
+    }
+}
