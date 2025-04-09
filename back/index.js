@@ -8,6 +8,7 @@ import classRoutes from './routes/classRoutes.js';
 import googleRoutes from './routes/googleRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
 import { testConnection } from './utils.js';
+import { sequelize } from "./models/index.js";
 
 dotenv.config();
 
@@ -38,6 +39,9 @@ app.get('/', (req, res) => {
     res.send('This is the back end!');
 });
 
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+sequelize.sync().then(() => {
+    console.log("Database synced");
+    app.listen(port, () => {
+        console.log(`Server is running on port ${port}`);
+    });
 });

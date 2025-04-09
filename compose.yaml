@@ -11,7 +11,7 @@ services:
     depends_on:
       - mindcode-mysql
       - mindcode-mongo
-    command: sh -c "npm install && nodemon -L index.js"
+    command: sh -c "npm install && npm run start-with-seed"
     networks:
       - mindcode-network
   
@@ -70,8 +70,8 @@ services:
       - '3306:3306'
     volumes:
       - mysqldb:/var/lib/mysql:rw
-      - ./db/create.sql:/docker-entrypoint-initdb.d/create.sql
-      - ./db/inserts.sql:/docker-entrypoint-initdb.d/inserts.sql
+      # - ./db/create.sql:/docker-entrypoint-initdb.d/create.sql
+      # - ./db/inserts.sql:/docker-entrypoint-initdb.d/inserts.sql
     networks:
       - mindcode-network
       
