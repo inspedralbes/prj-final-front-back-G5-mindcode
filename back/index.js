@@ -22,13 +22,8 @@ admin.initializeApp({
 // Create an Express application
 const app = express();
 
+app.use(cors("*"));
 
-
-app.use(cors({
-    origin: "*", 
-    methods: "GET,POST,PUT,DELETE",
-    credentials: true 
-}));
 
 const port = process.env.PORT;
 
@@ -647,8 +642,7 @@ app.delete("/api/language", verifyTokenMiddleware, async (req, res) => {
 
 // get all users from a class
 app.get("/api/class/user", verifyTokenMiddleware, async (req, res) => {
-    const { class_id } = req.query;
-
+    const { class_id } = req.query;   
     if (!class_id) {
         return res.status(400).json({ error: "Class ID is required" });
     }
@@ -656,7 +650,7 @@ app.get("/api/class/user", verifyTokenMiddleware, async (req, res) => {
     try {
         const connection = await createConnection();
         const [rows] = await connection.execute(
-            "SELECT name, gmail FROM USER WHERE class_id = ?",
+            "SELECT name, gmail FROM USER WHERE class = ?",
             [class_id]
         );
         await connection.end();

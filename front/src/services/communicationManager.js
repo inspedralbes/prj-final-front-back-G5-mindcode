@@ -4,7 +4,7 @@ import { useAuthStore } from "../stores/authStore"
 const URL = process.env.NEXT_PUBLIC_URL;
 
 const user_info = useAuthStore.getState().user_info
-const class_details = useAuthStore.getState().class_details
+const class_info = useAuthStore.getState().class_info
 
 // const setUser = useAuthStore((state) => state.setUser);
 // const setClass = useAuthStore((state) => state.setClass);
@@ -379,6 +379,62 @@ export async function getUserInfo() {
   } catch (error) {
     console.error("Error in Communication Manager:", error);
     throw error;
+  }
+}
+
+export async function updateUserInfo() {
+    try {
+        const user_info = user_info.getState().user_info;
+        const response = await fetch(`${URL}/user`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${user_info.token}` 
+            },
+            body: JSON.stringify({ id, name, gmail })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Error updating user');
+        }
+
+        return data;
+    } catch (error) {
+        console.error('Error updating user:', error);
+        throw error;
+    }
+}
+
+export async function getClassInfo() {
+  try {
+      const user_info = useAuthStore.getState().user_info;
+      const class_info = useAuthStore.getState().class_info;
+      const classId = class_info[0]?.class_id;
+
+      const response = await fetch(`${URL}/api/class/user?class_id=${classId}`, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${user_info.token}` 
+          }
+      });
+
+      const contentType = response.headers.get('Content-Type');
+        if (!contentType || !contentType.includes('application/json')) {
+            throw new Error(`Expected JSON response but got ${contentType}`);
+        }
+
+      const data = await response.json();
+      if (!response.ok) {
+          throw new Error(data.error || 'Error fetching users');
+      }
+
+      return data; 
+  } catch (error) {
+      console.error('Error fetching users:', error);
+      throw error;
   }
 }
 
