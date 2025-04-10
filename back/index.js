@@ -20,12 +20,11 @@ admin.initializeApp({
     credential: admin.credential.cert(serviceaccount),
 });
 
-// Create an Express application
+
 const app = express();
 app.use(cors('*'));
 const port = process.env.PORT;
 
-// Parse JSON bodies for this app
 app.use(express.json());
 
 app.use("/api/language", languageRoutes);
@@ -38,6 +37,7 @@ testConnection();
 app.get('/', (req, res) => {
     res.send('This is the back end!');
 });
+
 
 sequelize.sync().then(() => {
     console.log("Database synced");
