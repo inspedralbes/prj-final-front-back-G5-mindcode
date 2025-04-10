@@ -1,5 +1,6 @@
-// Importar el modelo
-const Conversaciones = require('./models/Conversaciones'); // Ajusta la ruta si es distinta
+const Conversaciones = require('./models/Conversaciones'); 
+
+
 
 app.post('/message/create', verifyTokenMiddleware, async (req, res) => {
     const { message, language_id, class_id } = req.body;
@@ -23,6 +24,9 @@ app.post('/message/create', verifyTokenMiddleware, async (req, res) => {
         return res.status(400).json({ error: 'El ID de usuario verificado es obligatorio y debe ser un número.' });
     }
 
+
+
+
     try {
         connection = await createConnection();
         const [rows] = await connection.execute(
@@ -38,6 +42,8 @@ app.post('/message/create', verifyTokenMiddleware, async (req, res) => {
     } finally {
         if (connection) connection.end();
     }
+
+
 
     let language;
     try {
@@ -63,6 +69,8 @@ app.post('/message/create', verifyTokenMiddleware, async (req, res) => {
         return res.status(400).json({ error: 'El lenguaje no coincide con la clase.' });
     }
 
+
+
     let restriction;
     try {
         connection = await createConnection();
@@ -80,6 +88,9 @@ app.post('/message/create', verifyTokenMiddleware, async (req, res) => {
     } finally {
         if (connection) connection.end();
     }
+
+
+
 
     try {
         const aiResponse = await sendToAI(message, languageToSend.name, restriction);

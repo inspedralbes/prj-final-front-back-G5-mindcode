@@ -2,6 +2,7 @@ import express from "express";
 import { createConnection } from "../utils.js";
 import { verifyTokenMiddleware } from "../tokens.js";
 import dotenv from 'dotenv';
+import Message from "../schemes/mongoScheme.js"
 
 dotenv.config();
 
@@ -15,6 +16,15 @@ router.post('/create', verifyTokenMiddleware, async (req, res) => {
     const { message, language_id, class_id } = req.body;
     const verified_user_id = req.verified_user_id;
     let connection;
+    const objToSaveMongoDB = {
+        userContent: message,
+        aiContent: "",
+        aiThought: "",
+        userId: verified_user_id,
+        language: "",
+        languageId: language_id,
+        classId: class_id
+    }
 
     console.log("message", message);
 
@@ -79,6 +89,7 @@ router.post('/create', verifyTokenMiddleware, async (req, res) => {
         }
 
         language = rows[0].language;
+        objToSaveMongoDB.language = language;
         console.log("Language: ", language);
 
     } catch (error) {
@@ -115,6 +126,9 @@ router.post('/create', verifyTokenMiddleware, async (req, res) => {
     } finally {
         if (connection) connection.end();
     }
+
+
+    saveMessage(objToSaveMongoDB);
 
     try {
         const aiResponse = await sendToAI(message, languageToSend.name, restriction);
@@ -180,5 +194,10 @@ const sendToAI = async (message, language, restriction) => {
 
     return aiResponse;
 };
+
+export async function saveMessage(obj) {
+    const message = new Message(obj);
+    await message.save();
+}
 
 export default router;

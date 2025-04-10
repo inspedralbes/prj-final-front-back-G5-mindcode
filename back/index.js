@@ -7,8 +7,9 @@ import languageRoutes from './routes/languageRoutes.js';
 import classRoutes from './routes/classRoutes.js';
 import googleRoutes from './routes/googleRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
-import { testConnection } from './utils.js';
+import { testConnection, connectMongo } from './utils.js';
 import { sequelize } from "./models/index.js";
+import Message from "./schemes/mongoScheme.js"
 
 dotenv.config();
 
@@ -33,6 +34,13 @@ app.use("/api/auth/google", googleRoutes);
 app.use("/message", aiRoutes);
 
 testConnection();  
+
+connectMongo();
+
+export async function insertBase() {
+    const message = new Message({ userContent: 'HOLAHOLAOHLAOHLAOHOGOALHOAOHOGJGHASG', userId: 1, classId: 2, languageId: 3, language: "Python" });
+    await message.save();
+}
 
 app.get('/', (req, res) => {
     res.send('This is the back end!');

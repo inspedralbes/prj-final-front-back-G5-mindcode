@@ -12,6 +12,8 @@ const dbConfig = {
     database: process.env.DB_DATABASE
 };
 
+
+
 export async function createConnection() {
     try {
         const connection = await mysql.createConnection(dbConfig);
@@ -36,12 +38,14 @@ export async function testConnection() {
     }
 }
 
-mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
-.then(() => console.log('Conectado a MongoDB Atlas'))
-.catch(err => console.error('Error al conectar a MongoDB:', err));
+export const connectMongo = () => {
+    mongoose.connect(process.env.MONGO_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    })
+    .then(() => console.log('Conectado a MongoDB'))
+    .catch(err => console.error('Error al conectar a MongoDB:', err));
+}
 
 
 
