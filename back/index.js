@@ -22,8 +22,11 @@ admin.initializeApp({
 // Create an Express application
 const app = express();
 
-app.use(cors("*"));
-
+app.use(cors({
+    origin: "*",
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true
+}));
 
 const port = process.env.PORT;
 
@@ -843,6 +846,33 @@ app.put('/api/user', verifyTokenMiddleware, async (req, res) => {
     }
 })
 
+app.put('/api/class/leave', verifyTokenMiddleware, async (req, res) => {
+    const { id } = req.body;
+  
+    if (!id) {
+        return res.status(400).json({ error: "User ID is required" });
+    }
+  
+    try {
+        const connection = await createConnection();
+        
+        const [result] = await connection.execute(
+            "UPDATE USER SET class = NULL WHERE id = ?", 
+            [id]
+        );
+        
+        await connection.end();
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: "User not found or already not in any class" });
+        }
+        
+        res.status(200).json({ message: "Successfully left the class" });
+    } catch (error) {
+        console.error("Error leaving class:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
 
 app.get('/', (req, res) => {
     res.send('This is the back end!');

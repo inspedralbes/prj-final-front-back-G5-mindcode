@@ -382,29 +382,29 @@ export async function getUserInfo() {
   }
 }
 
-export async function updateUserInfo() {
-    try {
-        const user_info = user_info.getState().user_info;
-        const response = await fetch(`${URL}/user`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${user_info.token}` 
-            },
-            body: JSON.stringify({ id, name, gmail })
-        });
+export async function updateUserInfo({ id, name, gmail }) {
+  try {
+    const user_info = useAuthStore.getState().user_info;
 
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.error || 'Error updating user');
-        }
-
-        return data;
-    } catch (error) {
-        console.error('Error updating user:', error);
-        throw error;
+    if (!user_info || !user_info.token) {
+      throw new Error("No token provided");
     }
+
+    const response = await fetch(`${URL}/api/user`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${user_info.token}`,
+      },
+      body: JSON.stringify({ id, name, gmail }),
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error updating user:", error);
+    throw error;
+  }
 }
 
 export async function getClassInfo() {
@@ -438,5 +438,66 @@ export async function getClassInfo() {
   }
 }
 
+export async function getClassDetails() {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+    const class_info = useAuthStore.getState().class_info;
+    const classId = class_info[0]?.class_id;
+
+    if (!user_info || !user_info.token) {
+      throw new Error("No token provided");
+    }
+
+    const url = `${URL}/api/class?class_id=${classId}`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${user_info.token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error fetching class details: ${errorText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching class details:", error);
+    throw error;
+  }
+}
+
+export async function leaveClass() {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+
+    if (!user_info || !user_info.token) {
+      throw new Error("No token provided");
+    }
+    const response = await fetch(`${URL}/api/class/leave`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${user_info.token}`,
+      },
+      body: JSON.stringify({ id: user_info.userId }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error leaving class: ${errorText}`);
+    }
+
+    const data = await response.json();
+    return data; 
+  } catch (error) {
+    console.error("Error leaving class:", error);
+    throw error;
+  }
+}
 
 

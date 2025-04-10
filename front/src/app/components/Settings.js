@@ -1,23 +1,84 @@
-import React from "react";
+import React, { useState } from "react";
+import Button from "app/components/atoms/Button";
+import { updateUserInfo } from "services/communicationManager";
+import Snackbar from "app/components/atoms/Snackbar";
 
-const Settings = ({name, gmail}) => {
+const Settings = ({id, name: initialName, gmail }) => {
+    const [isEditing, setIsEditing] = useState(false);
+    const [name, setName] = useState(initialName);
+    const [editedName, setEditedName] = useState(name);
+    const [snackbar, setSnackbar] = useState(null);
+
+    const handleSave = async () => {
+        try {
+            await updateUserInfo({ id, name: editedName, gmail }); 
+            setName(editedName);
+            setIsEditing(false);
+            setSnackbar({ message: "Nom actualitzat correctament!" });
+        } catch (error) {
+            setSnackbar({ message: "Error al actualitzar el nom." });
+        }
+    };
+
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-            <div className="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-6 w-96">
+            <div className="bg-gray-50 dark:bg-gray-800 shadow-2xl shadow-gray-600 dark:shadow-black rounded-2xl p-8 w-[28rem] h-[20rem] items-center justify-center">
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-50 mb-4">
                     <strong>El meu usuari</strong>
                 </h2>
-            <div className="space-y-3">
-                <p className="text-gray-700 dark:text-gray-300">
-                    <strong>Nombre:</strong> {name}
-                </p>
-                <p className="text-gray-700 dark:text-gray-300">
-                    <strong>Email:</strong> {gmail}
-                </p>
-            </div>
-            </div>
+                <div className="space-y-3">
+                    {isEditing ? (
+                        <>
+                            <div>
+                                <label className="block text-gray-700 dark:text-gray-300">
+                                    <strong>Nom:</strong>
+                                </label>
+                                <input
+                                    type="text"
+                                    value={editedName}
+                                    onChange={(e) => setEditedName(e.target.value)}
+                                    className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-300"
+                                />
+                            </div>
+                            <Button
+                                text="Guardar"
+                                className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-400"
+                                onClick={handleSave}
+                            />
+                            <Button
+                                text="Cancelar"
+                                className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-400 ml-2"
+                                onClick={() => setIsEditing(false)}
+                            />
+                        </>
+                    ) : (
+                        <>
+                            <p className="text-gray-700 dark:text-gray-300">
+                                <strong>Nom:</strong> {name}
+                            </p>
+                            <p className="text-gray-700 dark:text-gray-300">
+                                <strong>Email:</strong> {gmail}
+                            </p>
+                            <Button
+                                text="Editar dades"
+                                className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-400"
+                                onClick={() => setIsEditing(true)}
+                            />
+                            <Button 
+                                text="Log Out"
+                                className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-400 ml-2"
+                                //onClick
+                            />
+                        </>
+                    )}
+                </div>
+            {snackbar && (
+                <Snackbar
+                    message={snackbar.message}
+                    onClose={() => setSnackbar(null)} 
+                />
+            )}
         </div>
     );
-}
+};
 
 export default Settings;

@@ -5,22 +5,21 @@ import Navbar from "app/components/Navbar"
 import Sidebar from "app/components/Sidebar"
 import Settings from "app/components/Settings"
 import ClassSettings from "app/components/ClassSettings";
-import { getUserInfo, updateUserInfo, getClassInfo } from "services/communicationManager"
-
+import { getUserInfo, getClassInfo, getClassDetails, leaveClass } from "services/communicationManager"
+import Dialog from "app/components/atoms/Dialog";
+import { useRouter } from "next/navigation";
 
 const UserSettings = () => {
-  
   const [userSettings, setUserSettings] = useState(null);
-  const [newName, setNewName] = useState("");
-
   const [classSettings, setClassSettings] = useState(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUser = async () => {
       try{
         const userData = await getUserInfo();
         setUserSettings(userData);
-        setNewName(userData.name);
       }catch(error){
         console.error("Error fetching user settings:", error);
       }
@@ -29,13 +28,15 @@ const UserSettings = () => {
     const fetchClassSettings = async () => {
       try {
           const classData = await getClassInfo();
+          const classInfo = await getClassDetails();
           
           if (!Array.isArray(classData) || classData.length === 0) {
               console.warn("No class data found.");
               return;
           }
+          const className = classInfo.name;
           const users = classData.map(user => user.name);
-          setClassSettings({ users });
+          setClassSettings({ users, className });
   
       } catch (error) {
           console.error("Error fetching class settings:", error);
@@ -47,17 +48,17 @@ const UserSettings = () => {
     fetchClassSettings();
   }, []);
 
-  const handleUpdateName = async () => {
-    if (!newName.trim()) return alert("El nombre no puede estar vacío");
-    
+  const handleLeaveClass = async () => {
     try {
-      const updatedUser = await updateUserInfo(userSettings.id, newName, userSettings.gmail);
-      setUserSettings((prev) => ({ ...prev, name: updatedUser.name }));
-      alert("Nombre actualizado con éxito");
+      await leaveClass({});
+      router.push("/JoinClass"); 
+      setIsDialogOpen(false); 
+      setClassSettings(null);
     } catch (error) {
-      alert("Error al actualizar el nombre: " + error.message);
+      console.error("Error leaving class:", error);
     }
   };
+
 
   if(!userSettings){
     return <div>Loading...</div>;
@@ -68,25 +69,31 @@ const UserSettings = () => {
         <Sidebar />
           <div className="flex flex-col w-full">
           <Navbar />
-          <div className="flex gap-4 p-4 sticky top-0">
+          <div className="flex flex-grow items-center justify-center gap-6">
           <Settings 
+            id={userSettings.id}
             name={userSettings.name}
             gmail={userSettings.gmail}
             />
-            <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
-              Editar Perfil
-            </button>
             {classSettings && (
-              <div className="flex flex-col gap-2 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
                     <ClassSettings
-                    users={classSettings.users}/>
-                  <button className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
-                      Sortir de la clase
-                  </button>
-              </div>
+                    name={classSettings.className}
+                    users={classSettings.users}
+                    onLeaveClass={() => setIsDialogOpen(true)} 
+              />
                 )}
                 </div>
-          </div>    
+          </div>
+          {isDialogOpen && (
+            <div className="fixed inset-0 z-50">
+          <Dialog
+          title="Confirmació"
+          message="Estàs segur que vols sortir de la classe?"
+          onConfirm={handleLeaveClass} 
+          onCancel={() => setIsDialogOpen(false)}
+        />
+        </div>
+      )}
         </div>
     );
 }
