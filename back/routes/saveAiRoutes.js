@@ -57,14 +57,12 @@ app.post('/message/create', verifyTokenMiddleware, async (req, res) => {
         if (connection) connection.end();
     }
 
-    // Language check
     const parsedLanguages = JSON.parse(language);
     const languageToSend = parsedLanguages.find(l => l.id === language_id);
     if (!languageToSend) {
         return res.status(400).json({ error: 'El lenguaje no coincide con la clase.' });
     }
 
-    // IA restrictions
     let restriction;
     try {
         connection = await createConnection();
@@ -83,7 +81,6 @@ app.post('/message/create', verifyTokenMiddleware, async (req, res) => {
         if (connection) connection.end();
     }
 
-    // SendMessage to AI and save it
     try {
         const aiResponse = await sendToAI(message, languageToSend.name, restriction);
         const returnMessage = aiResponse.content;
@@ -98,7 +95,6 @@ app.post('/message/create', verifyTokenMiddleware, async (req, res) => {
             mensajeIA = returnMessage.replace(thinkTagContent[0], "").trim();
         }
 
-        // Guardar en MongoDB (historial)
         const nuevoMensaje = new Conversaciones({
             usuario: verified_user_id,
             mensaje: message,

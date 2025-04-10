@@ -1,5 +1,6 @@
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
+import mongoose from 'mongoose';
 
 dotenv.config();
 
@@ -34,6 +35,15 @@ export async function testConnection() {
         console.log('Database connection closed');
     }
 }
+
+mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => console.log('Conectado a MongoDB Atlas'))
+.catch(err => console.error('Error al conectar a MongoDB:', err));
+
+
 
 export async function getClassesInfoWithTeacher(user_id) {
     const classesWithTeacher = await getClassesWithTeacher(user_id);
