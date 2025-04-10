@@ -26,6 +26,7 @@ services:
     ports: 
       - 5173:3000
     restart: always
+    
     environment:
       - WATCHPACK_POLLING=true
     env_file:
