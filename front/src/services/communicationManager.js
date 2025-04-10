@@ -177,6 +177,7 @@ export async function getMessagesById() {
 }
 
 export async function sendMessage(body) {
+  console.log("User token:", user_info.token);
   console.log("New Message", body)
   try {
     console.log("mensaje a: ", URL)
@@ -186,7 +187,7 @@ export async function sendMessage(body) {
         'Content-Type': 'application/json',
         "Authorization": `Bearer ${user_info.token}`,
       },
-      body: JSON.stringify({ message: body.text })
+      body: JSON.stringify({ message: body.message, class_id: body.class_id, language_id: body.language_id })
     });
 
     if (!response.ok) {

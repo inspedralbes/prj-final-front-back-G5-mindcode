@@ -3,7 +3,7 @@ run-name: ${{ github.actor }} is deploying MindCode on PRODUCTION ⭐
 on:
   push:
     branches:
-      - main
+      - feature-fix-prod-server
 
 jobs:
   STOP-DOCKER:
@@ -126,9 +126,12 @@ jobs:
           echo "PORT=${{ secrets.BACK_PORT }}" >> .env
           echo "DB_HOST=${{ secrets.MYSQL_HOST }}" >> .env
           echo "DB_USER=${{ secrets.MYSQL_ROOT_USER }}" >> .env
+          echo "DB_PORT=${{ secrets.MYSQL_PORT }}" >> .env
           echo "DB_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
+          echo "DB_DATABASE=mindcode" >> .env
           echo "DB_NAME=${{ secrets.MYSQL_DATABASE }}" >> .env          
           echo "AI_HOST=${{ secrets.AI_HOST }}" >> .env
+          echo "SECRET_KEY=${{ secrets.JWT_KEY }}" >> .env
 
           ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} "if [ -d ./mindcode/back ] 
                                                                                                                                               then

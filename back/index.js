@@ -1,10 +1,14 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import mysql from 'mysql2/promise';
-import ShortUniqueId from 'short-unique-id';
 import admin from 'firebase-admin';
 import fs from 'fs';
 import cors from 'cors';
+import languageRoutes from './routes/languageRoutes.js';
+import classRoutes from './routes/classRoutes.js';
+import googleRoutes from './routes/googleRoutes.js';
+import aiRoutes from './routes/aiRoutes.js';
+import { testConnection } from './utils.js';
+import { sequelize } from "./models/index.js";
 import { login, verifyTokenMiddleware } from './tokens.js';
 import { CLIENT_RENEG_LIMIT } from 'tls';
 import { log } from 'console';
@@ -28,6 +32,10 @@ const port = process.env.PORT;
 // Parse JSON bodies for this app
 app.use(express.json());
 
+app.use("/api/language", languageRoutes);
+app.use("/api/class", classRoutes);
+app.use("/api/auth/google", googleRoutes);
+app.use("/message", aiRoutes);
 // Database configuration
 const dbConfig = {
     host: process.env.DB_HOST,
@@ -65,6 +73,7 @@ async function testConnection() {
     }
 }
 
+testConnection();  
 testConnection();
 
 app.get('/api/class', async (req, res) => {
@@ -802,6 +811,9 @@ app.get('/', (req, res) => {
     res.send('This is the back end!');
 });
 
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+sequelize.sync().then(() => {
+    console.log("Database synced");
+    app.listen(port, () => {
+        console.log(`Server is running on port ${port}`);
+    });
 });

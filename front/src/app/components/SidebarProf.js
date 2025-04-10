@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getLanguages, addLanguageToClass, createLanguage, updateLanguages, deleteLanguageFronClass } from "services/communicationManager.js";
+import { getLanguages, addLanguageToClass, createLanguage, deleteLanguage } from "services/communicationManager.js";
 import { useAuthStore } from "../../stores/authStore";
 
 
@@ -10,7 +11,6 @@ const SidebarProf = () => {
   const [isLlenguatgesOpen, setIsLlenguatgesOpen] = useState(false);
   const [isAlumnesOpen, setIsAlumnesOpen] = useState(false);
   const [languagesByClass, setLanguagesByClass] = useState({});
-  const [editingLanguage, setEditingLanguage] = useState({ classId: null, index: null, name: '' });
 
   const user_info = useAuthStore((state) => state.user_info);
   const class_info = useAuthStore((state) => state.class_info);
@@ -69,23 +69,25 @@ const SidebarProf = () => {
 
   const handleAddLanguage = async () => {
     if (!newLanguage || !openClassId) {
-      console.error("Error: Class not selected or language name is empty.");
-      return;
+        console.error("Error: Class not selected or language name is empty.");
+        return;
     }
 
     try {
-      if (!user_info || !user_info.token) {
-        console.error("No token available, user not authenticated.");
-        return;
-      }
+        if (!user_info || !user_info.token) {
+            console.error("No token available, user not authenticated.");
+            return;
+        }
 
-      const allLanguages = await getLanguages();
-
-      let existingLanguage = allLanguages.find(lang => lang.name.toLowerCase() === newLanguage.toLowerCase());
+        const allLanguages = await getLanguages();
+        
+        let existingLanguage = allLanguages.find(lang => lang.name.toLowerCase() === newLanguage.toLowerCase());
 
       if (!existingLanguage) {
         console.log(`Language "${newLanguage}" not found in database, creating it...`);
 
+        if (!existingLanguage) {
+            console.log(`Language "${newLanguage}" not found in database, creating it...`);
 
         const newLangResponse = await createLanguage(newLanguage);
 
@@ -101,20 +103,36 @@ const SidebarProf = () => {
           restrictionId: Math.floor(Math.random() * 3) + 1,
         }
       };
+            const newLangResponse = await createLanguage(newLanguage);
+            existingLanguage = {
+                idlanguage: newLangResponse.idlanguage, 
+                name: newLangResponse.name,
+                restrictionId: Math.floor(Math.random() * 3) + 1, 
+            };
+        }
 
-      console.log(`Adding language to class ${openClassId}:`, existingLanguage);
+        if (!existingLanguage.restrictionId) {
+            console.error("No restrictionId found for language:", existingLanguage);
+            existingLanguage.restrictionId = 1;
+        }
 
-      await addLanguageToClass(openClassId, existingLanguage);
+        console.log(`Adding language to class ${openClassId}:`, existingLanguage);
+
+        await addLanguageToClass(openClassId, existingLanguage);
 
       setLanguagesByClass((prev) => ({
         ...prev,
         [openClassId]: [...(prev[openClassId] || []), existingLanguage],
       }));
+        setLanguagesByClass((prev) => ({
+            ...prev,
+            [openClassId]: [...(prev[openClassId] || []), existingLanguage.name], 
+        }));
 
-      setNewLanguage("");
-      setShowInput(false);
+        setNewLanguage("");
+        setShowInput(false);
     } catch (error) {
-      console.error("Error adding new language:", error);
+        console.error("Error adding new language:", error);
     }
   };
 
@@ -252,6 +270,9 @@ const SidebarProf = () => {
                             <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-300 peer-checked:translate-x-full"></                          div>
                           </label>
 
+                            <button className="w-3/4 px-3 py-2 bg-green-500 hover:bg-green-700 rounded-md text-white">
+                              {lang} {/* Asegúrate de mostrar solo el nombre del idioma */}
+                            </button>
                           </div>
                         ))
                       ) : (
