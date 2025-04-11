@@ -3,15 +3,30 @@
 import React from 'react';
 
 const FormInput = ({ question, options = [], value, onChange, required = false, className = '' }) => {
-  console.log('FormInput received:', { question, options, value });
-
-  if (!options || options.length === 0) {
-    return (
-      <div className="mb-4 bg-white dark:bg-gray-700 p-4 rounded-lg shadow-sm">
-        <p className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
-          {question}
-          {required && <span className="text-red-500 ml-1">*</span>}
-        </p>
+  return (
+    <div className="mb-4 bg-white dark:bg-gray-700 p-4 rounded-lg shadow-sm">
+      <p className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-3">
+        {question}
+        {required && <span className="text-red-500 ml-1">*</span>}
+      </p>
+      {options && options.length > 0 ? (
+        <div className="space-y-2">
+          {options.map((option, index) => (
+            <label key={index} className="flex items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer transition-colors">
+              <input
+                type="radio"
+                name={question}
+                value={option}
+                checked={value === option}
+                onChange={() => onChange(option, index)}
+                required={required}
+                className="form-radio h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500 dark:border-gray-600"
+              />
+              <span className="ml-3 text-gray-700 dark:text-gray-300">{option}</span>
+            </label>
+          ))}
+        </div>
+      ) : (
         <input
           type="text"
           value={value || ''}
@@ -21,31 +36,7 @@ const FormInput = ({ question, options = [], value, onChange, required = false, 
                      bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white 
                      focus:outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
         />
-      </div>
-    );
-  }
-
-  return (
-    <div className="mb-4 bg-white dark:bg-gray-700 p-4 rounded-lg shadow-sm">
-      <p className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-3">
-        {question}
-        {required && <span className="text-red-500 ml-1">*</span>}
-      </p>
-      <div className="space-y-3">
-        {options.map((option, index) => (
-          <label key={index} className="flex items-center space-x-3 p-2 rounded hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-            <input
-              type="radio"
-              name={question}
-              value={option}
-              checked={value === option}
-              onChange={(e) => onChange(e.target.value)}
-              className="form-radio h-5 w-5 text-blue-600"
-            />
-            <span className="text-gray-700 dark:text-gray-300">{option}</span>
-          </label>
-        ))}
-      </div>
+      )}
     </div>
   );
 };

@@ -5,36 +5,24 @@ import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import UserForm from '../components/UserForm';
 import { useAuthStore } from '../../stores/authStore';
-import { generateQuiz } from 'services/communicationManager';
+import { generateQuiz,getQuiz} from 'services/communicationManager';
 
 const ChatForm = () => {
-  const [highlitedLanguage, setHighlitedLanguage] = useState(null);
-  const [highlitedLanguageIndex, setHighlitedLanguageIndex] = useState(0);
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
-  const [loading, setLoading] = useState(false);
+  const [selectedAnswers, setSelectedAnswers] = useState({});
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const classInfo = useAuthStore((state) => state.class_info);
-  const user_info = useAuthStore.getState().user_info;
+  const [results, setResults] = useState(null);
+  const { classInfo, handleSetCurrentLanguage } = useAuthStore();
 
   const loadQuestions = async () => {
     setLoading(true);
     setError(null);
     try {
-      const messages = [
-        "JavaScript: What is a closure in JavaScript and how can it be used?",
-        "PHP: Can you explain the preg_match function in PHP and provide an example of its usage?",
-        "Python: How does list comprehension work in Python, and when would you use it?"
-      ];
-      const quizData = await generateQuiz(messages);
-      console.log('Quiz data received:', quizData);
-
-      if (quizData?.quiz?.questions && Array.isArray(quizData.quiz.questions)) {
-        setQuestions(quizData.quiz.questions);
-      } else {
-        throw new Error('Invalid quiz data format');
-      }
+  
+      const quizData = await getQuiz();
+      setQuestions(quizData);
     } catch (err) {
       setError('Error fetching questions: ' + err.message);
       console.error('Error:', err);
@@ -43,47 +31,27 @@ const ChatForm = () => {
     }
   };
 
-  const handleAnswerChange = (questionId, value) => {
-    setAnswers(prev => ({
+  const handleAnswerSelect = (questionId, answerIndex) => {
+    setSelectedAnswers(prev => ({
       ...prev,
-      [questionId]: value
+      [questionId]: answerIndex
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
+  const handleSubmit = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/quiz/submit`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user_info.token}`,
-        },
-        body: JSON.stringify({
-          answers: answers,
-          quiz_id: questions[0]?.quiz_id
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al enviar les respostes');
+      const answers = questions.map(q => selectedAnswers[q.question_id] ?? -1);
+      
+      if (answers.includes(-1)) {
+        setError('Por favor responde todas las preguntas');
+        return;
       }
 
-      const result = await response.json();
-      console.log('Quiz result:', result);
+      const results = await submitQuizResults(answers);
+      setResults(results);
     } catch (err) {
-      setError('Error al enviar les respostes: ' + err.message);
-      console.error('Error:', err);
-    } finally {
-      setLoading(false);
+      setError('Error submitting answers: ' + err.message);
     }
-  };
-
-  const handleSetCurrentLanguage = (language) => {
-    setHighlitedLanguage(language);
   };
 
   useEffect(() => {
@@ -96,9 +64,8 @@ const ChatForm = () => {
       <div className="flex flex-col w-full">
         <Navbar />
         <UserForm
-          questions={questions} 
-          answers={answers}
-          handleAnswerChange={handleAnswerChange}
+
+          handleAnswerSelect={handleAnswerSelect}
           handleSubmit={handleSubmit}
           loading={loading}
           error={error}

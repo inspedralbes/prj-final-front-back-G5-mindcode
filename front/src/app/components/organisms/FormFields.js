@@ -4,7 +4,6 @@ import React from 'react';
 import FormField from '../molecules/FormField';
 
 const FormFields = ({ questions, answers, onAnswerChange, showResults }) => {
-  console.log('FormFields received questions:', questions);
   return (
     <div className="space-y-6">
       {questions.map((question) => (
@@ -14,15 +13,21 @@ const FormFields = ({ questions, answers, onAnswerChange, showResults }) => {
               text: question.question_text,
               options: question.options || []
             }}
-            value={answers[question.question_id] || ''}
-            onChange={(value) => onAnswerChange(question.question_id, value)}
+            value={answers[question.question_id]}
+            onChange={(answer) => onAnswerChange(question.question_id, answer)}
+            required={question.required}
           />
-          {showResults && (
+          {showResults && answers[question.question_id] && (
             <div className="mt-2 text-sm">
-              <span className={`font-medium ${answers[question.question_id] === question.options[question.correct_option] ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
-                {answers[question.question_id] === question.options[question.correct_option] ? 
-                  '✓ Resposta correcta' : 
-                  `✗ La resposta correcta era: ${question.options[question.correct_option]}`}
+              <span className={`font-medium ${
+                answers[question.question_id].optionIndex === question.correct_option ? 
+                'text-green-600 dark:text-green-400' : 
+                'text-red-600 dark:text-red-400'
+              }`}>
+                {answers[question.question_id].optionIndex === question.correct_option ? 
+                  '✓ Correct answer' : 
+                  `✗ The correct answer was: ${question.options[question.correct_option]}`
+                }
               </span>
             </div>
           )}

@@ -4,145 +4,102 @@ import React, { useState, useEffect } from 'react';
 import FormFields from './organisms/FormFields';
 import FormButton from './atoms/FormButton';
 import { useAuthStore } from '../../stores/authStore';
-import { generateQuiz } from '../../services/communicationManager';
+import { generateQuiz, submitQuizResults, getQuiz } from '../../services/communicationManager';
 
 const UserForm = () => {
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [results, setResults] = useState(null);
   const [showResults, setShowResults] = useState(false);
-  const user_info = useAuthStore.getState().user_info;
-
-  useEffect(() => {
-    loadQuestions();
-  }, []);
 
   const loadQuestions = async () => {
     setLoading(true);
     setError(null);
     try {
-      const messages = [ 
-        "JavaScript: What is a closure in JavaScript and how can it be used?", 
-        "PHP: Can you explain the preg_match function in PHP and provide an example of its usage?",
-        "Python: How does list comprehension work in Python, and when would you use it?" 
-      ]; 
-      const quizData = await generateQuiz(messages);
-      console.log('Quiz data received:', quizData);
-      
-      // Verificar la estructura anidada correcta
-      if (quizData?.quiz?.quiz && Array.isArray(quizData.quiz.quiz)) {
-        setQuestions(quizData.quiz.quiz);
-        console.log('Questions set:', quizData.quiz.quiz);
-      } else {
-        console.error('Invalid quiz data structure:', quizData);
-        throw new Error('Invalid quiz data format');
-      }
+      const quizData = await getQuiz();
+      console.log('Quiz data:', quizData);
+      setQuestions(quizData);
     } catch (err) {
-      setError('Error al carregar les preguntes: ' + err.message);
+      setError('Error fetching questions: ' + err.message);
       console.error('Error:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleAnswerChange = (questionId, value) => {
-    setAnswers(prev => ({
-      ...prev,
-      [questionId]: value
+  const handleAnswerChange = (questionId, answer) => {
+    console.log(`Answer updated for question ${questionId}:`, answer);
+    setAnswers(prevAnswers => ({
+      ...prevAnswers,
+      [questionId]: answer
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
+  const handleSubmit = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/quiz/submit`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user_info.token}`,
-        },
-        body: JSON.stringify({
-          answers: answers,
-          quiz_id: questions[0]?.quiz_id
-        })
-      });
+      const answersArray = questions.map(question => ({
+        question_id: question.question_id,
+        answer: answers[question.question_id]?.value,
+        selected_option: answers[question.question_id]?.optionIndex
+      }));
+      console.log('Submitting answers:', answersArray);
 
-      if (!response.ok) {
-        throw new Error('Error al enviar les respostes');
-      }
-
-      const result = await response.json();
-      console.log('Quiz result:', result);
+      const results = await submitQuizResults(answersArray);
+      console.log('Quiz results:', results);
+      setResults(results);
       setShowResults(true);
     } catch (err) {
-      setError('Error al enviar les respostes: ' + err.message);
-      console.error('Error:', err);
-    } finally {
-      setLoading(false);
+      setError('Error submitting answers: ' + err.message);
+      console.error('Submit error:', err);
     }
   };
 
-  const resetQuiz = () => {
-    setAnswers({});
-    setShowResults(false);
+  useEffect(() => {
     loadQuestions();
-  };
-
-  if (loading) {
-    return (
-      <div className="flex-grow overflow-y-auto p-4 space-y-4 rounded-md">
-        <p className="text-gray-600 dark:text-gray-300">Preparant qüestionari...</p>
-      </div>
-    );
-  }
+  }, []);
 
   return (
     <div className="flex-grow overflow-y-auto p-4 space-y-4 rounded-md">
-      <form onSubmit={handleSubmit} className="w-full">
-        <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">Qüestionari</h2>
-
-        {error && (
-          <div className="mb-4 p-3 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-100 rounded">
-            {error}
+      <div className="max-w-3xl mx-auto p-6 overflow-y-auto" >
+        {loading ? (
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+            <p className="mt-4 text-gray-600 dark:text-gray-300">Loading questions...</p>
           </div>
-        )}
-
-        {questions && questions.length > 0 ? (
-          <>
+        ) : questions.length > 0 ? (
+          <div className="space-y-8">
             <FormFields
               questions={questions}
               answers={answers}
               onAnswerChange={handleAnswerChange}
               showResults={showResults}
             />
-            <div className="mt-6">
-              {!showResults ? (
-                <FormButton
-                  text="Enviar respostes"
-                  type="submit"
-                  className="w-full"
-                  disabled={loading || Object.keys(answers).length !== questions.length}
-                />
-              ) : (
-                <FormButton
-                  text="Nou qüestionari"
-                  type="button"
-                  className="w-full"
-                  onClick={resetQuiz}
-                />
-              )}
+            <div className="sticky bottom-0 bg-white dark:bg-gray-900 py-4">
+              <FormButton
+                text={showResults ? "Try Again" : "Submit"}
+                onClick={showResults ? () => {
+                  setShowResults(false);
+                  setAnswers({});
+                  loadQuestions();
+                } : handleSubmit}
+                disabled={loading || (!showResults && Object.keys(answers).length !== questions.length)}
+                className="w-full sm:w-auto"
+              />
             </div>
-          </>
-        ) : !loading && (
+          </div>
+        ) : (
           <div className="text-gray-600 dark:text-gray-300">
-            No hi ha preguntes disponibles en aquest moment.
+            No questions available at this time.
+            <FormButton 
+              text="Refresh" 
+              onClick={loadQuestions}
+              className="mt-4"
+            />
           </div>
         )}
-      </form>
+      </div>
     </div>
   );
 };

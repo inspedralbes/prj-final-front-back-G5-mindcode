@@ -357,53 +357,67 @@ export async function updateLanguages(classId, languages) {
     throw error;
   }
 }
-export async function generateQuiz(messages) {
-  console.log("User token:", user_info.token);
-  if (!Array.isArray(messages) || messages.length === 0) {
-    throw new Error('Messages must be a non-empty array.');
+// export async function generateQuiz(messages) {
+//   console.log("User token:", user_info.token);
+//   if (!Array.isArray(messages) || messages.length === 0) {
+//     throw new Error('Messages must be a non-empty array.');
+//   }
+//   try {
+//     const response = await fetch(`${URL}/api/quiz`, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         "Authorization": `Bearer ${user_info.token}`,
+//       },
+//       body: JSON.stringify({ messages })
+//     });
+
+//     if (!response.ok) {
+//       const errorResponse = await response.json();
+//       throw new Error(`Error ${response.status}: ${errorResponse.description || 'Invalid request'}`);
+//     }
+
+//     const responseData = await response.json();
+//     return responseData;
+//   } catch (error) {
+//     console.error("Fetch error", error);
+//     throw error;
+//   }
+// }
+export async function submitQuizResultsIa(quizId, questions) {
+  const user_info = useAuthStore.getState().user_info;
+
+  if (!user_info || !user_info.token) {
+    throw new Error("No token provided. User not authenticated.");
   }
+
+  if (!quizId || !questions || !Array.isArray(questions)) {
+    throw new Error("Quiz ID and questions array are required.");
+  }
+
   try {
-    const response = await fetch(`${URL}/api/quiz`, {
-      method: 'POST',
+    const response = await fetch(`${URL}/api/quizResponse`, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         "Authorization": `Bearer ${user_info.token}`,
       },
-      body: JSON.stringify({ messages })
+      body: JSON.stringify({
+        quiz_id: quizId,
+        questions: questions
+      }),
     });
 
     if (!response.ok) {
       const errorResponse = await response.json();
-      throw new Error(`Error ${response.status}: ${errorResponse.description || 'Invalid request'}`);
+      throw new Error(`Error ${response.status}: ${errorResponse.description || "Invalid request"}`);
     }
 
     const responseData = await response.json();
     return responseData;
   } catch (error) {
-    console.error("Fetch error", error);
+    console.error("Error submitting quiz results:", error);
     throw error;
-  }
-}
-export async function getQuizToSolve(user_id,quiz_id) {
-
-  if(!user_id | !quiz_id){
-    throw new Error('User_id and quiz_id are required');
-  }
-  try {
-      const response = await fetch(`${URL}/api/quizToSolve?id=${id}`, {
-          method: 'GET',
-          headers: {
-              'Content-Type': 'application/json',
-          }
-      });
-      if (!response.ok) {
-          throw new Error(`Error: ${response.status}`);
-      }
-      const data = await response.json();
-      return data;
-  } catch (error) {
-      console.error("Error loading quiz:", error);
-      throw error;
   }
 }
 export async function addLanguageToClass(classId, language) {
@@ -437,6 +451,64 @@ export async function addLanguageToClass(classId, language) {
     return await response.json();
   } catch (error) {
     console.error("Error in Communication Manager:", error);
+    throw error;
+  }
+}
+
+export async function getQuiz() {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+    if (!user_info || !user_info.token) {
+      throw new Error('No token provided. User not authenticated.');
+    }
+
+    const response = await fetch(`${URL}/api/quiz`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${user_info.token}`
+      }
+    });
+
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      throw new Error(`Error ${response.status}: ${errorResponse.description || 'Invalid request'}`);
+    }
+
+    const data = await response.json();
+    return data.quiz;
+  } catch (error) {
+    console.error('Error getting quiz:', error);
+    throw error;
+  }
+}
+
+export async function submitQuizResults(answers) {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+    if (!user_info || !user_info.token) {
+      throw new Error('No token provided. User not authenticated.');
+    }
+
+    const response = await fetch(`${URL}/api/quizResponse`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user_info.token}`
+      },
+      body: JSON.stringify({
+        questions: answers
+      })
+    });
+
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      throw new Error(`Error ${response.status}: ${errorResponse.description || 'Invalid request'}`);
+    }
+
+    const data = await response.json();
+    return data.body[0].answered;
+  } catch (error) {
+    console.error('Error submitting quiz results:', error);
     throw error;
   }
 }

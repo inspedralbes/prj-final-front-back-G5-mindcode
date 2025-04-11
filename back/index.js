@@ -791,6 +791,7 @@ app.put('/api/language/class', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
 app.get("/api/language", verifyTokenMiddleware, async (req, res) => {
     try {
         const connection = await createConnection();
@@ -1001,6 +1002,60 @@ const sendToAI = async (message, language, restriction) => {
 
     return aiResponse;
 };
+
+const quizData = JSON.parse(fs.readFileSync("./quizData.json", "utf-8"));
+
+app.post('/api/quizResponse', verifyTokenMiddleware, async (req, res) => {
+    const { questions } = req.body;
+
+    if (!questions || !Array.isArray(questions)) {
+        return res.status(400).json({
+            status: "error",
+            description: "Questions array is required"
+        });
+    }
+
+    try {
+        const answered = questions.map((userAnswer, index) => {
+            const question = quizData.quiz[index];
+            if (!question) return 0;
+            
+            return userAnswer === question.correct_option ? 1 : 0;
+        });
+
+        return res.status(200).json({
+            status: "success",
+            description: "Quiz response successfully",
+            body: [
+                {
+                    answered: answered
+                }
+            ]
+        });
+
+    } catch (error) {
+        console.error('Error in quiz response:', error);
+        return res.status(500).json({
+            status: "error",
+            description: "Internal server error while processing quiz response"
+        });
+    }
+});
+
+app.get('/api/quiz', verifyTokenMiddleware, async (req, res) => {
+    try {
+        res.status(200).json({
+            status: "success",
+            quiz: quizData.quiz
+        });
+    } catch (error) {
+        console.error('Error getting quiz:', error);
+        res.status(500).json({
+            status: "error",
+            description: "Internal server error while getting quiz"
+        });
+    }
+});
 
 app.post('/api/quiz', async (req, res) => {
   try {
