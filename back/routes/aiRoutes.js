@@ -89,7 +89,7 @@ router.post('/create', verifyTokenMiddleware, async (req, res) => {
         }
 
         language = rows[0].language;
-        objToSaveMongoDB.language = language;
+        
         console.log("Language: ", language);
 
     } catch (error) {
@@ -126,6 +126,8 @@ router.post('/create', verifyTokenMiddleware, async (req, res) => {
     } finally {
         if (connection) connection.end();
     }
+
+    objToSaveMongoDB.language = languageToSend.name;
 
 
     saveMessage(objToSaveMongoDB);
