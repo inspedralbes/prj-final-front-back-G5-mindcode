@@ -2,6 +2,7 @@ import express from "express";
 import { createConnection } from "../utils.js";
 import { verifyTokenMiddleware } from "../tokens.js";
 import ShortUniqueId from 'short-unique-id';
+import { getClassInfo, getClassesInfoWithTeacher } from "../utils.js";
 
 const router = express.Router();
 

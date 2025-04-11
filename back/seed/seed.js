@@ -17,7 +17,7 @@ const seed = async () => {
         idclass: 2,
         code: 'JS201',
         name: 'JavaScript for Web Development',
-        teacher_id: '[2]',
+        teacher_id: '[2, 5]',
         language: '[{"id": 2,"name": "Javascript","restrictionId": 3},{"id": 1,"name": "Python","restrictionId": 1}]',
       },
       {
@@ -64,6 +64,15 @@ const seed = async () => {
         teacher: false,
         language: '[{"id": 3,"name": "Java","restrictionId": 2}]',
         googleId: null,
+        class: null,
+      },
+      {
+        id: 5,
+        name: 'Arnau A22 Fernández Gil',
+        gmail: 'a22arnfergil@inspedralbes.cat',
+        teacher: true,
+        language: '[{"id": 3,"name": "Java","restrictionId": 2}]',
+        googleId: "EHGRxTGwEfXaB3U4XJ9RAy2E8nA3",
         class: null,
       },
     ]);
