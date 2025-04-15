@@ -72,6 +72,17 @@ router.post('/class/add', async (req, res) => {
     }
 });
 
+router.get("/", verifyTokenMiddleware, async (req, res) => {
+  try {
+    const connection = await createConnection();
+    const [rows] = await connection.execute("SELECT idlanguage, name FROM LANGUAGE");
+    await connection.end();
+    res.status(200).json(rows);
+  } catch (error) {
+    console.error("Error fetching languages:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 
 // modify a classes' languages
@@ -132,38 +143,55 @@ router.get("/", verifyTokenMiddleware, async (req, res) => {
     }
 });
 
-router.delete("/", verifyTokenMiddleware, async (req, res) => {
-    try {
-        console.log("🔹 Incoming DELETE request to /");
-        console.log("Headers:", req.headers);
-        console.log("Body:", req.body);
-
-        const { idlanguage } = req.body;
-
-        if (!idlanguage) {
-            console.error("❌ No idlanguage provided in request.");
-            return res.status(400).json({ error: "Idlanguage is required" });
-        }
-
-        const connection = await createConnection();
-        const [result] = await connection.execute(
-            `DELETE FROM LANGUAGES WHERE idlanguage = ?`,
-            [idlanguage]
-        );
-        await connection.end();
-
-        if (result.affectedRows === 0) {
-            console.error(`❌ No language found with ID: ${idlanguage}`);
-            return res.status(404).json({ error: "Language not found" });
-        }
-
-        console.log(`✅ Language with ID ${idlanguage} deleted successfully`);
-        res.status(200).json({ message: "Language deleted successfully" });
-
-    } catch (error) {
-        console.error("❌ Error in attempt to delete language", error);
-        res.status(500).json({ error: "Internal server error" });
+// delete language from class
+router.delete("/class", verifyTokenMiddleware, async (req, res) => {
+    const classId = parseInt(req.query.classId);
+    const languageId = parseInt(req.query.languageId);
+  
+    if (!classId || !languageId) {
+      return res.status(400).json({ error: 'classId and languageId are required' });
     }
-});
+  
+    try {
+      const connection = await createConnection();
+  
+      const [classRows] = await connection.execute(
+        'SELECT idclass, language FROM CLASS WHERE idclass = ?',
+        [classId]
+      );
+  
+      if (classRows.length === 0) {
+        await connection.end();
+        return res.status(404).json({ error: 'Class not found' });
+      }
+  
+      let currentLanguages = JSON.parse(classRows[0].language || "[]");
+  
+      const filteredLanguages = currentLanguages.filter(
+        (lang) => lang.idlanguage !== languageId
+      );
+  
+      if (filteredLanguages.length === currentLanguages.length) {
+        await connection.end();
+        return res.status(404).json({ error: 'Language not found in class' });
+      }
+  
+      await connection.execute(
+        'UPDATE CLASS SET language = ? WHERE idclass = ?',
+        [JSON.stringify(filteredLanguages), classId]
+      );
+  
+      await connection.end();
+      res.status(200).json({
+        message: 'Language removed successfully from class',
+        classId,
+        languages: filteredLanguages,
+      });
+    } catch (error) {
+      console.error('Error removing language from class:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+  
 
 export default router;

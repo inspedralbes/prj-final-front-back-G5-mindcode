@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { getLanguages, addLanguageToClass, createLanguage, updateLanguages, deleteLanguageFronClass } from "services/communicationManager.js";
-import { getLanguages, addLanguageToClass, createLanguage, deleteLanguage } from "services/communicationManager.js";
+import {
+  getLanguages,
+  addLanguageToClass,
+  createLanguage,
+  updateLanguages,
+  deleteLanguageFromClass
+} from "services/communicationManager.js";
 import { useAuthStore } from "../../stores/authStore";
-
 
 const SidebarProf = () => {
   const [openClassId, setOpenClassId] = useState(null);
@@ -11,6 +15,7 @@ const SidebarProf = () => {
   const [isLlenguatgesOpen, setIsLlenguatgesOpen] = useState(false);
   const [isAlumnesOpen, setIsAlumnesOpen] = useState(false);
   const [languagesByClass, setLanguagesByClass] = useState({});
+  const [editingLanguage, setEditingLanguage] = useState({ classId: null, index: null, name: '' });
 
   const user_info = useAuthStore((state) => state.user_info);
   const class_info = useAuthStore((state) => state.class_info);
@@ -48,15 +53,16 @@ const SidebarProf = () => {
   };
 
   useEffect(() => {
-    console.log("Clases en el store Zustand:", class_info);
-
     const initialLanguages = {};
     class_info.forEach((classItem) => {
-      initialLanguages[classItem.class_id] = classItem.language_info.map(lang => ({
-        idlanguage: lang.idlanguage,
-        name: lang.name,
-        restrictionId: lang.restrictionId,
-      }));
+      initialLanguages[classItem.class_id] = classItem.language_info
+        .filter((lang) => typeof lang === "object" && lang.idlanguage)
+        .map((lang) => ({
+          idlanguage: lang.idlanguage,
+          name: lang.name,
+          restrictionId: lang.restrictionId,
+          isActive: lang.isActive ?? true,
+        }));
     });
     setLanguagesByClass(initialLanguages);
   }, [class_info]);
@@ -69,26 +75,24 @@ const SidebarProf = () => {
 
   const handleAddLanguage = async () => {
     if (!newLanguage || !openClassId) {
-        console.error("Error: Class not selected or language name is empty.");
-        return;
+      console.error("Error: Class not selected or language name is empty.");
+      return;
     }
 
     try {
-        if (!user_info || !user_info.token) {
-            console.error("No token available, user not authenticated.");
-            return;
-        }
+      if (!user_info || !user_info.token) {
+        console.error("No token available, user not authenticated.");
+        return;
+      }
 
-        const allLanguages = await getLanguages();
-        
-        let existingLanguage = allLanguages.find(lang => lang.name.toLowerCase() === newLanguage.toLowerCase());
+      const allLanguages = await getLanguages();
+
+      let existingLanguage = allLanguages.find(
+        (lang) => lang.name.toLowerCase() === newLanguage.toLowerCase()
+      );
 
       if (!existingLanguage) {
         console.log(`Language "${newLanguage}" not found in database, creating it...`);
-
-        if (!existingLanguage) {
-            console.log(`Language "${newLanguage}" not found in database, creating it...`);
-
         const newLangResponse = await createLanguage(newLanguage);
 
         existingLanguage = {
@@ -96,74 +100,62 @@ const SidebarProf = () => {
           name: newLangResponse.name,
           restrictionId: Math.floor(Math.random() * 3) + 1,
         };
-
       } else {
         existingLanguage = {
           ...existingLanguage,
           restrictionId: Math.floor(Math.random() * 3) + 1,
-        }
-      };
-            const newLangResponse = await createLanguage(newLanguage);
-            existingLanguage = {
-                idlanguage: newLangResponse.idlanguage, 
-                name: newLangResponse.name,
-                restrictionId: Math.floor(Math.random() * 3) + 1, 
-            };
-        }
+        };
+      }
 
-        if (!existingLanguage.restrictionId) {
-            console.error("No restrictionId found for language:", existingLanguage);
-            existingLanguage.restrictionId = 1;
-        }
-
-        console.log(`Adding language to class ${openClassId}:`, existingLanguage);
-
-        await addLanguageToClass(openClassId, existingLanguage);
+      await addLanguageToClass(openClassId, existingLanguage);
 
       setLanguagesByClass((prev) => ({
         ...prev,
         [openClassId]: [...(prev[openClassId] || []), existingLanguage],
       }));
-        setLanguagesByClass((prev) => ({
-            ...prev,
-            [openClassId]: [...(prev[openClassId] || []), existingLanguage.name], 
-        }));
 
-        setNewLanguage("");
-        setShowInput(false);
+      setNewLanguage("");
+      setShowInput(false);
     } catch (error) {
-        console.error("Error adding new language:", error);
+      console.error("Error adding new language:", error);
     }
   };
 
   const handleDeleteLanguage = async (classId, index) => {
-    const languageToDelete = languagesByClass[classId][index];
-  
-    if (!languageToDelete || !languageToDelete.idlanguage) {
-      console.error("No se encontró el lenguaje a eliminar");
+    const languageToDelete = languagesByClass[classId]?.[index];
+
+    if (
+      typeof languageToDelete !== "object" ||
+      !languageToDelete?.idlanguage ||
+      !classId
+    ) {
+      console.error(" Datos inválidos al eliminar lenguaje:", {
+        classId,
+        languageToDelete,
+      });
       return;
     }
 
     try {
       console.log(`Eliminando lenguaje "${languageToDelete.name}" (ID: ${languageToDelete.idlanguage}) de la clase ${classId}`);
-  
-      await deleteLanguageFronClass(classId, languageToDelete.idlanguage);
-  
+
+      await deleteLanguageFromClass(classId, languageToDelete.idlanguage); 
+
       const updatedLanguages = [...languagesByClass[classId]];
-      updatedLanguages.splice(index, 1); 
-  
+      updatedLanguages.splice(index, 1);
+
       setLanguagesByClass((prev) => ({
         ...prev,
         [classId]: updatedLanguages,
       }));
-  
+
       console.log(`Lenguaje eliminado correctamente de la clase ${classId}`);
     } catch (error) {
-      console.error("Error deleting language:", error.message);
+      console.error(" Error deleting language:", error.message);
     }
   };
 
-  const toggleLanguageActiveStatus = async (classId, index) => {
+ const toggleLanguageActiveStatus = async (classId, index) => {
     try {
       const updatedLanguages = [...languagesByClass[classId]];
       const currentLang = updatedLanguages[index];
@@ -187,7 +179,6 @@ const SidebarProf = () => {
       console.error("Error al cambiar el estado del lenguaje:", error.message);
     }
   };
-  
 
   return (
     <div className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white w-1/4 h-full p-4 border-r border-gray-300 dark:border-gray-700">
@@ -221,7 +212,6 @@ const SidebarProf = () => {
                     <div className="ml-4 mt-2 space-y-2">
                       {languagesByClass[class_id] && languagesByClass[class_id].length > 0 ? (
                         languagesByClass[class_id].map((lang, index) => (
-                          
                           <div key={index} className="flex items-center gap-2">
                             {editingLanguage.classId === class_id && editingLanguage.index === index ? (
                               <div className="flex gap-2">
@@ -231,35 +221,18 @@ const SidebarProf = () => {
                                   onChange={(e) => setEditingLanguage({ ...editingLanguage, name: e.target.value })}
                                   className="w-32 px-2 py-1 border border-gray-300 rounded-md dark:bg-gray-700 dark:text-white text-sm"
                                 />
-
-                              
-                                <button onClick={handleSaveEdit} className="px-2 py-1 bg-green-500 text-white rounded-md hover:bg-green-600">
-                                  ✅
-                                </button>
-                                <button onClick={() => setEditingLanguage({ classId: null, index: null, name: '' })} className="px-2 py-1 bg-red-500 text-white rounded-md hover:bg-red-600">
-                                  ✖
-                                </button>
+                                <button onClick={handleSaveEdit} className="px-2 py-1 bg-green-500 text-white rounded-md hover:bg-green-600">✅</button>
+                                <button onClick={() => setEditingLanguage({ classId: null, index: null, name: '' })} className="px-2 py-1 bg-red-500 text-white rounded-md hover:bg-red-600">✖</button>
                               </div>
                             ) : (
                               <>
-                                <button className="w-3/4 px-3 py-2 bg-green-500 hover:bg-green-700 rounded-md text-white">
-                                  {lang.name}
-                                </button>
-                                <button
-                                  onClick={() => handleEditLanguage(class_id, index, lang.name)}
-                                  className="px-1 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600"
-                                >
-                                  ✏️
-                                </button>
-                                <button
-                            onClick={() => handleDeleteLanguage(class_id, index)}
-                            className="px-1 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 "
-                            >
-                            🗑️
-                          </button>
+                                <button className="w-3/4 px-3 py-2 bg-green-500 hover:bg-green-700 rounded-md text-white">{lang.name}</button>
+                                <button onClick={() => handleEditLanguage(class_id, index, lang.name)} className="px-2 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600">✏️</button>
+                                <button onClick={() => handleDeleteLanguage(class_id, index)} className="px-1 py-1 bg-red-500 text-white rounded-md hover:bg-red-600">🗑️</button>
                               </>
+                              
                             )}
-                           <label className="relative inline-flex items-center cursor-pointer">
+                             <label className="relative inline-flex items-center cursor-pointer">
                             <input
                               type="checkbox"
                               checked={lang.isActive}
@@ -270,14 +243,12 @@ const SidebarProf = () => {
                             <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-300 peer-checked:translate-x-full"></                          div>
                           </label>
 
-                            <button className="w-3/4 px-3 py-2 bg-green-500 hover:bg-green-700 rounded-md text-white">
-                              {lang} {/* Asegúrate de mostrar solo el nombre del idioma */}
-                            </button>
                           </div>
                         ))
                       ) : (
                         <p className="text-sm text-gray-500 dark:text-gray-400">No hi ha llenguatges</p>
                       )}
+
                       {!showInput ? (
                         <button
                           className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 mt-2"
@@ -294,19 +265,14 @@ const SidebarProf = () => {
                             className="w-32 px-2 py-1 border border-gray-300 rounded-md dark:bg-gray-700 dark:text-white text-sm"
                             placeholder="Llenguatge"
                           />
-                          <button onClick={handleAddLanguage} className="px-1 py-1 bg-green-500 size-8 text-white rounded-md hover:bg-green-600 text-sm">
-                            ✅
-                          </button>
-                          <button onClick={() => { setShowInput(false); setNewLanguage(""); }} className="px-1 py-1 size-8 bg-red-500 text-white rounded-md hover:bg-red-600 text-sm">
-                            ✖
-                          </button>
-                         
+                          <button onClick={handleAddLanguage} className="px-1 py-1 bg-green-500 size-8 text-white rounded-md hover:bg-green-600 text-sm">✅</button>
+                          <button onClick={() => { setShowInput(false); setNewLanguage(""); }} className="px-1 py-1 size-8 bg-red-500 text-white rounded-md hover:bg-red-600 text-sm">✖</button>
                         </div>
                       )}
                     </div>
                   )}
 
-                  <button className="w-full px-4 py-2 bg-gray-500 hover:bg-gray-600 rounded-md text-white">📊​ Estadístiques</button>
+                  <button className="w-full px-4 py-2 bg-gray-500 hover:bg-gray-600 rounded-md text-white">📊 Estadístiques</button>
 
                   <button
                     className="w-full px-4 py-2 bg-gray-500 hover:bg-gray-600 rounded-md text-white"
@@ -319,10 +285,7 @@ const SidebarProf = () => {
                     <div className="ml-4 mt-2 space-y-2">
                       {classmate_info && classmate_info.length > 0 ? (
                         classmate_info.map((student) => (
-                          <div
-                            key={student.id}
-                            className="px-3 py-2 bg-blue-200 dark:bg-blue-800 text-black dark:text-white rounded-md"
-                          >
+                          <div key={student.id} className="px-3 py-2 bg-blue-200 dark:bg-blue-800 text-black dark:text-white rounded-md">
                             {student.name}
                           </div>
                         ))
