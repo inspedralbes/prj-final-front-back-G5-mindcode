@@ -27,7 +27,7 @@ const Sidebar = ({classInfo, handleSetCurrentLanguage}) => {
   };
 
   const handleRedirect = async () => {
-    router.push('/UserSettings');
+    router.push('/PfSettings');
   }
 
   return (

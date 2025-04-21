@@ -1,26 +1,41 @@
 import React from "react";
-import Button from "app/components/atoms/Button"
+import Button from "app/components/atoms/Button";
 
-const ClassSettings = ({name, users, onLeaveClass}) => {
-    return (
-            <div className="bg-gray-50 dark:bg-gray-800 shadow-2xl shadow-gray-600 dark:shadow-black rounded-2xl p-8 w-[28rem] h-[20rem] items-center justify-center">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-50 mb-4">
-                    <strong>Nom de la classe:</strong> 
-                </h2>
-                <h3><strong> {name} </strong></h3>
-                <br/>
-            <div className="space-y-3">
-                <p className="text-gray-700 dark:text-gray-300">
-                    {users.map((user, index) => (
-                <span key={index}>
-                   - {user} <br />
-                </span>
-    ))}
-                </p>
-                <Button text="Sortir de la classe" className="bg-red-600 text-white px-4 py-2 rounded-md center hover:bg-red-400" onClick={onLeaveClass}/>  
+const ClassSettings = ({ name, users, onLeaveClass, isStudent = true, onKickUser }) => {
+  return (
+    <div className="bg-gray-50 dark:bg-gray-800 shadow-2xl shadow-gray-600 dark:shadow-black rounded-2xl p-8 w-full max-w-md h-auto min-h-64 items-center justify-center">
+      <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-50 mb-4">
+        <strong>Nom de la classe:</strong>
+      </h2>
+      <h3><strong> {name} </strong></h3>
+      <br />
+      <div className="space-y-3">
+        <div className="text-gray-700 dark:text-gray-300">
+          {users.map((user, index) => (
+            <div key={index} className="flex justify-between items-center mb-2">
+              <span>- {user}</span>
+              {!isStudent && (
+                <Button 
+                  text="Eliminar" 
+                  className="bg-red-600 text-white px-2 py-1 text-sm rounded-md hover:bg-red-400" 
+                  onClick={() => onKickUser && onKickUser(user)}
+                />
+              )}
             </div>
-            </div>
-    );
-}
+          ))}
+        </div>
+        {isStudent && (
+          <div className="flex justify-center mt-4">
+            <Button 
+              text="Sortir de la classe" 
+              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-400" 
+              onClick={onLeaveClass}
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 export default ClassSettings;
