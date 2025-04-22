@@ -22,11 +22,7 @@ admin.initializeApp({
 // Create an Express application
 const app = express();
 
-app.use(cors({
-    origin: "*",
-    methods: "GET,POST,PUT,DELETE",
-    credentials: true
-}));
+app.use(cors("*"));
 
 const port = process.env.PORT;
 

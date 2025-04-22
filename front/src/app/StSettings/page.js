@@ -30,21 +30,28 @@ const StSettings = () => {
     
     const fetchClassSettings = async () => {
       try {
-          const classData = await getClassInfo();
-          const classInfo = await getClassDetails();
-         
-          if (!Array.isArray(classData) || classData.length === 0) {
-              console.warn("No class data found.");
-              return;
-          }
-          const className = classInfo.name;
-          const users = classData.map(user => user.name);
-          setClassSettings({ users, className });
- 
+        const classData = await getClassInfo(); 
+        const classDetails = await getClassDetails(); 
+    
+        if (!Array.isArray(classData) || classData.length === 0) {
+          console.warn("No class data found.");
+          return;
+        }
+    
+        const teacherName = classInfo?.[0]?.teacher_info[0]?.name || "Sense professor";
+    
+        const classMates = classData
+          .filter(user => user.name !== teacherName)
+          .map(user => user.name);
+    
+        const className = classDetails.name;
+    
+        setClassSettings({ className, teacher: teacherName, classMates });
+    
       } catch (error) {
-          console.error("Error fetching class settings:", error);
+        console.error("Error fetching class settings:", error);
       }
-    };
+    };    
  
     fetchUser();
     fetchClassSettings();
@@ -86,7 +93,8 @@ const StSettings = () => {
                 {classSettings && (
                     <ClassSettings
                         name={classSettings.className}
-                        users={classSettings.users}
+                        teacher={classSettings.teacher}
+                        classMates={classSettings.classMates}
                         onLeaveClass={() => setIsDialogOpen(true)}
                         isStudent={true}
                         className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3"

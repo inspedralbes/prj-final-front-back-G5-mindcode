@@ -500,3 +500,37 @@ export async function leaveClass() {
   }
 }
 
+export async function kickClass(targetUserId) {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+
+    if (!user_info || !user_info.token) {
+      throw new Error("No token provided");
+    }
+
+    const userIdToSend = targetUserId || user_info.userId;
+
+    const response = await fetch(`${URL}/api/class/leave`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${user_info.token}`,
+      },
+      body: JSON.stringify({ id: userIdToSend }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error leaving class: ${errorText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error kicking user from class:", error);
+    throw error;
+  }
+}
+
+
+

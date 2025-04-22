@@ -10,7 +10,7 @@ const Settings = ({ id, name: initialName, gmail }) => {
     const [name, setName] = useState(initialName);
     const [editedName, setEditedName] = useState(name);
     const [snackbar, setSnackbar] = useState(null);
-    const [isDialogOpen, setIsDialogOpen] = useState(false); // Estado para controlar el diálogo
+    const [isDialogOpen, setIsDialogOpen] = useState(false); 
     const router = useRouter();
 
     const handleSave = async () => {
@@ -25,7 +25,7 @@ const Settings = ({ id, name: initialName, gmail }) => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem("auth-storage");
+        sessionStorage.removeItem("auth-storage");
         router.push("/Login");
     };
 
@@ -75,7 +75,7 @@ const Settings = ({ id, name: initialName, gmail }) => {
                         <Button
                             text="Log Out"
                             className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-400 ml-2"
-                            onClick={() => setIsDialogOpen(true)} // Abre el diálogo
+                            onClick={() => setIsDialogOpen(true)}
                         />
                     </>
                 )}
