@@ -464,6 +464,13 @@ export async function getClassDetails() {
     }
 
     const data = await response.json();
+
+    if (data && data.teacher_id) {
+      console.log("Teacher IDs for the class:", data.teacher_id);
+    } else {
+      console.warn("No teacher_id found in class details.");
+    }
+
     return data;
   } catch (error) {
     console.error("Error fetching class details:", error);
@@ -496,6 +503,34 @@ export async function leaveClass() {
     return data; 
   } catch (error) {
     console.error("Error leaving class:", error);
+    throw error;
+  }
+}
+
+export async function getUserById(userId) {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+
+    if (!user_info || !user_info.token) {
+      throw new Error("No token provided");
+    }
+
+    const response = await fetch(`${URL}/api/user/${userId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${user_info.token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error getting user info for ID ${userId}: ${errorText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error(`Error fetching user info for ID ${userId}:`, error);
     throw error;
   }
 }

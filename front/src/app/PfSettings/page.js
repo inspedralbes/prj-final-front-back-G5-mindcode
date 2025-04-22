@@ -4,7 +4,7 @@ import Navbar from "app/components/Navbar";
 import Sidebar from "app/components/Sidebar";
 import Settings from "app/components/Settings";
 import ClassSettings from "app/components/ClassSettings";
-import { getUserInfo, getClassInfo, getClassDetails, leaveClass } from "services/communicationManager";
+import { getUserInfo, getClassInfo, getClassDetails, leaveClass, getUserById } from "services/communicationManager";
 import Dialog from "app/components/atoms/Dialog";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from '../../stores/authStore';
@@ -40,15 +40,25 @@ const PfSettings = () => {
               return;
             }
         
-            const teacherName = classInfo?.[0]?.teacher_info[0]?.name || "Sense professor";
+            const teacherIds = classDetails.teacher_id || [];
+            console.log("Teacher IDs:", teacherIds);
+        
+            const teacherNames = await Promise.all(
+              teacherIds.map(async (id) => {
+                const teacherInfo = await getUserById(id);
+                return teacherInfo.name; 
+              })
+            );
+        
+            console.log("Teacher Names:", teacherNames);
         
             const classMates = classData
-              .filter(user => user.name !== teacherName)
+              .filter(user => !teacherIds.includes(user.id))
               .map(user => user.name);
         
             const className = classDetails.name;
         
-            setClassSettings({ className, teacher: teacherName, classMates });
+            setClassSettings({ className, teacher: teacherNames, classMates });
         
           } catch (error) {
             console.error("Error fetching class settings:", error);

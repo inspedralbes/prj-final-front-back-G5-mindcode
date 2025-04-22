@@ -4,7 +4,7 @@ import Navbar from "app/components/Navbar";
 import Sidebar from "app/components/Sidebar";
 import Settings from "app/components/Settings";
 import ClassSettings from "app/components/ClassSettings";
-import { getUserInfo, getClassInfo, getClassDetails, leaveClass } from "services/communicationManager";
+import { getUserInfo, getClassInfo, getClassDetails, leaveClass, getUserById } from "services/communicationManager";
 import Dialog from "app/components/atoms/Dialog";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from '../../stores/authStore';
@@ -38,20 +38,33 @@ const StSettings = () => {
           return;
         }
     
-        const teacherName = classInfo?.[0]?.teacher_info[0]?.name || "Sense professor";
+        // Obtén los IDs de los profesores desde classDetails
+        const teacherIds = classDetails.teacher_id || [];
+        console.log("Teacher IDs:", teacherIds);
     
+        // Obtén los nombres de los profesores usando getUserById
+        const teacherNames = await Promise.all(
+          teacherIds.map(async (id) => {
+            const teacherInfo = await getUserById(id);
+            return teacherInfo.name; // Asume que el nombre está en teacherInfo.name
+          })
+        );
+    
+        console.log("Teacher Names:", teacherNames);
+    
+        // Filtra los compañeros de clase excluyendo a los profesores
         const classMates = classData
-          .filter(user => user.name !== teacherName)
+          .filter(user => !teacherIds.includes(user.id)) // Excluye a los profesores
           .map(user => user.name);
     
         const className = classDetails.name;
     
-        setClassSettings({ className, teacher: teacherName, classMates });
+        setClassSettings({ className, teacher: teacherNames.join(", "), classMates });
     
       } catch (error) {
         console.error("Error fetching class settings:", error);
       }
-    };    
+    };   
  
     fetchUser();
     fetchClassSettings();
