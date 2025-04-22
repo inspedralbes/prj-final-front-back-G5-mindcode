@@ -68,7 +68,7 @@ const UserForm = () => {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
             <p className="mt-4 text-gray-600 dark:text-gray-300">Loading questions...</p>
           </div>
-        ) : questions.length > 0 ? (
+        ) : (questions && questions.length > 0) ? (
           <div className="space-y-8">
             <FormFields
               questions={questions}

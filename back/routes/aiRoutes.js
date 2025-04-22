@@ -16,7 +16,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const filePath = path.resolve(__dirname, '../quizData.json');
-const quizData = fs.readFileSync(filePath, 'utf8');
+const quizData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
 
 
 // post a message

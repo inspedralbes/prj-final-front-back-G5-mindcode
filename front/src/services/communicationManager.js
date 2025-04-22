@@ -462,7 +462,7 @@ export async function getQuiz() {
       throw new Error('No token provided. User not authenticated.');
     }
 
-    const response = await fetch(`${URL}/api/quiz`, {
+    const response = await fetch(`${URL}/message/api/quiz`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${user_info.token}`
@@ -489,7 +489,7 @@ export async function submitQuizResults(answers) {
       throw new Error('No token provided. User not authenticated.');
     }
 
-    const response = await fetch(`${URL}/api/quizResponse`, {
+    const response = await fetch(`${URL}/message/api/quizResponse`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
