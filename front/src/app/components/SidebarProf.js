@@ -87,8 +87,13 @@ const SidebarProf = ({changeSelectedField, changeSelectedClass}) => {
     }
   };
 
+  const handleStudentClick = (studentId) => () => {
+    changeSelectedField("alumne");
+    changeSelectedClass(studentId);
+  }
+
   return (
-    <div className="sticky-sidebar flex-shrink-0 bg-gray-200 dark:bg-gray-800 text-black dark:text-white w-1/4 h-full p-4 border-r border-gray-300 dark:border-gray-700">
+    <div className="sticky-sidebar flex-shrink-0 bg-gray-200 dark:bg-gray-800 text-black dark:text-white h-full p-4 border-r border-gray-300 dark:border-gray-700">
       <div className="text-center mb-6">
         <div className="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 mx-auto mb-2"></div>
         <h2 className="text-lg font-semibold">PROFESSOR</h2>
@@ -178,6 +183,7 @@ const SidebarProf = ({changeSelectedField, changeSelectedClass}) => {
                       {classmate_info && classmate_info.length > 0 ? (
                         classmate_info.map((student) => (
                           <div
+                            onClick={handleStudentClick(student.id)}
                             key={student.id}
                             className="px-3 py-2 bg-blue-200 dark:bg-blue-800 text-black dark:text-white rounded-md"
                           >

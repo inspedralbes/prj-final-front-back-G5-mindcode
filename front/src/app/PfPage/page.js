@@ -40,11 +40,13 @@ const Page = () => {
 
   return (
     <div className="flex h-screen relative bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50">
-      <SidebarProf changeSelectedField={changeSelectedField} changeSelectedClass={changeSelectedClass} />
+      <div className="max-w-[50vw]">
+        <SidebarProf changeSelectedField={changeSelectedField} changeSelectedClass={changeSelectedClass} />
+      </div>
       <div className="flex flex-col w-full h-fullc ">
         <Navbar />
         <ContentArea >
-          {selectedField === "stats"?<StatsContent classId={selectedClass?selectedClass:classInfo[0].class_id} />:selectedField === "alumnes"?"isAlumnes":selectedField === "llenguatges"?"isLlenguatges":"isClass"}
+          {selectedField === "stats"?<StatsContent classId={selectedClass?selectedClass:classInfo[0].class_id} mode={"professor"} />:selectedField === "alumne"?<StatsContent classId={selectedClass?selectedClass:classInfo[0].class_id} mode={"alumne"} />:selectedField === "llenguatges"?"isLlenguatges":"isClass"}
         </ContentArea>
       </div>
     </div>

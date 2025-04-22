@@ -17,4 +17,16 @@ router.get('/:classId', verifyTokenMiddleware,  async (req, res) => {
     }
 });
 
+router.get('/student/:studentId', verifyTokenMiddleware, async (req, res) => {
+    const { studentId } = req.params;
+    
+    try {
+        const messages = await Message.find({ userId: studentId });
+        res.status(200).json(messages);
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred while fetching messages.' });
+    }
+});
+
+
 export default router;

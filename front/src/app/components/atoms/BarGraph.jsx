@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 
@@ -8,7 +8,17 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 const BarGraph = ({ rawData, title, legend, barColor, borderColor }) => {
 
+    const chartRef = useRef(null);
+    
     const [textColor, setTextColor] = useState('white');
+
+    useEffect(() => {
+        if (chartRef.current) {
+          chartRef.current.update(); // Smooth update (no full re-render)
+        }
+      }, [rawData, textColor]);
+
+    
 
     useEffect(() => {
         const observer = new MutationObserver((mutations) => {
@@ -92,7 +102,7 @@ const BarGraph = ({ rawData, title, legend, barColor, borderColor }) => {
     };
 
     return (
-        <Bar data={data} options={options} />
+        <Bar ref={chartRef} data={data} options={options} />
     );
 };
 

@@ -375,3 +375,23 @@ export async function fetchAiMessagesClassData(classId) {
   return data;
 }
 
+export async function fetchAiMessagesStudentData(studentId) {
+
+  const response = await fetch(`${URL}/api/stats/student/${studentId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      "Authorization": `Bearer ${user_info.token}`,
+    }
+  })
+
+  if (!response.ok) {
+    throw new Error('Error al cargar los mensajes');
+  }
+
+  const data = await response.json();
+  
+  console.log("Data from fetchAiMessagesClassData:", data);
+  return data;
+}
+
