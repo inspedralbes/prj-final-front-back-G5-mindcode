@@ -57,12 +57,6 @@ const StatsContent = ({ classId, mode }) => {
         <div className="">
             <TitleCard >Statistics Overview</TitleCard>
             <div className='w-full max-w-[80%] mx-auto'>
-                {/* <ImageWithSubtitle
-                    subtitleContent="AI use for all 2DAM"
-                    imageSource="/booboo.png"
-                    imageAlt="Placeholder Image"
-
-                /> */}
                 {mode === "alumne" ? 
                 <BarGraph 
                 rawData={languageStats} 
