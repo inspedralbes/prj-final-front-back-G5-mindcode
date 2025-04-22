@@ -92,6 +92,11 @@ const SidebarProf = ({changeSelectedField, changeSelectedClass}) => {
     changeSelectedClass(studentId);
   }
 
+  const handleStatsClick = () => {
+    changeSelectedField("stats");
+    changeSelectedClass(openClassId);
+  }
+
   return (
     <div className="sticky-sidebar flex-shrink-0 bg-gray-200 dark:bg-gray-800 text-black dark:text-white h-full p-4 border-r border-gray-300 dark:border-gray-700">
       <div className="text-center mb-6">
@@ -169,7 +174,9 @@ const SidebarProf = ({changeSelectedField, changeSelectedClass}) => {
                     </div>
                   )}
   
-                  <button className="w-full px-4 py-2 bg-gray-500 hover:bg-gray-600 rounded-md text-white">📊​ Estadístiques</button>
+                  <button className="w-full px-4 py-2 bg-gray-500 hover:bg-gray-600 rounded-md text-white"
+                  onClick={handleStatsClick}
+                  >📊​ Estadístiques</button>
   
                   <button
                     className="w-full px-4 py-2 bg-gray-500 hover:bg-gray-600 rounded-md text-white"
