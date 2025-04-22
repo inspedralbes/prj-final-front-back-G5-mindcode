@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getLanguages, addLanguageToClass, createLanguage, deleteLanguage } from "services/communicationManager.js";
 import { useAuthStore } from "../../stores/authStore";
+import { useRouter } from 'next/navigation';
 
 const SidebarProf = () => {
   const [openClassId, setOpenClassId] = useState(null);
@@ -12,6 +13,7 @@ const SidebarProf = () => {
 
   const user_info = useAuthStore((state) => state.user_info);
   const class_info = useAuthStore((state) => state.class_info);
+  const router = useRouter();
 
   useEffect(() => {
     console.log("Clases en el store Zustand:", class_info);
@@ -77,10 +79,14 @@ const SidebarProf = () => {
     }
   };
 
+  const handleRedirect = async () => {
+    router.push('/PfSettings');
+  }
+
   return (
     <div className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white w-1/4 h-full p-4 border-r border-gray-300 dark:border-gray-700">
       <div className="text-center mb-6">
-        <div className="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 mx-auto mb-2"></div>
+        <button className="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 mx-auto mb-2" onClick={handleRedirect}></button>
         <h2 className="text-lg font-semibold">PROFESSOR</h2>
         <p className="text-sm text-gray-600 dark:text-gray-400">Admin</p>
       </div>

@@ -4,10 +4,11 @@ import Navbar from "app/components/Navbar";
 import Sidebar from "app/components/Sidebar";
 import Settings from "app/components/Settings";
 import ClassSettings from "app/components/ClassSettings";
-import { getUserInfo, getClassInfo, getClassDetails, leaveClass } from "services/communicationManager";
+import { getUserInfo, getClassInfo, getClassDetails, leaveClass, getUserById } from "services/communicationManager";
 import Dialog from "app/components/atoms/Dialog";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from '../../stores/authStore';
+import SidebarProf from "app/components/SidebarProf";
 
 const PfSettings = () => {
   const [userSettings, setUserSettings] = useState(null);
@@ -30,22 +31,39 @@ const PfSettings = () => {
     };
     
     const fetchClassSettings = async () => {
-      try {
-          const classData = await getClassInfo();
-          const classInfo = await getClassDetails();
-         
-          if (!Array.isArray(classData) || classData.length === 0) {
+          try {
+            const classData = await getClassInfo(); 
+            const classDetails = await getClassDetails(); 
+        
+            if (!Array.isArray(classData) || classData.length === 0) {
               console.warn("No class data found.");
               return;
+            }
+        
+            const teacherIds = classDetails.teacher_id || [];
+            console.log("Teacher IDs:", teacherIds);
+        
+            const teacherNames = await Promise.all(
+              teacherIds.map(async (id) => {
+                const teacherInfo = await getUserById(id);
+                return teacherInfo.name; 
+              })
+            );
+        
+            console.log("Teacher Names:", teacherNames);
+        
+            const classMates = classData
+              .filter(user => !teacherIds.includes(user.id))
+              .map(user => user.name);
+        
+            const className = classDetails.name;
+        
+            setClassSettings({ className, teacher: teacherNames, classMates });
+        
+          } catch (error) {
+            console.error("Error fetching class settings:", error);
           }
-          const className = classInfo.name;
-          const users = classData.map(user => user.name);
-          setClassSettings({ users, className });
- 
-      } catch (error) {
-          console.error("Error fetching class settings:", error);
-      }
-    };
+        };  
  
     fetchUser();
     fetchClassSettings();
@@ -82,7 +100,7 @@ const PfSettings = () => {
   
   return (
     <div className="flex flex-col md:flex-row h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50">
-        <Sidebar className="w-full md:w-1/4 lg:w-1/5" classInfo={classInfo} handleSetCurrentLanguage={handleSetCurrentLanguage} />
+        <SidebarProf className="w-full md:w-1/4 lg:w-1/5" classInfo={classInfo} handleSetCurrentLanguage={handleSetCurrentLanguage} />
         <div className="flex flex-col w-full">
             <Navbar className="w-full" />
             <div className="flex flex-grow flex-wrap items-center justify-center gap-4 p-4">
@@ -95,7 +113,8 @@ const PfSettings = () => {
                 {classSettings && (
                     <ClassSettings
                         name={classSettings.className}
-                        users={classSettings.users}
+                        teacher={classSettings.teacher}
+                        classMates={classSettings.classMates}
                         isStudent={false}
                         onKickUser={handleKickUser}
                         className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3"

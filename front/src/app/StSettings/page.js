@@ -4,7 +4,7 @@ import Navbar from "app/components/Navbar";
 import Sidebar from "app/components/Sidebar";
 import Settings from "app/components/Settings";
 import ClassSettings from "app/components/ClassSettings";
-import { getUserInfo, getClassInfo, getClassDetails, leaveClass } from "services/communicationManager";
+import { getUserInfo, getClassInfo, getClassDetails, leaveClass, getUserById } from "services/communicationManager";
 import Dialog from "app/components/atoms/Dialog";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from '../../stores/authStore';
@@ -30,21 +30,41 @@ const StSettings = () => {
     
     const fetchClassSettings = async () => {
       try {
-          const classData = await getClassInfo();
-          const classInfo = await getClassDetails();
-         
-          if (!Array.isArray(classData) || classData.length === 0) {
-              console.warn("No class data found.");
-              return;
-          }
-          const className = classInfo.name;
-          const users = classData.map(user => user.name);
-          setClassSettings({ users, className });
- 
+        const classData = await getClassInfo(); 
+        const classDetails = await getClassDetails(); 
+    
+        if (!Array.isArray(classData) || classData.length === 0) {
+          console.warn("No class data found.");
+          return;
+        }
+    
+        // Obtén los IDs de los profesores desde classDetails
+        const teacherIds = classDetails.teacher_id || [];
+        console.log("Teacher IDs:", teacherIds);
+    
+        // Obtén los nombres de los profesores usando getUserById
+        const teacherNames = await Promise.all(
+          teacherIds.map(async (id) => {
+            const teacherInfo = await getUserById(id);
+            return teacherInfo.name; // Asume que el nombre está en teacherInfo.name
+          })
+        );
+    
+        console.log("Teacher Names:", teacherNames);
+    
+        // Filtra los compañeros de clase excluyendo a los profesores
+        const classMates = classData
+          .filter(user => !teacherIds.includes(user.id)) // Excluye a los profesores
+          .map(user => user.name);
+    
+        const className = classDetails.name;
+    
+        setClassSettings({ className, teacher: teacherNames.join(", "), classMates });
+    
       } catch (error) {
-          console.error("Error fetching class settings:", error);
+        console.error("Error fetching class settings:", error);
       }
-    };
+    };   
  
     fetchUser();
     fetchClassSettings();
@@ -86,7 +106,8 @@ const StSettings = () => {
                 {classSettings && (
                     <ClassSettings
                         name={classSettings.className}
-                        users={classSettings.users}
+                        teacher={classSettings.teacher}
+                        classMates={classSettings.classMates}
                         onLeaveClass={() => setIsDialogOpen(true)}
                         isStudent={true}
                         className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3"

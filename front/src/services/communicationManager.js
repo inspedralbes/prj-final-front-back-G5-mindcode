@@ -464,6 +464,13 @@ export async function getClassDetails() {
     }
 
     const data = await response.json();
+
+    if (data && data.teacher_id) {
+      console.log("Teacher IDs for the class:", data.teacher_id);
+    } else {
+      console.warn("No teacher_id found in class details.");
+    }
+
     return data;
   } catch (error) {
     console.error("Error fetching class details:", error);
@@ -499,4 +506,66 @@ export async function leaveClass() {
     throw error;
   }
 }
+
+export async function getUserById(userId) {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+
+    if (!user_info || !user_info.token) {
+      throw new Error("No token provided");
+    }
+
+    const response = await fetch(`${URL}/api/user/${userId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${user_info.token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error getting user info for ID ${userId}: ${errorText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error(`Error fetching user info for ID ${userId}:`, error);
+    throw error;
+  }
+}
+
+export async function kickClass(targetUserId) {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+
+    if (!user_info || !user_info.token) {
+      throw new Error("No token provided");
+    }
+
+    const userIdToSend = targetUserId || user_info.userId;
+
+    const response = await fetch(`${URL}/api/class/leave`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${user_info.token}`,
+      },
+      body: JSON.stringify({ id: userIdToSend }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error leaving class: ${errorText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error kicking user from class:", error);
+    throw error;
+  }
+}
+
+
 

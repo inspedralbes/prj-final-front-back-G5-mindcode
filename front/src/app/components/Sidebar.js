@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-// import { useAuthStore } from '../../stores/authStore';
+import { useAuthStore } from '../../stores/authStore';
 import { useRouter } from 'next/navigation';
 
 const URL = process.env.NEXT_PUBLIC_URL;
@@ -7,7 +7,7 @@ const Sidebar = ({classInfo, handleSetCurrentLanguage}) => {
   const [isLlenguatgesOpen, setIsLlenguatgesOpen] = useState(false);
   const [languages, setLanguages] = useState([]);
   // const classInfo = useAuthStore((state) => state.class_info);
-  // const user_info = useAuthStore.getState().user_info
+  const user_info = useAuthStore.getState().user_info
   const router = useRouter();
 
   useEffect(() => {
@@ -27,7 +27,7 @@ const Sidebar = ({classInfo, handleSetCurrentLanguage}) => {
   };
 
   const handleRedirect = async () => {
-    router.push('/PfSettings');
+    router.push('/StSettings');
   }
 
   return (
