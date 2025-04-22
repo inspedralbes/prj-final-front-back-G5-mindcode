@@ -46,7 +46,11 @@ const Page = () => {
       <div className="flex flex-col w-full h-fullc ">
         <Navbar />
         <ContentArea >
-          {selectedField === "stats"?<StatsContent classId={selectedClass?selectedClass:classInfo[0].class_id} mode={"professor"} />:selectedField === "alumne"?<StatsContent classId={selectedClass?selectedClass:classInfo[0].class_id} mode={"alumne"} />:selectedField === "llenguatges"?"isLlenguatges":"isClass"}
+          {selectedField === "stats"?
+          <StatsContent classId={selectedClass?selectedClass:classInfo[0].class_id} mode={"professor"} />:
+          selectedField === "alumne"?<StatsContent classId={selectedClass?selectedClass:classInfo[0].class_id} mode={"alumne"} />:
+          selectedField === "llenguatges"?"isLlenguatges":
+          "isClass"}
         </ContentArea>
       </div>
     </div>
