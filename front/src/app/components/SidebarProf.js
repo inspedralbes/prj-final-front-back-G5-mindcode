@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getLanguages, addLanguageToClass, createLanguage, deleteLanguage } from "services/communicationManager.js";
 import { useAuthStore } from "../../stores/authStore";
 
-const SidebarProf = () => {
+const SidebarProf = ({changeSelected}) => {
   const [openClassId, setOpenClassId] = useState(null);
   const [newLanguage, setNewLanguage] = useState("");
   const [showInput, setShowInput] = useState(false);
@@ -78,13 +78,13 @@ const SidebarProf = () => {
   };
 
   return (
-    <div className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white w-1/4 h-full p-4 border-r border-gray-300 dark:border-gray-700">
+    <div className="sticky-sidebar flex-shrink-0 bg-gray-200 dark:bg-gray-800 text-black dark:text-white w-1/4 h-full p-4 border-r border-gray-300 dark:border-gray-700">
       <div className="text-center mb-6">
         <div className="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 mx-auto mb-2"></div>
         <h2 className="text-lg font-semibold">PROFESSOR</h2>
         <p className="text-sm text-gray-600 dark:text-gray-400">Admin</p>
       </div>
-
+  
       <nav className="space-y-2">
         {class_info && class_info.length > 0 ? (
           class_info.map(({ class_id, name, classmate_info }) => (
@@ -95,7 +95,7 @@ const SidebarProf = () => {
               >
                 {name} <span>▼</span>
               </button>
-
+  
               {openClassId === class_id && (
                 <div className="mt-1 space-y-1 pl-2">
                   <button
@@ -104,14 +104,14 @@ const SidebarProf = () => {
                   >
                     📄 Llenguatges
                   </button>
-
+  
                   {isLlenguatgesOpen && (
                     <div className="ml-4 mt-2 space-y-2">
                       {languagesByClass[class_id] && languagesByClass[class_id].length > 0 ? (
                         languagesByClass[class_id].map((lang, index) => (
                           <div key={index} className="flex items-center gap-2">
                             <button className="w-3/4 px-3 py-2 bg-green-500 hover:bg-green-700 rounded-md text-white">
-                              {lang} {/* Asegúrate de mostrar solo el nombre del idioma */}
+                              {lang}
                             </button>
                           </div>
                         ))
@@ -134,26 +134,35 @@ const SidebarProf = () => {
                             className="w-32 px-2 py-1 border border-gray-300 rounded-md dark:bg-gray-700 dark:text-white text-sm"
                             placeholder="Llenguatge"
                           />
-                          <button onClick={handleAddLanguage} className="px-1 py-1 bg-green-500 size-8 text-white rounded-md hover:bg-green-600 text-sm">
+                          <button
+                            onClick={handleAddLanguage}
+                            className="px-1 py-1 bg-green-500 size-8 text-white rounded-md hover:bg-green-600 text-sm"
+                          >
                             ✅
                           </button>
-                          <button onClick={() => { setShowInput(false); setNewLanguage(""); }} className="px-1 py-1 size-8 bg-red-500 text-white rounded-md hover:bg-red-600 text-sm">
+                          <button
+                            onClick={() => {
+                              setShowInput(false);
+                              setNewLanguage("");
+                            }}
+                            className="px-1 py-1 size-8 bg-red-500 text-white rounded-md hover:bg-red-600 text-sm"
+                          >
                             ✖
                           </button>
                         </div>
                       )}
                     </div>
                   )}
-
+  
                   <button className="w-full px-4 py-2 bg-gray-500 hover:bg-gray-600 rounded-md text-white">📊​ Estadístiques</button>
-
+  
                   <button
                     className="w-full px-4 py-2 bg-gray-500 hover:bg-gray-600 rounded-md text-white"
                     onClick={() => setIsAlumnesOpen(!isAlumnesOpen)}
                   >
                     🎓 Alumnes
                   </button>
-
+  
                   {isAlumnesOpen && (
                     <div className="ml-4 mt-2 space-y-2">
                       {classmate_info && classmate_info.length > 0 ? (
