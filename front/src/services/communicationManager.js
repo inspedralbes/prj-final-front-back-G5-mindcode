@@ -543,7 +543,9 @@ export async function kickClass(targetUserId) {
       throw new Error("No token provided");
     }
 
-    const userIdToSend = targetUserId || user_info.userId;
+    if (!targetUserId) {
+      throw new Error("No target user ID provided");
+    }
 
     const response = await fetch(`${URL}/api/class/leave`, {
       method: "PUT",
@@ -551,12 +553,12 @@ export async function kickClass(targetUserId) {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${user_info.token}`,
       },
-      body: JSON.stringify({ id: userIdToSend }),
+      body: JSON.stringify({ id: targetUserId }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`Error leaving class: ${errorText}`);
+      throw new Error(`Error kicking user from class: ${errorText}`);
     }
 
     const data = await response.json();

@@ -22,12 +22,12 @@ const ClassSettings = ({ name, teacher, classMates, onLeaveClass, isStudent = tr
         <h4 className="font-semibold mb-2">Companys/es de classe:</h4>
         {classMates.map((user, index) => (
           <div key={index} className="flex justify-between items-center mb-2">
-            <span>- {user}</span>
+            <span>- {user.name}</span>
             {!isStudent && (
               <Button 
                 text="Eliminar" 
                 className="bg-red-600 text-white px-2 py-1 text-sm rounded-md hover:bg-red-400" 
-                onClick={() => onKickUser && onKickUser(user)}
+                onClick={() => onKickUser(user.id)}
               />
             )}
           </div>

@@ -4,7 +4,7 @@ import Navbar from "app/components/Navbar";
 import Sidebar from "app/components/Sidebar";
 import Settings from "app/components/Settings";
 import ClassSettings from "app/components/ClassSettings";
-import { getUserInfo, getClassInfo, getClassDetails, leaveClass, getUserById } from "services/communicationManager";
+import { getUserInfo, getClassInfo, getClassDetails, leaveClass, getUserById, kickClass } from "services/communicationManager";
 import Dialog from "app/components/atoms/Dialog";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from '../../stores/authStore';
@@ -53,8 +53,8 @@ const PfSettings = () => {
             console.log("Teacher Names:", teacherNames);
         
             const classMates = classData
-              .filter(user => !teacherIds.includes(user.id))
-              .map(user => user.name);
+            .filter(user => !teacherIds.includes(String(user.id))) 
+            .map(user => ({ id: user.id, name: user.name }));
         
             const className = classDetails.name;
         
@@ -69,20 +69,15 @@ const PfSettings = () => {
     fetchClassSettings();
   }, []);
   
-  const handleKickUser = (user) => {
-    setSelectedUser(user);
-    setIsDialogOpen(true);
-  };
-  
-  const confirmKickUser = async () => {
+  const handleKickUser = async (userId) => {
     try {
-      await leaveClass(selectedUser);
-      setIsDialogOpen(false);
-      
-      if (classSettings) {
-        const updatedUsers = classSettings.users.filter(user => user !== selectedUser);
-        setClassSettings({...classSettings, users: updatedUsers});
-      }
+      await kickClass(userId); // Llama a kickClass con el ID del usuario seleccionado
+  
+      // Actualiza la lista de classMates eliminando al usuario
+      setClassSettings((prevSettings) => ({
+        ...prevSettings,
+        classMates: prevSettings.classMates.filter((user) => user.id !== userId),
+      }));
     } catch (error) {
       console.error("Error kicking user from class:", error);
     }

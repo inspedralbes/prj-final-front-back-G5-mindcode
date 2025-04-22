@@ -649,7 +649,7 @@ app.get("/api/class/user", verifyTokenMiddleware, async (req, res) => {
     try {
         const connection = await createConnection();
         const [rows] = await connection.execute(
-            "SELECT name, gmail FROM USER WHERE class = ?",
+            "SELECT id, name, gmail FROM USER WHERE class = ?",
             [class_id]
         );
         await connection.end();
