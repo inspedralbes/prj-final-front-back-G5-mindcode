@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getLanguages, addLanguageToClass, createLanguage, deleteLanguage } from "services/communicationManager.js";
 import { useAuthStore } from "../../stores/authStore";
 
-const SidebarProf = ({changeSelected}) => {
+const SidebarProf = ({changeSelectedField, changeSelectedClass}) => {
   const [openClassId, setOpenClassId] = useState(null);
   const [newLanguage, setNewLanguage] = useState("");
   const [showInput, setShowInput] = useState(false);
@@ -14,6 +14,10 @@ const SidebarProf = ({changeSelected}) => {
   const class_info = useAuthStore((state) => state.class_info);
 
   useEffect(() => {
+    if (!class_info || class_info.length === 0) {
+      console.log("No classes available.");
+      return;
+    }
     console.log("Clases en el store Zustand:", class_info);
 
     const initialLanguages = {};
@@ -28,6 +32,12 @@ const SidebarProf = ({changeSelected}) => {
     setIsLlenguatgesOpen(false);
     setIsAlumnesOpen(false);
   };
+
+  useEffect(() => {
+    if (openClassId) {
+      changeSelectedClass(openClassId);
+    }
+  }, [openClassId]);
 
   const handleAddLanguage = async () => {
     if (!newLanguage || !openClassId) {

@@ -79,9 +79,6 @@ const Page = () => {
       setHighlitedLanguage(classInfo[0].language_info[0])
       setMessages(classInfo[0].language_info.map(lang => ({ messages: [] })));
       setHighlitedLanguageIndex(0);
-
-
-
     }
   }, [classInfo]);
 
