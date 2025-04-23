@@ -22,7 +22,12 @@ admin.initializeApp({
 // Create an Express application
 const app = express();
 
-app.use(cors("*"));
+app.use(cors({
+    origin: "*",
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true
+}));
+
 
 const port = process.env.PORT;
 
@@ -649,7 +654,7 @@ app.get("/api/class/user", verifyTokenMiddleware, async (req, res) => {
     try {
         const connection = await createConnection();
         const [rows] = await connection.execute(
-            "SELECT id, name, gmail FROM USER WHERE class = ?",
+            "SELECT id, teacher, name, gmail FROM USER WHERE class = ?",
             [class_id]
         );
         await connection.end();
@@ -857,11 +862,25 @@ app.put('/api/class/leave', verifyTokenMiddleware, async (req, res) => {
             [id]
         );
         
-        await connection.end();
-        
         if (result.affectedRows === 0) {
+            await connection.end();
             return res.status(404).json({ error: "User not found or already not in any class" });
         }
+
+        // Check if the user is a teacher and update if necessary
+        const [userRows] = await connection.execute(
+            "SELECT teacher FROM USER WHERE id = ?",
+            [id]
+        );
+
+        if (userRows.length > 0 && userRows[0].teacher === 1) {
+            await connection.execute(
+                "UPDATE USER SET teacher = 0 WHERE id = ?",
+                [id]
+            );
+        }
+
+        await connection.end();
         
         res.status(200).json({ message: "Successfully left the class" });
     } catch (error) {

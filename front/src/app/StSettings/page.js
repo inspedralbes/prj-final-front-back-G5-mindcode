@@ -19,56 +19,65 @@ const StSettings = () => {
   const classInfo = useAuthStore((state) => state.class_info);
   
   useEffect(() => {
-    const fetchUser = async () => {
-      try{
-        const userData = await getUserInfo();
-        setUserSettings(userData);
-      }catch(error){
-        console.error("Error fetching user settings:", error);
-      }
-    };
-    
-    const fetchClassSettings = async () => {
-      try {
-        const classData = await getClassInfo(); 
-        const classDetails = await getClassDetails(); 
-    
-        if (!Array.isArray(classData) || classData.length === 0) {
-          console.warn("No class data found.");
-          return;
-        }
-    
-        // Obtén los IDs de los profesores desde classDetails
-        const teacherIds = classDetails.teacher_id || [];
-        console.log("Teacher IDs:", teacherIds);
-    
-        // Obtén los nombres de los profesores usando getUserById
-        const teacherNames = await Promise.all(
-          teacherIds.map(async (id) => {
-            const teacherInfo = await getUserById(id);
-            return teacherInfo.name; // Asume que el nombre está en teacherInfo.name
-          })
-        );
-    
-        console.log("Teacher Names:", teacherNames);
-    
-        // Filtra los compañeros de clase excluyendo a los profesores
-        const classMates = classData
-          .filter(user => !teacherIds.includes(user.id)) // Excluye a los profesores
-          .map(user => user.name);
-    
-        const className = classDetails.name;
-    
-        setClassSettings({ className, teacher: teacherNames.join(", "), classMates });
-    
-      } catch (error) {
-        console.error("Error fetching class settings:", error);
-      }
-    };   
- 
-    fetchUser();
-    fetchClassSettings();
-  }, []);
+      const fetchUser = async () => {
+          try {
+              const userData = await getUserInfo();
+              setUserSettings(userData);
+          } catch (error) {
+              console.error("Error fetching user settings:", error);
+          }
+      };
+  
+      fetchUser();
+  }, []); // Este efecto solo se ejecuta una vez al montar el componente
+  
+  useEffect(() => {
+      if (!userSettings) return; // Espera a que userSettings esté disponible
+  
+      const fetchClassSettings = async () => {
+          try {
+              const classData = await getClassInfo();
+              const classDetails = await getClassDetails();
+  
+              console.log("Class Data:", classData);
+  
+              if (!Array.isArray(classData) || classData.length === 0) {
+                  console.warn("No class data found.");
+                  return;
+              }
+  
+              const teacherIds = classDetails.teacher_id || [];
+              console.log("Teacher IDs:", teacherIds);
+  
+              const teacherNames = await Promise.all(
+                  teacherIds.map(async (id) => {
+                      const teacherInfo = await getUserById(id);
+                      return teacherInfo.name;
+                  })
+              );
+  
+              console.log("Teacher Names:", teacherNames);
+  
+              const loggedInUserId = userSettings.id; 
+  
+              const classMates = classData
+                  .filter(user =>
+                      user.teacher === 0 && 
+                      user.id !== loggedInUserId 
+                  )
+                  .map(user => ({ id: user.id, name: user.name }));
+  
+              console.log("Class Mates:", classMates);
+              const className = classDetails.name;
+  
+              setClassSettings({ className, teacher: teacherNames, classMates });
+          } catch (error) {
+              console.error("Error fetching class settings:", error);
+          }
+      };
+  
+      fetchClassSettings();
+  }, [userSettings]);
   
   const handleLeaveClass = async () => {
     try {

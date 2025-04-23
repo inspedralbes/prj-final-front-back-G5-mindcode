@@ -22,66 +22,87 @@ const PfSettings = () => {
   
   useEffect(() => {
     const fetchUser = async () => {
-      try{
-        const userData = await getUserInfo();
-        setUserSettings(userData);
-      }catch(error){
-        console.error("Error fetching user settings:", error);
-      }
+        try {
+            const userData = await getUserInfo();
+            setUserSettings(userData);
+        } catch (error) {
+            console.error("Error fetching user settings:", error);
+        }
     };
-    
+
+    fetchUser();
+}, []); // Este efecto solo se ejecuta una vez al montar el componente
+
+useEffect(() => {
+    if (!userSettings) return; // Espera a que userSettings esté disponible
+
     const fetchClassSettings = async () => {
-          try {
-            const classData = await getClassInfo(); 
-            const classDetails = await getClassDetails(); 
-        
+        try {
+            const classData = await getClassInfo();
+            const classDetails = await getClassDetails();
+
+            console.log("Class Data:", classData);
+
             if (!Array.isArray(classData) || classData.length === 0) {
-              console.warn("No class data found.");
-              return;
+                console.warn("No class data found.");
+                return;
             }
-        
+
             const teacherIds = classDetails.teacher_id || [];
             console.log("Teacher IDs:", teacherIds);
-        
+
             const teacherNames = await Promise.all(
-              teacherIds.map(async (id) => {
-                const teacherInfo = await getUserById(id);
-                return teacherInfo.name; 
-              })
+                teacherIds.map(async (id) => {
+                    const teacherInfo = await getUserById(id);
+                    return teacherInfo.name;
+                })
             );
-        
+
             console.log("Teacher Names:", teacherNames);
-        
+
+            const loggedInUserId = userSettings.id; 
+
             const classMates = classData
-            .filter(user => !teacherIds.includes(String(user.id))) 
-            .map(user => ({ id: user.id, name: user.name }));
-        
+                .filter(user =>
+                    user.teacher === 0 && 
+                    user.id !== loggedInUserId 
+                )
+                .map(user => ({ id: user.id, name: user.name }));
+
+            console.log("Class Mates:", classMates);
             const className = classDetails.name;
-        
+
             setClassSettings({ className, teacher: teacherNames, classMates });
-        
-          } catch (error) {
+        } catch (error) {
             console.error("Error fetching class settings:", error);
-          }
-        };  
- 
-    fetchUser();
+        }
+    };
+
     fetchClassSettings();
-  }, []);
+}, [userSettings]);
   
-  const handleKickUser = async (userId) => {
-    try {
-      await kickClass(userId); // Llama a kickClass con el ID del usuario seleccionado
-  
-      // Actualiza la lista de classMates eliminando al usuario
+const handleKickUser = (user) => {
+  setSelectedUser(user); // Almacena el usuario seleccionado
+  setIsDialogOpen(true); // Abre el diálogo
+};
+
+const confirmKickUser = async () => {
+  try {
+      if (!selectedUser) return;
+
+      await kickClass(selectedUser.id); // Expulsa al usuario seleccionado
+
       setClassSettings((prevSettings) => ({
-        ...prevSettings,
-        classMates: prevSettings.classMates.filter((user) => user.id !== userId),
+          ...prevSettings,
+          classMates: prevSettings.classMates.filter((user) => user.id !== selectedUser.id),
       }));
-    } catch (error) {
+
+      setIsDialogOpen(false); // Cierra el diálogo
+      setSelectedUser(null); // Limpia el usuario seleccionado
+  } catch (error) {
       console.error("Error kicking user from class:", error);
-    }
-  };
+  }
+};
   
   const handleSetCurrentLanguage = (language) => {
     console.log(language);
@@ -122,7 +143,7 @@ const PfSettings = () => {
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
                 <Dialog
                     title="Confirmació"
-                    message={`Estàs segur que vols expulsar a ${selectedUser} de la classe?`}
+                    message={`Estàs segur que vols expulsar a l'alumne de la classe?`}
                     onConfirm={confirmKickUser}
                     onCancel={() => setIsDialogOpen(false)}
                     className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3"
