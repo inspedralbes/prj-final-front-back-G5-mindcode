@@ -15,10 +15,6 @@ const AIHOST = process.env.AIHOST;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const filePath = path.resolve(__dirname, '../quizData.json');
-const quizData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-
-
 // post a message
 router.post('/create', verifyTokenMiddleware, async (req, res) => {
     const { message, language_id, class_id } = req.body;
@@ -178,7 +174,7 @@ router.post('/create', verifyTokenMiddleware, async (req, res) => {
 
 const sendToAI = async (message, language, restriction) => {
     console.log("sending message");
-    const response = await fetch(`${AIHOST}`, {
+    const response = await fetch(`http://${AIHOST}:4567`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -248,50 +244,107 @@ router.post('/api/quizResponse', verifyTokenMiddleware, async (req, res) => {
     }
 });
 
-router.get('/api/quiz', verifyTokenMiddleware, async (req, res) => {
+router.post('/api/quiz', verifyTokenMiddleware, async (req, res) => {
     try {
-        res.status(200).json({
-            status: "success",
-            quiz: quizData.quiz
-        });
+        const userId = req.verified_user_id;
+
+        const messages = await Message.find({ userId })
+            .sort({ _id: -1 }) 
+            .limit(3) 
+            .select('userContent') 
+            .lean(); 
+
+        if (!messages || messages.length === 0) {
+            return res.status(400).json({ error: "No hay mensajes suficientes para generar el cuestionario." });
+        }
+
+        const formattedMessages = messages.map(msg => msg.userContent).join("\n");
+        console.log("Formatted messages for AI:", formattedMessages);
+
+        const restriction = "The response must be in valid JSON format and include exactly four multiple-choice questions.";
+
+        const aiResponse = await sendForQuiz(formattedMessages, restriction);
+
+        if (!aiResponse) {
+            return res.status(500).json({ error: "AI did not return a valid response." });
+        }
+
+        console.log("AI response:", aiResponse);
+
+        res.status(200).json({ quiz: aiResponse });
     } catch (error) {
-        console.error('Error getting quiz:', error);
-        res.status(500).json({
-            status: "error",
-            description: "Internal server error while getting quiz"
-        });
+        console.error('Error processing quiz:', error);
+        res.status(500).json({ error: "Internal server error" });
     }
 });
 
-router.post('/api/quiz', async (req, res) => {
-  try {
-      const  messages  = req.body.messages;
 
-      if (!messages || !Array.isArray(messages) || messages.length === 0) {
-          return res.status(400).json({ error: "Messages are required and must be a non-empty array." });
-      }
+router.post('/api/quizResponse', verifyTokenMiddleware, async (req, res) => {
+const { questions } = req.body;
 
-      const formattedMessages = messages.join("\n");
-
-      console.log("Messages received from user:", formattedMessages);
-
-      const restriction = "The response must be in valid JSON format and include exactly four multiple-choice questions.";
-
-    
-      const aiResponse = await sendForQuiz(formattedMessages,restriction);
-
-      if (!aiResponse) {
-          return res.status(500).json({ error: "AI did not return a valid response." });
-      }
-
-      console.log("AI response:", aiResponse);
-
-      res.status(200).json({ quiz: aiResponse });
-
-  } catch (error) {
-      console.error("Error processing quiz:", error);
-      res.status(500).json({ error: "Internal server error." });
-  }
+if (!questions || !Array.isArray(questions)) {
+return res.status(400).json({
+    status: "error",
+    description: "Questions array is required"
 });
+}
+
+try {
+const answered = questions.map((userAnswer, index) => {
+    const question = quizData.quiz[index];
+    if (!question) return 0;
+    
+    return userAnswer === question.correct_option ? 1 : 0;
+});
+
+return res.status(200).json({
+    status: "success",
+    description: "Quiz response successfully",
+    body: [
+        {
+            answered: answered
+        }
+    ]
+});
+
+} catch (error) {
+console.error('Error in quiz response:', error);
+return res.status(500).json({
+    status: "error",
+    description: "Internal server error while processing quiz response"
+});
+}
+});
+
+
+const sendForQuiz = async (formattedMessages) => {
+console.log("Sending message to AI:", formattedMessages);
+console.log("AIHOST actual:", AIHOST);
+
+const response = await fetch(`http://${AIHOST}:4567/generateQuiz`, {
+method: 'POST',
+headers: {
+    'Content-Type': 'application/json'
+},
+body: JSON.stringify({userPrompt: formattedMessages})
+});
+
+console.log("answer recieved");
+if (!response.ok) {
+throw new Error("La IA respondió con un error: " + response.statusText);
+}
+
+const aiResponse = await response.json();
+
+if (!aiResponse) {
+throw new Error("No se recibió respuesta de la IA");
+}
+
+console.log(aiResponse);
+
+console.log("answer sent back");
+
+return aiResponse;
+};
 
 export default router;

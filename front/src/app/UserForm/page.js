@@ -5,10 +5,10 @@ import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import UserForm from '../components/UserForm';
 import { useAuthStore } from '../../stores/authStore';
-import { generateQuiz,getQuiz} from 'services/communicationManager';
+import { generateQuiz } from '../../services/communicationManager';
 
 const ChatForm = () => {
-  const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState([]); 
   const [answers, setAnswers] = useState({});
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [loading, setLoading] = useState(true);
@@ -20,9 +20,15 @@ const ChatForm = () => {
     setLoading(true);
     setError(null);
     try {
-  
-      const quizData = await getQuiz();
-      setQuestions(quizData);
+      const quizData = await generateQuiz(); 
+      console.log('Quiz data:', quizData);
+
+      if (quizData?.quiz?.quiz && Array.isArray(quizData.quiz.quiz)) {
+        setQuestions(quizData.quiz.quiz);
+      }else{
+        throw new Error('Invalid quiz data format');
+      }
+      setAnswers({});
     } catch (err) {
       setError('Error fetching questions: ' + err.message);
       console.error('Error:', err);
@@ -43,7 +49,7 @@ const ChatForm = () => {
       const answers = questions.map(q => selectedAnswers[q.question_id] ?? -1);
       
       if (answers.includes(-1)) {
-        setError('Por favor responde todas las preguntas');
+        setError('Respon totes les preguntes correctament');
         return;
       }
 
@@ -64,7 +70,7 @@ const ChatForm = () => {
       <div className="flex flex-col w-full">
         <Navbar />
         <UserForm
-
+          questions={questions} 
           handleAnswerSelect={handleAnswerSelect}
           handleSubmit={handleSubmit}
           loading={loading}

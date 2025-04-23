@@ -14,6 +14,7 @@ const FormField = ({ question, value, onChange, required = true }) => {
   return (
     <FormInput
       question={question.text}
+      type={question.type || 'MCQ'}
       options={question.options}
       value={value?.value || ''}
       onChange={handleOptionChange}

@@ -205,44 +205,6 @@ export async function sendMessage(body) {
   }
 }
 
-// obtener pregunta
-// export async function fetchFormQuestions(formId) {
-//   try {
-//       const response = await fetch(`/api/form/questions?form_id=${formId}`, {
-//           method: "GET",
-//           headers: {
-//               "Content-Type": "application/json"
-//           }
-//       });
-      
-//       if (!response.ok) {
-//           throw new Error("Failed to fetch form questions");
-//       }
-      
-//       const data = await response.json();
-//       return data;
-//   } catch (error) {
-//       console.error("Error fetching form questions:", error);
-//       return null;
-//   }
-// }
-
-// Fetch from JSON file
-export async function fetchFormQuestions() {
-  try {
-      const response = await fetch("/formQuestions.json"); 
-
-      if (!response.ok) {
-          throw new Error("Failed to fetch form questions");
-      }
-      
-      const data = await response.json();
-      return data;
-  } catch (error) {
-      console.error("Error fetching form questions:", error);
-      return null;
-  }
-}
 export async function getStudents(class_id) {
   try {
     const response = await fetch(`${URL}/api/user?class_id=${class_id}`);  
@@ -357,33 +319,30 @@ export async function updateLanguages(classId, languages) {
     throw error;
   }
 }
-// export async function generateQuiz(messages) {
-//   console.log("User token:", user_info.token);
-//   if (!Array.isArray(messages) || messages.length === 0) {
-//     throw new Error('Messages must be a non-empty array.');
-//   }
-//   try {
-//     const response = await fetch(`${URL}/api/quiz`, {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//         "Authorization": `Bearer ${user_info.token}`,
-//       },
-//       body: JSON.stringify({ messages })
-//     });
+export async function generateQuiz() {
+  console.log("User token:", user_info.token);
+  try {
+    const response = await fetch(`${URL}/message/api/quiz`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": `Bearer ${user_info.token}`,
+      },
+      body: JSON.stringify({})
+    });
 
-//     if (!response.ok) {
-//       const errorResponse = await response.json();
-//       throw new Error(`Error ${response.status}: ${errorResponse.description || 'Invalid request'}`);
-//     }
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      throw new Error(`Error ${response.status}: ${errorResponse.description || 'Invalid request'}`);
+    }
 
-//     const responseData = await response.json();
-//     return responseData;
-//   } catch (error) {
-//     console.error("Fetch error", error);
-//     throw error;
-//   }
-// }
+    const responseData = await response.json();
+    return responseData.quiz;
+  } catch (error) {
+    console.error("Fetch error", error);
+    throw error;
+  }
+}
 export async function submitQuizResultsIa(quizId, questions) {
   const user_info = useAuthStore.getState().user_info;
 
@@ -396,7 +355,7 @@ export async function submitQuizResultsIa(quizId, questions) {
   }
 
   try {
-    const response = await fetch(`${URL}/api/quizResponse`, {
+    const response = await fetch(`${URL}/message/api/quizResponse`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -451,33 +410,6 @@ export async function addLanguageToClass(classId, language) {
     return await response.json();
   } catch (error) {
     console.error("Error in Communication Manager:", error);
-    throw error;
-  }
-}
-
-export async function getQuiz() {
-  try {
-    const user_info = useAuthStore.getState().user_info;
-    if (!user_info || !user_info.token) {
-      throw new Error('No token provided. User not authenticated.');
-    }
-
-    const response = await fetch(`${URL}/message/api/quiz`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${user_info.token}`
-      }
-    });
-
-    if (!response.ok) {
-      const errorResponse = await response.json();
-      throw new Error(`Error ${response.status}: ${errorResponse.description || 'Invalid request'}`);
-    }
-
-    const data = await response.json();
-    return data.quiz;
-  } catch (error) {
-    console.error('Error getting quiz:', error);
     throw error;
   }
 }
