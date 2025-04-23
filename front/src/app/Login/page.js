@@ -35,14 +35,14 @@ const Signup = () => {
 
   if (!hydrated) {
     return (
-      <div className="flex justify-center items-center h-screen bg-gray-900 text-white">
+      <div className="flex justify-center items-center h-screen bg-gray-800 text-white">
         Loading...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex">
+    <div className="min-h-screen bg-gray-800 text-white flex">
       <div className="w-full lg:w-1/2 p-10 flex items-center justify-center">
         <div className="bg-black/100 p-8 rounded-3xl shadow-2xl max-w-md w-full">
           <h1 className="text-4xl font-bold mb-4">Sign up</h1>
