@@ -8,6 +8,7 @@ import classRoutes from './routes/classRoutes.js';
 import googleRoutes from './routes/googleRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
 import statsRoutes from './routes/statsRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 import { testConnection, connectMongo } from './utils.js';
 import { sequelize } from "./models/index.js";
 import Message from "./schemes/mongoScheme.js"
@@ -25,11 +26,7 @@ admin.initializeApp({
 
 const app = express();
 
-app.use(cors({
-    origin: "*",
-    methods: "GET,POST,PUT,DELETE",
-    credentials: true
-}));
+app.use(cors("*"));
 
 
 const port = process.env.PORT;
@@ -41,6 +38,7 @@ app.use("/api/class", classRoutes);
 app.use("/api/auth/google", googleRoutes);
 app.use("/message", aiRoutes);
 app.use("/api/stats", statsRoutes);
+app.use("/api/user", userRoutes);
 
 testConnection();  
 
