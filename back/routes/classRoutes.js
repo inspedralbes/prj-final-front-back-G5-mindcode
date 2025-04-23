@@ -196,7 +196,7 @@ router.get('/', async (req, res) => {
   });
 
   // get all users from a class
-  router.get("/api/class/user", verifyTokenMiddleware, async (req, res) => {
+  router.get("/user", verifyTokenMiddleware, async (req, res) => {
       const { class_id } = req.query;
   
       if (!class_id) {
@@ -206,7 +206,7 @@ router.get('/', async (req, res) => {
       try {
           const connection = await createConnection();
           const [rows] = await connection.execute(
-              "SELECT name, gmail FROM USER WHERE class_id = ?",
+              "SELECT name, gmail FROM USER WHERE class = ?",
               [class_id]
           );
           await connection.end();

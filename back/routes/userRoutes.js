@@ -4,9 +4,9 @@ import { createConnection } from "../utils.js";
 
 const router = express.Router();
 
-router.get('/api/user/:id', verifyTokenMiddleware, async (req, res) => {
+// Obtener información de un usuario por ID
+router.get('/:id', verifyTokenMiddleware, async (req, res) => {
     const { id } = req.params;
-    console.log("ID: ", id);
 
     if (!id) {
         return res.status(400).json({ error: 'User ID is required' });
@@ -24,14 +24,14 @@ router.get('/api/user/:id', verifyTokenMiddleware, async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        const user = rows[0];
-        res.status(200).json(user);
+        res.status(200).json(rows[0]);
     } catch (error) {
-        console.error('Error fetching user:', error);
+        console.error('Error fetching user:', error); 
         res.status(500).json({ error: 'Internal server error' });
     }
-})
+});
 
+// Actualizar información de un usuario
 router.put('/api/user', verifyTokenMiddleware, async (req, res) => {
     const { id, name, gmail } = req.body;
 
@@ -52,47 +52,46 @@ router.put('/api/user', verifyTokenMiddleware, async (req, res) => {
         console.error('Error updating user:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
-})
+});
 
+// Dejar una clase
 router.put('/api/class/leave', verifyTokenMiddleware, async (req, res) => {
     const { id } = req.body;
-  
+
     if (!id) {
-        return res.status(400).json({ error: "User ID is required" });
+        return res.status(400).json({ error: 'User ID is required' });
     }
-  
+
     try {
         const connection = await createConnection();
-        
         const [result] = await connection.execute(
-            "UPDATE USER SET class = NULL WHERE id = ?", 
+            'UPDATE USER SET class = NULL WHERE id = ?',
             [id]
         );
-        
+
         if (result.affectedRows === 0) {
             await connection.end();
-            return res.status(404).json({ error: "User not found or already not in any class" });
+            return res.status(404).json({ error: 'User not found or already not in any class' });
         }
 
-        // Check if the user is a teacher and update if necessary
+        // Verificar si el usuario es profesor y actualizar si es necesario
         const [userRows] = await connection.execute(
-            "SELECT teacher FROM USER WHERE id = ?",
+            'SELECT teacher FROM USER WHERE id = ?',
             [id]
         );
 
         if (userRows.length > 0 && userRows[0].teacher === 1) {
             await connection.execute(
-                "UPDATE USER SET teacher = 0 WHERE id = ?",
+                'UPDATE USER SET teacher = 0 WHERE id = ?',
                 [id]
             );
         }
 
         await connection.end();
-        
-        res.status(200).json({ message: "Successfully left the class" });
+        res.status(200).json({ message: 'Successfully left the class' });
     } catch (error) {
-        console.error("Error leaving class:", error);
-        res.status(500).json({ error: "Internal server error" });
+        console.error('Error leaving class:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
