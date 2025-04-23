@@ -14,7 +14,7 @@ const UserChat = ({ language, message, messages, handleSendMessage, handleChange
   };
 
   return (
-    <div className="w-full h-full flex flex-col pl-[20%] pr-[20%] bg-gray-100 dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 mx-auto">
+    <div className="w-full h-full flex flex-col pl-[10%] pr-[10%] bg-gray-100 dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 mx-auto">
       <div className="flex-grow overflow-y-auto p-4 space-y-4 rounded-md">
         {messages?.map((msg, index) => (
           <div key={index} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
