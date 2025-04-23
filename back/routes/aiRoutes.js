@@ -6,6 +6,7 @@ import { createConnection } from "../utils.js";
 import { verifyTokenMiddleware } from "../tokens.js";
 import dotenv from 'dotenv';
 import Message from "../schemes/mongoScheme.js"
+import Quiz from "../schemes/quizScheme.js"
 
 dotenv.config();
 
@@ -245,75 +246,104 @@ router.post('/api/quizResponse', verifyTokenMiddleware, async (req, res) => {
 });
 
 router.post('/api/quiz', verifyTokenMiddleware, async (req, res) => {
-    try {
-        const userId = req.verified_user_id;
+  try {
+    const userId = req.verified_user_id;
+    const classId = req.body.class_id;
 
-        const messages = await Message.find({ userId })
-            .sort({ _id: -1 }) 
-            .limit(3) 
-            .select('userContent') 
-            .lean(); 
+    const messages = await Message.find({ userId })
+      .sort({ _id: -1 })
+      .limit(3)
+      .select('userContent')
+      .lean();
 
-        if (!messages || messages.length === 0) {
-            return res.status(400).json({ error: "No hay mensajes suficientes para generar el cuestionario." });
-        }
-
-        const formattedMessages = messages.map(msg => msg.userContent).join("\n");
-        console.log("Formatted messages for AI:", formattedMessages);
-
-        const restriction = "The response must be in valid JSON format and include exactly four multiple-choice questions.";
-
-        const aiResponse = await sendForQuiz(formattedMessages, restriction);
-
-        if (!aiResponse) {
-            return res.status(500).json({ error: "AI did not return a valid response." });
-        }
-
-        console.log("AI response:", aiResponse);
-
-        res.status(200).json({ quiz: aiResponse });
-    } catch (error) {
-        console.error('Error processing quiz:', error);
-        res.status(500).json({ error: "Internal server error" });
+    if (!messages || messages.length === 0) {
+      return res.status(400).json({ error: "There are not enough messages to generate the questionnaire." });
     }
+
+    const formattedMessages = messages.map(msg => msg.userContent).join("\n");
+    console.log('Messages received from user:', formattedMessages);
+    const aiResponse = await sendForQuiz(formattedMessages);
+    console.log('AI response:', aiResponse);
+
+    if (!aiResponse || !aiResponse.quiz || !Array.isArray(aiResponse.quiz)) {
+      return res.status(500).json({ error: "AI did not return a valid response:" });
+    }
+
+    const quiz = new Quiz({
+      userId,
+      classId: classId || 1,
+      questions: aiResponse.quiz,
+      userAnswers: [],
+      createdAt: new Date()
+    });
+
+    const savedQuiz = await quiz.save();
+    console.log('Quiz saved in MongoDB:', savedQuiz._id);
+
+    res.status(200).json({
+      quiz: aiResponse.quiz,
+      quizId: savedQuiz._id
+    });
+
+  } catch (error) {
+    console.error('Error processing quiz:', error);
+    res.status(500).json({ 
+      error: "Internal server error",
+      message: error.message 
+    });
+  }
 });
 
 
 router.post('/api/quizResponse', verifyTokenMiddleware, async (req, res) => {
-const { questions } = req.body;
+    const { quizId, answers } = req.body;
+    const userId = req.verified_user_id;
 
-if (!questions || !Array.isArray(questions)) {
-return res.status(400).json({
-    status: "error",
-    description: "Questions array is required"
-});
-}
+    if (!quizId || !answers || !Array.isArray(answers)) {
+        return res.status(400).json({
+            status: "error",
+            description: "Quiz ID and answers are required"
+        });
+    }
 
-try {
-const answered = questions.map((userAnswer, index) => {
-    const question = quizData.quiz[index];
-    if (!question) return 0;
-    
-    return userAnswer === question.correct_option ? 1 : 0;
-});
+    try {
+        const quiz = await Quiz.findOne({ _id: quizId, userId });
 
-return res.status(200).json({
-    status: "success",
-    description: "Quiz response successfully",
-    body: [
-        {
-            answered: answered
+        if (!quiz) {
+            return res.status(404).json({
+                status: "error",
+                description: "Quiz not found"
+            });
         }
-    ]
-});
 
-} catch (error) {
-console.error('Error in quiz response:', error);
-return res.status(500).json({
-    status: "error",
-    description: "Internal server error while processing quiz response"
-});
-}
+        const results = answers.map(answer => {
+            const question = quiz.questions.find(q => q.question_id === answer.question_id);
+            if (!question) return null;
+
+            return {
+                question_id: answer.question_id,
+                isCorrect: question.correct_option === answer.selected_option,
+                selected_option: answer.selected_option,
+                correct_option: question.correct_option
+            };
+        }).filter(result => result !== null);
+
+        quiz.userAnswers = answers;
+        await quiz.save();
+
+        return res.status(200).json({
+            status: "success",
+            description: "Answers processed successfully",
+            results
+        });
+
+    } catch (error) {
+        console.error('Error processing quiz answers:', error);
+        return res.status(500).json({
+            status: "error",
+            description: "Internal error while processing answers"
+        });
+    }
 });
 
 
