@@ -29,6 +29,7 @@ const SidebarProf = ({changeSelectedField, changeSelectedClass}) => {
 
   const handleClassClick = (class_id) => {
     setOpenClassId(openClassId === class_id ? null : class_id);
+    changeSelectedField("stats");
     setIsLlenguatgesOpen(false);
     setIsAlumnesOpen(false);
   };

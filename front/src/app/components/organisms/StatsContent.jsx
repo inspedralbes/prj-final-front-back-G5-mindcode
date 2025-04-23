@@ -12,6 +12,7 @@ const StatsContent = ({ classId, mode }) => {
 
     const [classStats, setClassStats] = useState([]);
     const [languageStats, setLanguageStats] = useState([]);
+    const [messageCountByDate, setMessageCountByDate] = useState([]);
 
     const class_info = useAuthStore((state) => state.class_info);
 
@@ -31,7 +32,8 @@ const StatsContent = ({ classId, mode }) => {
         if (classStats && class_info?.[0]?.language_info) {
             const result = filterMessageCount(classStats, class_info[0].language_info);
             setLanguageStats(result);
-            
+            const messageCountByDate = filterDate(classStats);
+            setMessageCountByDate(messageCountByDate);
 
         }
     }, [classStats, class_info]);
@@ -55,20 +57,40 @@ const StatsContent = ({ classId, mode }) => {
         return result;
     };
 
+    const filterDate = (data) => {
+        // Create a map of message counts grouped by date
+        const messageCountMap = data.reduce((acc, curr) => {
+            const date = new Date(curr.createdAt).toISOString().split("T")[0]; // Format the date as needed
+            acc[date] = (acc[date] || 0) + 1;
+            return acc;
+        }, {});
+
+        // Convert the map to an array of objects
+        const result = Object.entries(messageCountMap).map(([date, count]) => ({
+            date,
+            count,
+        }));
+
+        console.log("Date results: ", result);
+        return result;
+    }
+
     return (
         <div className="">
             <TitleCard >Estadístiques</TitleCard>
             <div className='w-full max-w-[80%] mx-auto'>
                 {mode === "alumne" ? 
                 <BarGraph 
-                rawData={languageStats} 
+                labels={languageStats.map(item => item.languageName)}
+                dataValues={languageStats.map(item => item.messageCount)} 
                 title={"Missatges totals d'aquest alumne"} 
                 legend={"Missatges per llenguatge"}
                 barColor={"rgba(54, 162, 235, 0.5)"}
                 borderColor={'rgba(54, 162, 235, 1)'} /> 
                 : 
                 <BarGraph 
-                rawData={languageStats} 
+                labels={languageStats.map(item => item.languageName)}
+                dataValues={languageStats.map(item => item.messageCount)} 
                 title={"Missatges totals d'aquesta classe"} 
                 legend={"Missatges per llenguatge"} 
                 barColor={"rgba(54, 162, 235, 0.5)"} 
@@ -79,14 +101,16 @@ const StatsContent = ({ classId, mode }) => {
             <div className='w-full max-w-[80%] mx-auto'>
                 {mode === "alumne" ? 
                 <BarGraph 
-                rawData={classStats} 
+                labels={messageCountByDate.map(item => item.date)}
+                dataValues={messageCountByDate.map(item => item.count)}  
                 title={"Missatges totals d'aquest alumne"} 
                 legend={"Missatges per llenguatge"}
                 barColor={"rgba(54, 162, 235, 0.5)"}
                 borderColor={'rgba(54, 162, 235, 1)'} /> 
                 : 
                 <BarGraph 
-                rawData={classStats} 
+                labels={messageCountByDate.map(item => item.date)}
+                dataValues={messageCountByDate.map(item => item.count)}   
                 title={"Missatges totals d'aquesta classe"} 
                 legend={"Missatges per llenguatge"} 
                 barColor={"rgba(54, 162, 235, 0.5)"} 

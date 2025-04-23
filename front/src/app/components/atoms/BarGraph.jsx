@@ -6,7 +6,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 
 
-const BarGraph = ({ rawData, title, legend, barColor, borderColor }) => {
+const BarGraph = ({ labels, dataValues, title, legend, barColor, borderColor }) => {
 
     const chartRef = useRef(null);
     
@@ -16,7 +16,7 @@ const BarGraph = ({ rawData, title, legend, barColor, borderColor }) => {
         if (chartRef.current) {
           chartRef.current.update(); // Smooth update (no full re-render)
         }
-      }, [rawData, textColor]);
+      }, [labels, dataValues, textColor]);
 
     
 
@@ -39,9 +39,6 @@ const BarGraph = ({ rawData, title, legend, barColor, borderColor }) => {
 
     
 
-    // Process data for Chart.js
-    const labels = rawData.map(item => item.languageName);
-    const dataValues = rawData.map(item => item.messageCount);
 
     const data = {
         labels,
