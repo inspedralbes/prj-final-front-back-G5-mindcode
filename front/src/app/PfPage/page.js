@@ -9,6 +9,7 @@ import StatsContent from "app/components/organisms/StatsContent";
 import { useAuthStore } from '../../stores/authStore';
 import { useState } from "react";
 import { useEffect } from "react";
+import { getUserInfo } from "services/communicationManager";
 
 const Page = () => {
   const [selectedField, setSelectedField] = useState("stats");
@@ -19,7 +20,9 @@ const Page = () => {
   const classInfo = useAuthStore((state) => state.class_info);
 
   useEffect(() => {
+    getUserInfo();
     if (classInfo) {
+      
       setSelectedClass(classInfo[0].class_id);
     }
     setLoading(false);
@@ -36,7 +39,7 @@ const Page = () => {
   };
 
   console.log("Selected class: ", selectedClass);
-  console.log("Class info: ", classInfo[0].class_id);
+  // console.log("Class info: ", classInfo[0].class_id);
 
   return (
     <div className="flex h-screen relative bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50">

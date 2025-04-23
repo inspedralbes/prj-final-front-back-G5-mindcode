@@ -31,6 +31,8 @@ const StatsContent = ({ classId, mode }) => {
         if (classStats && class_info?.[0]?.language_info) {
             const result = filterMessageCount(classStats, class_info[0].language_info);
             setLanguageStats(result);
+            
+
         }
     }, [classStats, class_info]);
 
@@ -55,7 +57,7 @@ const StatsContent = ({ classId, mode }) => {
 
     return (
         <div className="">
-            <TitleCard >Statistics Overview</TitleCard>
+            <TitleCard >Estadístiques</TitleCard>
             <div className='w-full max-w-[80%] mx-auto'>
                 {mode === "alumne" ? 
                 <BarGraph 
@@ -74,6 +76,23 @@ const StatsContent = ({ classId, mode }) => {
                 }
                 
             </div>
+            <div className='w-full max-w-[80%] mx-auto'>
+                {mode === "alumne" ? 
+                <BarGraph 
+                rawData={classStats} 
+                title={"Missatges totals d'aquest alumne"} 
+                legend={"Missatges per llenguatge"}
+                barColor={"rgba(54, 162, 235, 0.5)"}
+                borderColor={'rgba(54, 162, 235, 1)'} /> 
+                : 
+                <BarGraph 
+                rawData={classStats} 
+                title={"Missatges totals d'aquesta classe"} 
+                legend={"Missatges per llenguatge"} 
+                barColor={"rgba(54, 162, 235, 0.5)"} 
+                borderColor={'rgba(54, 162, 235, 1)'} />
+                }
+                </div>
         </div>
     );
 };

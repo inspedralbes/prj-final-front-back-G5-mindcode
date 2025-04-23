@@ -11,6 +11,7 @@ router.get('/:classId', verifyTokenMiddleware,  async (req, res) => {
     
     try {
         const messages = await Message.find({ classId });
+        console.log(messages);
         res.status(200).json(messages);
     } catch (error) {
         res.status(500).json({ error: 'An error occurred while fetching messages.' });

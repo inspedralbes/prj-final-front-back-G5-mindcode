@@ -1,4 +1,3 @@
-import { cloneUniformsGroups } from "three/src/renderers/shaders/UniformsUtils";
 import { useAuthStore } from "../stores/authStore"
 
 const URL = process.env.NEXT_PUBLIC_URL;
@@ -135,6 +134,30 @@ export async function joinClass(class_code) {
     console.error("Error in Communication Manager:", error);
     throw error;
   }
+}
+
+export async function getUserInfo() {
+  console.log("GETTING CLASS INFO");
+  const response = await fetch(`${URL}/api/class/user/info`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      "Authorization": `Bearer ${user_info.token}`,
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error('Error al cargar la clase');
+  }
+  const data = await response.json();
+
+  console.log(data);
+
+  if (data && data.class_info) {
+    useAuthStore.getState().setClass(data.class_info);
+    console.log("Class details saved in store:", data.class_info);
+  }
+  return data;
 }
 
 export async function chargeMessage(userId) {
