@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import FormFields from './organisms/FormFields';
 import FormButton from './atoms/FormButton';
-import QuizResults from './molecules/QuizResults';
 import { generateQuiz, submitQuizResults } from '../../services/communicationManager';
 import { useAuthStore } from '../../stores/authStore';
 
@@ -81,6 +80,15 @@ const UserForm = () => {
       console.log('Quiz results:', results);
       setResults(results);
       setShowResults(true);
+
+      const updatedAnswers = {};
+      results.results.forEach(result => {
+        updatedAnswers[result.question_id] = {
+          selected_option: result.selected_option,
+          isCorrect: result.isCorrect
+        };
+      });
+      setAnswers(updatedAnswers);
     } catch (err) {
       setError('Error submitting answers: ' + err.message);
       console.error('Submit error:', err);
@@ -108,9 +116,11 @@ const UserForm = () => {
           </div>
         ) : showResults ? (
           <div className="space-y-6">
-            <QuizResults 
-              results={results.results} 
+            <FormFields
               questions={questions}
+              answers={answers}
+              onAnswerChange={handleAnswerChange}
+              showResults={true}
             />
             <div className="text-center">
               <FormButton text="Try Again" onClick={loadQuestions} className="mt-4" />

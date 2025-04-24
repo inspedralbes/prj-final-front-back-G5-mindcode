@@ -268,10 +268,9 @@ router.post('/api/quizResponse', verifyTokenMiddleware, async (req, res) => {
       });
     }
 
-    const validAnswers = answers.every(answer => (
-      answer.question_id &&
-      (answer.selected_option !== undefined || answer.value !== undefined)
-    ));
+    const validAnswers = answers.every(answer => {
+      return answer.question_id && (answer.selected_option !== undefined || answer.value !== undefined);
+    });
 
     if (!validAnswers) {
       return res.status(400).json({
@@ -281,7 +280,7 @@ router.post('/api/quizResponse', verifyTokenMiddleware, async (req, res) => {
     }
   
     try {
-      const quiz = await Quiz.findOne({ _id: quizId });
+      const quiz = await Quiz.findById(quizId);
       console.log('Found quiz:', quiz);
   
       if (!quiz) {
@@ -290,40 +289,43 @@ router.post('/api/quizResponse', verifyTokenMiddleware, async (req, res) => {
           description: "Quiz not found"
         });
       }
-  
       const results = answers.map(answer => {
         const question = quiz.questions.find(q => q.question_id === answer.question_id);
         if (!question) return null;
 
+        const baseAnswer = {
+          question_id: answer.question_id,
+          question_type: question.question_type
+        };
+
         if (question.question_type === 'short_answer') {
           return {
-            question_id: answer.question_id,
-            question_type: 'short_answer',
-            submitted_value: answer.value
+            ...baseAnswer,
+            value: answer.value,
+            isCorrect: answer.value?.toLowerCase().trim() === question.correct_answer?.toLowerCase().trim()
           };
         } else {
           return {
-            question_id: answer.question_id,
-            question_type: 'MCQ',
-            isCorrect: question.correct_option === answer.selected_option,
+            ...baseAnswer,
             selected_option: answer.selected_option,
+            isCorrect: answer.selected_option === question.correct_option,
             correct_option: question.correct_option
           };
         }
       }).filter(result => result !== null);
 
-      quiz.userAnswers = answers.map(answer => ({
-        question_id: answer.question_id,
-        question_type: quiz.questions.find(q => q.question_id === answer.question_id)?.question_type || 'MCQ',
-        selected_option: answer.selected_option,
-        value: answer.value
-      }));
+      const updatedQuiz = await Quiz.findByIdAndUpdate(
+        quizId,
+        { $set: { userAnswers: results } },
+        { new: true }
+      );
 
-      await quiz.save();
-  
+      console.log('Quiz response saved in MongoDB:', results);
+
       res.status(200).json({
         status: "success",
-        results
+        results,
+        questions: quiz.questions
       });
     } catch (error) {
       console.error('Error processing quiz response:', error);
