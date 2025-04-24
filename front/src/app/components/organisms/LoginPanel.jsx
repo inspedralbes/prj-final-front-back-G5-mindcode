@@ -8,7 +8,7 @@ import Button from 'app/components/atoms/Button';
 const LoginPanel = ({ onLogin }) => {
   return (
     <Panel>
-      <PanelBox className="mr-0"> 
+      <PanelBox> 
         <Tilt
           tiltMaxAngleX={10}
           tiltMaxAngleY={10}
