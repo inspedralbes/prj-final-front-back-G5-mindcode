@@ -28,8 +28,8 @@ export async function loginGoogle(uid, name, gmail) {
       console.log("setting user info with this info: ", { userId: data.id, role: data.teacher, gmail: data.gmail, token: data.token, name: data.name });
       useAuthStore.getState().setUser({ userId: data.id, role: data.teacher, gmail: data.gmail, token: data.token, name: data.name });
       if (data.class_info) {
+        console.log("setting class info with this info: ", data.class_info);
         useAuthStore.getState().setClass(data.class_info);
-        console.log("Class details saved in store:", data.class_info);
       }
     }
     if (!data) {
@@ -81,15 +81,15 @@ export async function createClass(name) {
 
 export async function getClass(class_id) {
   try {
-      const url = `${URL}/api/class`;
-      const response = await fetch(url);
+    const url = `${URL}/api/class`;
+    const response = await fetch(url);
 
-      if (!response.ok) throw new Error(`Error getting class data: ${await response.text()}`);
+    if (!response.ok) throw new Error(`Error getting class data: ${await response.text()}`);
 
-      return await response.json();
+    return await response.json();
   } catch (error) {
-      console.error("Error in getClass:", error);
-      throw error;
+    console.error("Error in getClass:", error);
+    throw error;
   }
 }
 
@@ -138,22 +138,22 @@ export async function joinClass(class_code) {
 }
 
 export async function chargeMessage(userId) {
-    try {
-        const response = await fetch(`${URL}/messages?userId=${userId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-        if (!response.ok) {
-            throw new Error('Error al cargar los mensajes');
-        }
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error("Error al cargar los mensajes:", error);
-        throw error;
+  try {
+    const response = await fetch(`${URL}/messages?userId=${userId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    if (!response.ok) {
+      throw new Error('Error al cargar los mensajes');
     }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error al cargar los mensajes:", error);
+    throw error;
+  }
 }
 
 

@@ -73,6 +73,12 @@ const SidebarProf = () => {
     setIsAlumnesOpen(false);
   };
 
+  useEffect(() => {
+    if (openClassId) {
+      changeSelectedClass(openClassId);
+    }
+  }, [openClassId]);
+
   const handleAddLanguage = async () => {
     if (!newLanguage || !openClassId) {
       console.error("Error: Class not selected or language name is empty.");
