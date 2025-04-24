@@ -17,15 +17,20 @@ const FormFields = ({ questions, answers, onAnswerChange, showResults }) => {
             value={answers[question.question_id]}
             onChange={(answer) => onAnswerChange(question.question_id, answer)}
             required={question.required}
+            questionId={question.question_id}
           />
           {showResults && answers[question.question_id] && (
             <div className="mt-2 text-sm">
               <span className={`font-medium ${
-                answers[question.question_id].optionIndex === question.correct_option ? 
+                question.question_type === 'short_answer' ?
+                'text-blue-600 dark:text-blue-400' :
+                answers[question.question_id].selected_option === question.correct_option ? 
                 'text-green-600 dark:text-green-400' : 
                 'text-red-600 dark:text-red-400'
               }`}>
-                {answers[question.question_id].optionIndex === question.correct_option ? 
+                {question.question_type === 'short_answer' ?
+                  'Answer submitted' :
+                  answers[question.question_id].selected_option === question.correct_option ? 
                   '✓ Correct answer' : 
                   `✗ The correct answer was: ${question.options[question.correct_option]}`
                 }

@@ -207,49 +207,11 @@ export async function saveMessage(obj) {
     await message.save();
 }
 
-
-router.post('/api/quizResponse', verifyTokenMiddleware, async (req, res) => {
-    const { questions } = req.body;
-
-    if (!questions || !Array.isArray(questions)) {
-        return res.status(400).json({
-            status: "error",
-            description: "Questions array is required"
-        });
-    }
-
-    try {
-        const answered = questions.map((userAnswer, index) => {
-            const question = quizData.quiz[index];
-            if (!question) return 0;
-            
-            return userAnswer === question.correct_option ? 1 : 0;
-        });
-
-        return res.status(200).json({
-            status: "success",
-            description: "Quiz response successfully",
-            body: [
-                {
-                    answered: answered
-                }
-            ]
-        });
-
-    } catch (error) {
-        console.error('Error in quiz response:', error);
-        return res.status(500).json({
-            status: "error",
-            description: "Internal server error while processing quiz response"
-        });
-    }
-});
-
 router.post('/api/quiz', verifyTokenMiddleware, async (req, res) => {
   try {
     const userId = req.verified_user_id;
-    const classId = req.body.class_id;
-
+    const { class_id } = req.body;
+    console.log("en teoria aqui se veria el classid del back: " + class_id);
     const messages = await Message.find({ userId })
       .sort({ _id: -1 })
       .limit(3)
@@ -271,10 +233,9 @@ router.post('/api/quiz', verifyTokenMiddleware, async (req, res) => {
 
     const quiz = new Quiz({
       userId,
-      classId: classId || 1,
+      classId: class_id,
       questions: aiResponse.quiz,
       userAnswers: [],
-      createdAt: new Date()
     });
 
     const savedQuiz = await quiz.save();
@@ -294,56 +255,90 @@ router.post('/api/quiz', verifyTokenMiddleware, async (req, res) => {
   }
 });
 
-
 router.post('/api/quizResponse', verifyTokenMiddleware, async (req, res) => {
-    const { quizId, answers } = req.body;
+  try {
+    const { quizId, answers } = req.body; 
     const userId = req.verified_user_id;
+    console.log('Received quiz response:', { quizId, answers });
 
     if (!quizId || !answers || !Array.isArray(answers)) {
-        return res.status(400).json({
-            status: "error",
-            description: "Quiz ID and answers are required"
-        });
+      return res.status(400).json({
+        status: "error",
+        description: "Quiz ID and answers array are required"
+      });
     }
 
+    const validAnswers = answers.every(answer => (
+      answer.question_id &&
+      (answer.selected_option !== undefined || answer.value !== undefined)
+    ));
+
+    if (!validAnswers) {
+      return res.status(400).json({
+        status: "error",
+        description: "Invalid answer format. Each answer must have question_id and either selected_option or value"
+      });
+    }
+  
     try {
-        const quiz = await Quiz.findOne({ _id: quizId, userId });
+      const quiz = await Quiz.findOne({ _id: quizId });
+      console.log('Found quiz:', quiz);
+  
+      if (!quiz) {
+        return res.status(404).json({
+          status: "error",
+          description: "Quiz not found"
+        });
+      }
+  
+      const results = answers.map(answer => {
+        const question = quiz.questions.find(q => q.question_id === answer.question_id);
+        if (!question) return null;
 
-        if (!quiz) {
-            return res.status(404).json({
-                status: "error",
-                description: "Quiz not found"
-            });
+        if (question.question_type === 'short_answer') {
+          return {
+            question_id: answer.question_id,
+            question_type: 'short_answer',
+            submitted_value: answer.value
+          };
+        } else {
+          return {
+            question_id: answer.question_id,
+            question_type: 'MCQ',
+            isCorrect: question.correct_option === answer.selected_option,
+            selected_option: answer.selected_option,
+            correct_option: question.correct_option
+          };
         }
+      }).filter(result => result !== null);
 
-        const results = answers.map(answer => {
-            const question = quiz.questions.find(q => q.question_id === answer.question_id);
-            if (!question) return null;
+      quiz.userAnswers = answers.map(answer => ({
+        question_id: answer.question_id,
+        question_type: quiz.questions.find(q => q.question_id === answer.question_id)?.question_type || 'MCQ',
+        selected_option: answer.selected_option,
+        value: answer.value
+      }));
 
-            return {
-                question_id: answer.question_id,
-                isCorrect: question.correct_option === answer.selected_option,
-                selected_option: answer.selected_option,
-                correct_option: question.correct_option
-            };
-        }).filter(result => result !== null);
-
-        quiz.userAnswers = answers;
-        await quiz.save();
-
-        return res.status(200).json({
-            status: "success",
-            description: "Answers processed successfully",
-            results
-        });
-
+      await quiz.save();
+  
+      res.status(200).json({
+        status: "success",
+        results
+      });
     } catch (error) {
-        console.error('Error processing quiz answers:', error);
-        return res.status(500).json({
-            status: "error",
-            description: "Internal error while processing answers"
-        });
+      console.error('Error processing quiz response:', error);
+      res.status(500).json({
+        status: "error",
+        description: "Internal server error while processing quiz response"
+      });
     }
+  } catch (error) {
+    console.error('Error in quiz response route:', error);
+    res.status(500).json({
+      status: "error",
+      description: "Internal server error"
+    });
+  }
 });
 
 

@@ -3,7 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import FormFields from './organisms/FormFields';
 import FormButton from './atoms/FormButton';
+import QuizResults from './molecules/QuizResults';
 import { generateQuiz, submitQuizResults } from '../../services/communicationManager';
+import { useAuthStore } from '../../stores/authStore';
 
 const UserForm = () => {
   const [questions, setQuestions] = useState([]); 
@@ -12,16 +14,24 @@ const UserForm = () => {
   const [error, setError] = useState(null); 
   const [results, setResults] = useState(null); 
   const [showResults, setShowResults] = useState(false);
+  const [quizId, setQuizId] = useState(null);
+  const classInfo = useAuthStore((state) => state.class_info);
 
   const loadQuestions = async () => {
     setLoading(true);
     setError(null);
     try {
-      const quizData = await generateQuiz();
+      const classId = classInfo[0]?.class_id;
+      const quizData = await generateQuiz(classId);
       console.log('Quiz data:', quizData);
       
+      if (!quizData.quiz || !quizData.quizId) {
+        throw new Error('Invalid quiz data received');
+      }
+
       console.log('Quiz questions:', quizData.quiz);
       setQuestions(quizData.quiz);
+      setQuizId(quizData.quizId);
       setAnswers({}); 
       setShowResults(false); 
     } catch (err) {
@@ -32,11 +42,11 @@ const UserForm = () => {
     }
   };
 
-  const handleAnswerChange = (questionId, answer) => {
-    console.log(`Answer updated for question ${questionId}:`, answer);
+  const handleAnswerChange = (question_id, answer) => {
+    console.log(`Answer updated for question ${question_id}:`, answer);
     setAnswers(prevAnswers => ({
       ...prevAnswers,
-      [questionId]: answer
+      [question_id]: answer
     }));
   };
 
@@ -45,19 +55,29 @@ const UserForm = () => {
     setLoading(true);
     setError(null);
     try {
-      const answersArray = questions.map(question => ({
-        question_id: question.question_id,
-        question_text: question.question_text,
-        answer: answers[question.question_id]?.value,
-        selected_option: answers[question.question_id]?.optionIndex,
-      }));
+      if (!quizId) {
+        setError('No quiz ID available');
+        return;
+      }
 
-      if (answersArray.some(answer => !answer.answer)) {
+      const answersArray = questions.map(question => {
+        const answer = answers[question.question_id];
+        if (!answer) return null;
+
+        return {
+          question_id: question.question_id,
+          question_text: question.question_text,
+          selected_option: answer.selected_option,
+          value: answer.answer
+        };
+      }).filter(Boolean);
+
+      if (answersArray.length !== questions.length) {
         setError('Respon totes les preguntes');
         return;
       }
 
-      const results = await submitQuizResults(questions[0]?.quiz_id, answersArray);
+      const results = await submitQuizResults(quizId, answersArray);
       console.log('Quiz results:', results);
       setResults(results);
       setShowResults(true);
@@ -87,12 +107,11 @@ const UserForm = () => {
             <FormButton text="Retry" onClick={loadQuestions} className="mt-4" />
           </div>
         ) : showResults ? (
-          <div className="text-center text-gray-600 dark:text-gray-300">
-            <p>Quiz completed! Here are your results:</p>
-            <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded-md text-left">
-              {JSON.stringify(results, null, 2)}
-            </pre>
-            <FormButton text="Try Again" onClick={loadQuestions} className="mt-4" />
+          <div className="space-y-6">
+            <QuizResults results={results.results} />
+            <div className="text-center">
+              <FormButton text="Try Again" onClick={loadQuestions} className="mt-4" />
+            </div>
           </div>
         ) : (
           <div className="space-y-8">

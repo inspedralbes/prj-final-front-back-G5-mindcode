@@ -3,22 +3,16 @@
 import React from 'react';
 import FormInput from '../atoms/FormInput';
 
-const FormField = ({ question, value, onChange, required = true }) => {
-  const handleOptionChange = (selectedOption, selectedIndex) => {
-    onChange({
-      value: selectedOption,
-      optionIndex: selectedIndex
-    });
-  };
-
+const FormField = ({ question, value, onChange, required = true, questionId }) => {
   return (
     <FormInput
       question={question.text}
       type={question.type || 'MCQ'}
       options={question.options}
-      value={value?.value || ''}
-      onChange={handleOptionChange}
+      value={value}
+      onChange={onChange}
       required={required}
+      question_id={questionId}
     />
   );
 };
