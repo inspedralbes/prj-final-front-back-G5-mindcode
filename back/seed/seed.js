@@ -78,9 +78,9 @@ const seed = async () => {
     ]);
 
     await Language.bulkCreate([
-      { idlanguage: 1, name: 'Python' },
-      { idlanguage: 2, name: 'JavaScript' },
-      { idlanguage: 3, name: 'Java' },
+      { id: 1, name: 'Python' },
+      { id: 2, name: 'JavaScript' },
+      { id: 3, name: 'Java' },
     ]);
 
     await Restriction.bulkCreate([

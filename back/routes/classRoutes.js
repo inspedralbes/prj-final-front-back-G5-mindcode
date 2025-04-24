@@ -219,7 +219,9 @@ router.get("/user", verifyTokenMiddleware, async (req, res) => {
 });
 
 router.get("/user/info", verifyTokenMiddleware, async (req, res) => {
+    console.log("userId: ", req.verified_user_id);
     getClassesInfoWithTeacher(req.verified_user_id).then((class_info) => {
+        console.log("Class info found: ", class_info);
         res.status(200).json({ class_info: class_info });
     }).catch((error) => {
         console.error("Error fetching classes:", error);

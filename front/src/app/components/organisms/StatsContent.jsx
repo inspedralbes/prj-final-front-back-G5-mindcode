@@ -54,7 +54,7 @@ const StatsContent = ({ classId, mode }) => {
             messageCount: messageCountMap[language.id] || 0,
         }));
 
-        console.log(result);
+        // console.log(result);
         return result;
     };
 
@@ -75,7 +75,7 @@ const StatsContent = ({ classId, mode }) => {
         result.sort((a, b) => new Date(a.date) - new Date(b.date));
 
 
-        console.log("Date results: ", result);
+        // console.log("Date results: ", result);
         return result;
     }
 
