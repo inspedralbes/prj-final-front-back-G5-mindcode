@@ -19,7 +19,7 @@ const ClassSettings = ({ name, teacher, classMates, onLeaveClass, isStudent = tr
           <p className="mb-4">- {teacher}</p>
         )}
         <br />
-        <h4 className="font-semibold mb-2">Companys/es de classe:</h4>
+        <h4 className="font-semibold mb-2">Alumnes:</h4>
         {classMates.map((user, index) => (
           <div key={index} className="flex justify-between items-center mb-2">
             <span>- {user.name}</span>

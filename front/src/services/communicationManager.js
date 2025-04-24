@@ -136,30 +136,6 @@ export async function joinClass(class_code) {
   }
 }
 
-export async function getUserInfo() {
-  const user_info = useAuthStore.getState().user_info;
-  console.log("GETTING CLASS INFO");
-  const response = await fetch(`${URL}/api/class/user/info`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      "Authorization": `Bearer ${user_info.token}`,
-    }
-  });
-
-  if (!response.ok) {
-    throw new Error('Error al cargar la clase');
-  }
-  const data = await response.json();
-
-  console.log("Data recieved: ", data);
-
-  if (data && data.class_info) {
-    useAuthStore.getState().setClass(data.class_info);
-    console.log("Class details saved in store:", data.class_info);
-  }
-  return data;
-}
 
 export async function chargeMessage(userId) {
   try {
