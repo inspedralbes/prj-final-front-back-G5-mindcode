@@ -27,7 +27,7 @@ const ClassSettings = ({ name, teacher, classMates, onLeaveClass, isStudent = tr
               <Button 
                 text="Eliminar" 
                 className="bg-red-600 text-white px-2 py-1 text-sm rounded-md hover:bg-red-400" 
-                onClick={() => onKickUser(user.id)}
+                onClick={() => onKickUser(user)}
               />
             )}
           </div>

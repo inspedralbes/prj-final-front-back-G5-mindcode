@@ -206,7 +206,7 @@ router.get('/', async (req, res) => {
       try {
           const connection = await createConnection();
           const [rows] = await connection.execute(
-              "SELECT name, gmail FROM USER WHERE class = ?",
+              "SELECT id, name, teacher, gmail FROM USER WHERE class = ?",
               [class_id]
           );
           await connection.end();
@@ -217,6 +217,46 @@ router.get('/', async (req, res) => {
           res.status(500).json({ error: "Internal server error" });
       }
   });
+
+
+  router.put('/leave', verifyTokenMiddleware, async (req, res) => {
+    const { id } = req.body;
+
+    if (!id) {
+        return res.status(400).json({ error: 'User ID is required' });
+    }
+
+    try {
+        const connection = await createConnection();
+        const [result] = await connection.execute(
+            'UPDATE USER SET class = NULL WHERE id = ?',
+            [id]
+        );
+
+        if (result.affectedRows === 0) {
+            await connection.end();
+            return res.status(404).json({ error: 'User not found or already not in any class' });
+        }
+
+        const [userRows] = await connection.execute(
+            'SELECT teacher FROM USER WHERE id = ?',
+            [id]
+        );
+
+        if (userRows.length > 0 && userRows[0].teacher === 1) {
+            await connection.execute(
+                'UPDATE USER SET teacher = 0 WHERE id = ?',
+                [id]
+            );
+        }
+
+        await connection.end();
+        res.status(200).json({ message: 'Successfully left the class' });
+    } catch (error) {
+        console.error('Error leaving class:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 
 export default router;
 

@@ -31,10 +31,10 @@ const PfSettings = () => {
     };
 
     fetchUser();
-}, []); // Este efecto solo se ejecuta una vez al montar el componente
+}, []); 
 
 useEffect(() => {
-    if (!userSettings) return; // Espera a que userSettings esté disponible
+    if (!userSettings) return; 
 
     const fetchClassSettings = async () => {
         try {
@@ -82,32 +82,33 @@ useEffect(() => {
 }, [userSettings]);
   
 const handleKickUser = (user) => {
-  setSelectedUser(user); // Almacena el usuario seleccionado
-  setIsDialogOpen(true); // Abre el diálogo
+  setSelectedUser(user); 
+  setIsDialogOpen(true);
 };
 
 const confirmKickUser = async () => {
   try {
       if (!selectedUser) return;
 
-      await kickClass(selectedUser.id); // Expulsa al usuario seleccionado
+      await kickClass(selectedUser.id); 
 
       setClassSettings((prevSettings) => ({
           ...prevSettings,
           classMates: prevSettings.classMates.filter((user) => user.id !== selectedUser.id),
       }));
 
-      setIsDialogOpen(false); // Cierra el diálogo
-      setSelectedUser(null); // Limpia el usuario seleccionado
+      setIsDialogOpen(false);
+      setSelectedUser(null); 
   } catch (error) {
       console.error("Error kicking user from class:", error);
   }
 };
-  
+
   const handleSetCurrentLanguage = (language) => {
     console.log(language);
     setHighlitedLanguage(language);
     setHighlitedLanguageIndex(classInfo[0].language_info.findIndex(lang => lang.id === language.id));
+    router.push("/PfPage");
   };
   
   if(!userSettings){

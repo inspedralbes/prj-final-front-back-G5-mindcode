@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Button from "app/components/atoms/Button";
-import Dialog from "app/components/atoms/Dialog"; // Importa el componente de diálogo
+import Dialog from "app/components/atoms/Dialog";
 import { updateUserInfo } from "services/communicationManager";
 import Snackbar from "app/components/atoms/Snackbar";
 import { useRouter } from "next/navigation";

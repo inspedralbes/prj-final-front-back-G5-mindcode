@@ -83,7 +83,7 @@ const Page = () => {
   }, [classInfo]);
 
   if (!isClient) {
-    return null; // or a loading spinner, or some fallback UI
+    return null; 
   }
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50">

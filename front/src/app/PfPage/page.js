@@ -5,7 +5,6 @@ import React from "react";
 import Navbar from "../components/Navbar";
 import ContentArea from "../components/ContentArea";
 import SidebarProf from "app/components/SidebarProf";
-import StatsContent from "app/components/organisms/StatsContent";
 import { useAuthStore } from '../../stores/authStore';
 import { useState } from "react";
 import { useEffect } from "react";
@@ -46,8 +45,7 @@ const Page = () => {
       <div className="flex flex-col w-full h-fullc ">
         <Navbar />
         <ContentArea >
-          {selectedField === "stats"?
-          <StatsContent classId={selectedClass?selectedClass:classInfo[0].class_id} mode={"professor"} />:
+          {
           selectedField === "alumne"?<StatsContent classId={selectedClass?selectedClass:classInfo[0].class_id} mode={"alumne"} />:
           selectedField === "llenguatges"?"isLlenguatges":
           "isClass"}

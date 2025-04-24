@@ -29,17 +29,16 @@ const StSettings = () => {
       };
   
       fetchUser();
-  }, []); // Este efecto solo se ejecuta una vez al montar el componente
+  }, []); 
   
   useEffect(() => {
-      if (!userSettings) return; // Espera a que userSettings esté disponible
+      if (!userSettings) return; 
   
       const fetchClassSettings = async () => {
           try {
               const classData = await getClassInfo();
-              const classDetails = await getClassDetails();
-  
               console.log("Class Data:", classData);
+              const classDetails = await getClassDetails();
   
               if (!Array.isArray(classData) || classData.length === 0) {
                   console.warn("No class data found.");
@@ -59,7 +58,7 @@ const StSettings = () => {
               console.log("Teacher Names:", teacherNames);
   
               const loggedInUserId = userSettings.id; 
-  
+
               const classMates = classData
                   .filter(user =>
                       user.teacher === 0 && 
@@ -94,6 +93,7 @@ const StSettings = () => {
     console.log(language);
     setHighlitedLanguage(language);
     setHighlitedLanguageIndex(classInfo[0].language_info.findIndex(lang => lang.id === language.id));
+    router.push("/StPage");
   };
   
   if(!userSettings){
