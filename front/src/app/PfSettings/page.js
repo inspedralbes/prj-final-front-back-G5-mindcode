@@ -15,6 +15,8 @@ const PfSettings = () => {
   const [classSettings, setClassSettings] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedField, setSelectedField] = useState("stats");
+  const [selectedClass, setSelectedClass] = useState(null);
   const [highlitedLanguage, setHighlitedLanguage] = useState(null);
   const [highlitedLanguageIndex, setHighlitedLanguageIndex] = useState(0);
   const router = useRouter();
@@ -32,6 +34,12 @@ const PfSettings = () => {
 
     fetchUser();
 }, []); 
+
+useEffect(() => {
+    if (classInfo) {
+      setSelectedClass(classInfo[0]?.class_id);
+    }
+  }, [classInfo]);
 
 useEffect(() => {
     if (!userSettings) return; 
@@ -104,11 +112,12 @@ const confirmKickUser = async () => {
   }
 };
 
-  const handleSetCurrentLanguage = (language) => {
-    console.log(language);
-    setHighlitedLanguage(language);
-    setHighlitedLanguageIndex(classInfo[0].language_info.findIndex(lang => lang.id === language.id));
-    router.push("/PfPage");
+    const changeSelectedField = (value) => {
+    setSelectedField(value);
+  };
+
+    const changeSelectedClass = (value) => {
+    setSelectedClass(value);
   };
   
   if(!userSettings){
@@ -117,7 +126,9 @@ const confirmKickUser = async () => {
   
   return (
     <div className="flex flex-col md:flex-row h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50">
-        <SidebarProf className="w-full md:w-1/4 lg:w-1/5" classInfo={classInfo} handleSetCurrentLanguage={handleSetCurrentLanguage} />
+        <div className="w-[25vw]">
+        <SidebarProf changeSelectedField={changeSelectedField} changeSelectedClass={changeSelectedClass} />
+        </div>
         <div className="flex flex-col w-full">
             <Navbar className="w-full" />
             <div className="flex flex-grow flex-wrap items-center justify-center gap-4 p-4">
