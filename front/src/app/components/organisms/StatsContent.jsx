@@ -72,6 +72,9 @@ const StatsContent = ({ classId, mode }) => {
             count,
         }));
 
+        result.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+
         console.log("Date results: ", result);
         return result;
     }

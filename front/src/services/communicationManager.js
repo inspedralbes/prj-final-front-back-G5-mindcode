@@ -137,6 +137,7 @@ export async function joinClass(class_code) {
 }
 
 export async function getUserInfo() {
+  const user_info = useAuthStore.getState().user_info;
   console.log("GETTING CLASS INFO");
   const response = await fetch(`${URL}/api/class/user/info`, {
     method: 'GET',
@@ -380,6 +381,8 @@ export async function addLanguageToClass(classId, language) {
 
 export async function fetchAiMessagesClassData(classId) {
 
+  const user_info = useAuthStore.getState().user_info;
+
   const response = await fetch(`${URL}/api/stats/${classId}`, {
     method: 'GET',
     headers: {
@@ -399,6 +402,8 @@ export async function fetchAiMessagesClassData(classId) {
 }
 
 export async function fetchAiMessagesStudentData(studentId) {
+
+  const user_info = useAuthStore.getState().user_info;
 
   const response = await fetch(`${URL}/api/stats/student/${studentId}`, {
     method: 'GET',
