@@ -2,12 +2,13 @@
 
 import React from "react";
 
-const PanelBox = ({ children }) => {
+const PanelBox = ({ children, className = "" }) => {
   return (
-    <div className="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/10 p-8 rounded-3xl shadow-2xl transition-all duration-300 hover:shadow-[0_0_40px_0_rgba(255,255,255,0.2)] hover:scale-[1.01]">
+    <div className={`w-[50%] max-w-[360px] bg-white/10  backdrop-blur-xl border border-white/10 p-8 rounded-lg shadow-2xl transition-all duration-300 hover:shadow-[0_0_40px_0_rgba(255,255,255,0.2)] hover:scale-[1.01] ${className}`}>
       {children}
     </div>
   );
 };
+
 
 export default PanelBox;
