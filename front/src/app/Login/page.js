@@ -37,20 +37,28 @@ const Signup = () => {
   };
 
   if (!hydrated) {
-    return <div className="flex justify-center items-center h-screen bg-gray-800 text-white"></div>;
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-800 text-white"></div>
+    );
   }
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center overflow-visible relative p-4">
-      <Tilt tiltMaxAngleX={6} tiltMaxAngleY={6} glareEnable={false} className="w-[90%] max-w-5xl overflow-visible">
+      <Tilt
+        tiltMaxAngleX={6}
+        tiltMaxAngleY={6}
+        glareEnable={false}
+        className="w-[90%] max-w-5xl overflow-visible"
+      >
         <div className="relative flex flex-row bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl transition-all duration-300 hover:shadow-[0_0_40px_0_rgba(255,255,255,0.2)] hover:scale-[1.01] overflow-visible">
-          <div className="pl-10">
-            <LoginPanel onLogin={handleGoogleLogin} />
-          </div>
-
-          <div className="hidden lg:flex relative w-1/2 h-[500px] z-0 overflow-visible pr-20">
-            <div className="absolute top-1/2 right-[-120px] -translate-y-1/2 w-[700px] h-[500px] overflow-visible">
-              <Canvas shadows camera={{ position: [0, 1, 5], fov: 50 }} style={{ overflow: "visible" }}>
+          <LoginPanel onLogin={handleGoogleLogin} />
+          <div className="hidden lg:flex relative w-1/2 h-[500px] z-0 overflow-visible pr-14">
+            <div className="absolute top-1/2 right-[-100px] -translate-y-1/2 w-[700px] h-[500px] overflow-visible">
+              <Canvas
+                shadows
+                camera={{ position: [0, 1, 5], fov: 50 }}
+                style={{ overflow: "visible" }}
+              >
                 <ambientLight intensity={0.3} />
                 <directionalLight position={[2, 2, 5]} intensity={1} castShadow />
                 <Suspense fallback={null}>
