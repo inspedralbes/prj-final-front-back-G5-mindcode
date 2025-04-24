@@ -1,4 +1,3 @@
-import { cloneUniformsGroups } from "three/src/renderers/shaders/UniformsUtils";
 import { useAuthStore } from "../stores/authStore"
 
 const URL = process.env.NEXT_PUBLIC_URL;
@@ -137,6 +136,31 @@ export async function joinClass(class_code) {
   }
 }
 
+export async function getUserInfo() {
+  const user_info = useAuthStore.getState().user_info;
+  console.log("GETTING CLASS INFO");
+  const response = await fetch(`${URL}/api/class/user/info`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      "Authorization": `Bearer ${user_info.token}`,
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error('Error al cargar la clase');
+  }
+  const data = await response.json();
+
+  console.log("Data recieved: ", data);
+
+  if (data && data.class_info) {
+    useAuthStore.getState().setClass(data.class_info);
+    console.log("Class details saved in store:", data.class_info);
+  }
+  return data;
+}
+
 export async function chargeMessage(userId) {
   try {
     const response = await fetch(`${URL}/messages?userId=${userId}`, {
@@ -179,6 +203,8 @@ export async function getMessagesById() {
 
 
 export async function sendMessage(body) {
+  const user_info = useAuthStore.getState().user_info
+
   console.log("User token:", user_info.token);
   console.log("New Message", body)
   try {
@@ -284,18 +310,20 @@ export async function addLanguageToClass(classId, language) {
       throw new Error("No token provided");
     }
 
+    console.log("language", language);
 
-  if (!classId || !language || !language.idlanguage || !language.name || !language.restrictionId) {
+
+  if (!classId || !language || !language.id || !language.name || !language.restrictionId) {
 
      console.log("classId", classId );
      console.log("language", language );
-      console.log("language.idlanguage", language?.idlanguage );
+      console.log("language.id", language.id? language.id : "No id" );
       console.log("language.name", language.name );
       console.log("language.restrictionId", language.restrictionId );
     throw new Error("Class ID and valid language details are required");
     }
 
-    console.log(`Adding language to class: ${language.name} (ID: ${language.idlanguage}, Restriction: ${language.restrictionId})`);
+    console.log(`Adding language to class: ${language.name} (ID: ${language.id}, Restriction: ${language.restrictionId})`);
 
     const response = await fetch(`${URL}/api/language/class/add`, {
       method: "POST",
@@ -380,6 +408,51 @@ export async function deleteLanguageFromClass(classId, languageId) {
     throw error;
   }
 }
+
+export async function fetchAiMessagesClassData(classId) {
+
+  const user_info = useAuthStore.getState().user_info;
+
+  const response = await fetch(`${URL}/api/stats/${classId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      "Authorization": `Bearer ${user_info.token}`,
+    }
+  })
+
+  if (!response.ok) {
+    throw new Error('Error al cargar los mensajes');
+  }
+
+  const data = await response.json();
+  
+  console.log("Data from fetchAiMessagesClassData:", data);
+  return data;
+}
+
+export async function fetchAiMessagesStudentData(studentId) {
+
+  const user_info = useAuthStore.getState().user_info;
+
+  const response = await fetch(`${URL}/api/stats/student/${studentId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      "Authorization": `Bearer ${user_info.token}`,
+    }
+  })
+
+  if (!response.ok) {
+    throw new Error('Error al cargar los mensajes');
+  }
+
+  const data = await response.json();
+  
+  console.log("Data from fetchAiMessagesClassData:", data);
+  return data;
+}
+
 
 //export userSettings function
 export async function getUserInfo() {

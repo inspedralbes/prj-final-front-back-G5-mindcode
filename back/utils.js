@@ -43,20 +43,36 @@ export const connectMongo = () => {
         useNewUrlParser: true,
         useUnifiedTopology: true
     })
-    .then(() => console.log('Conectado a MongoDB'))
-    .catch(err => console.error('Error al conectar a MongoDB:', err));
+        .then(() => console.log('Conectado a MongoDB'))
+        .catch(err => console.error('Error al conectar a MongoDB:', err));
 }
 
 
 
 export async function getClassesInfoWithTeacher(user_id) {
-    const classesWithTeacher = await getClassesWithTeacher(user_id);
     let class_info = [];
-    if (classesWithTeacher.length > 0) {
-        for (const classId of classesWithTeacher) {
+    const connection = await createConnection();
+    const [rows] = await connection.execute(
+        "SELECT teacher, class FROM USER WHERE id = ?",
+        [user_id]
+    );
+    await connection.end();
+    if (rows[0].teacher === 0) {
+        const classId = rows[0].class;
+        if (classId) {
             class_info.push(await getClassInfo(classId));
+        } else {
+            console.log("No class found for student");
         }
-        console.log(class_info);
+    } else {
+        const classesWithTeacher = await getClassesWithTeacher(user_id);
+
+        if (classesWithTeacher.length > 0) {
+            for (const classId of classesWithTeacher) {
+                class_info.push(await getClassInfo(classId));
+            }
+            console.log(class_info);
+        }
     }
     return class_info;
 }
