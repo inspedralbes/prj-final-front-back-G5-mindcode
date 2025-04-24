@@ -108,7 +108,10 @@ const UserForm = () => {
           </div>
         ) : showResults ? (
           <div className="space-y-6">
-            <QuizResults results={results.results} />
+            <QuizResults 
+              results={results.results} 
+              questions={questions}
+            />
             <div className="text-center">
               <FormButton text="Try Again" onClick={loadQuestions} className="mt-4" />
             </div>
