@@ -20,7 +20,7 @@ router.post('/', async (req, res) => {
         );
         await connection.end();
 
-        res.status(201).json({ idlanguage: result.insertId, name });
+        res.status(201).json({ id: result.insertId, name });
     } catch (error) {
         console.error('Error creating language:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -29,7 +29,7 @@ router.post('/', async (req, res) => {
 
 router.post('/class/add', async (req, res) => {
     const { classId, language } = req.body;
-    if (!classId || !language || !language.name || !language.idlanguage || !language.restrictionId) {
+    if (!classId || !language || !language.name || !language.id || !language.restrictionId) {
         return res.status(400).json({ error: 'Invalid input. Class ID, language ID, name, and restrictionId are required.' });
     }
     try {
@@ -43,8 +43,8 @@ router.post('/class/add', async (req, res) => {
             return res.status(404).json({ error: 'Class not found' });
         }
         const [languageRows] = await connection.execute(
-            'SELECT idlanguage, name FROM LANGUAGE WHERE idlanguage = ?',
-            [language.idlanguage]
+            'SELECT id, name FROM LANGUAGE WHERE id = ?',
+            [language.id]
         );
         if (languageRows.length === 0) {
             await connection.end();
@@ -55,7 +55,7 @@ router.post('/class/add', async (req, res) => {
             return res.status(400).json({ error: 'Invalid restriction ID. Must be 1, 2, or 3.' });
         }
         let currentLanguages = JSON.parse(classRows[0].language || "[]");
-        if (currentLanguages.some(lang => lang.idlanguage === language.idlanguage)) {
+        if (currentLanguages.some(lang => lang.id === language.id)) {
             await connection.end();
             return res.status(409).json({ error: 'Language already exists in class' });
         }
@@ -75,7 +75,7 @@ router.post('/class/add', async (req, res) => {
 router.get("/", verifyTokenMiddleware, async (req, res) => {
   try {
     const connection = await createConnection();
-    const [rows] = await connection.execute("SELECT idlanguage, name FROM LANGUAGE");
+    const [rows] = await connection.execute("SELECT id, name FROM LANGUAGE");
     await connection.end();
     res.status(200).json(rows);
   } catch (error) {
@@ -133,7 +133,7 @@ router.get("/", verifyTokenMiddleware, async (req, res) => {
             return res.status(404).json({ error: "Class not found" });
         }
 
-        const language_info = rows.map(({ idlanguage, name }) => ({ idlanguage, name }));
+        const language_info = rows.map(({ id, name }) => ({ id, name }));
         res
             .status(200)
             .json( language_info );
@@ -147,6 +147,9 @@ router.get("/", verifyTokenMiddleware, async (req, res) => {
 router.delete("/class", verifyTokenMiddleware, async (req, res) => {
     const classId = parseInt(req.query.classId);
     const languageId = parseInt(req.query.languageId);
+
+    console.log("classId", classId);
+    console.log("languageId", languageId);
   
     if (!classId || !languageId) {
       return res.status(400).json({ error: 'classId and languageId are required' });
@@ -166,10 +169,14 @@ router.delete("/class", verifyTokenMiddleware, async (req, res) => {
       }
   
       let currentLanguages = JSON.parse(classRows[0].language || "[]");
+
+      console.log("currentLanguages", currentLanguages);
   
       const filteredLanguages = currentLanguages.filter(
-        (lang) => lang.idlanguage !== languageId
+        (lang) => lang.id !== languageId
       );
+
+      console.log("filteredLanguages", filteredLanguages);
   
       if (filteredLanguages.length === currentLanguages.length) {
         await connection.end();

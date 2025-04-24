@@ -7,8 +7,9 @@ import {
   deleteLanguageFromClass
 } from "services/communicationManager.js";
 import { useAuthStore } from "../../stores/authStore";
+import { useRouter } from 'next/navigation';
 
-const SidebarProf = () => {
+const SidebarProf = ({ changeSelectedField, changeSelectedClass }) => {
   const [openClassId, setOpenClassId] = useState(null);
   const [newLanguage, setNewLanguage] = useState("");
   const [showInput, setShowInput] = useState(false);
@@ -17,8 +18,17 @@ const SidebarProf = () => {
   const [languagesByClass, setLanguagesByClass] = useState({});
   const [editingLanguage, setEditingLanguage] = useState({ classId: null, index: null, name: '' });
 
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      console.log("languagesByClass:", languagesByClass);
+    }, 5000);
+
+    return () => clearInterval(intervalId); // Cleanup on component unmount
+  }, [languagesByClass]);
+
   const user_info = useAuthStore((state) => state.user_info);
   const class_info = useAuthStore((state) => state.class_info);
+  const router = useRouter();
 
   const handleEditLanguage = (classId, index, name) => {
     setEditingLanguage({ classId, index, name });
@@ -55,20 +65,24 @@ const SidebarProf = () => {
   useEffect(() => {
     const initialLanguages = {};
     class_info.forEach((classItem) => {
+      console.log(classItem.language_info);
       initialLanguages[classItem.class_id] = classItem.language_info
-        .filter((lang) => typeof lang === "object" && lang.idlanguage)
+        // .filter((lang) => {console.log(lang); return typeof lang === "object" && lang.id})
         .map((lang) => ({
-          idlanguage: lang.idlanguage,
+          id: lang.id,
           name: lang.name,
           restrictionId: lang.restrictionId,
           isActive: lang.isActive ?? true,
         }));
+
+        console.log("initial languages", initialLanguages[classItem.class_id]);
     });
     setLanguagesByClass(initialLanguages);
   }, [class_info]);
 
   const handleClassClick = (class_id) => {
     setOpenClassId(openClassId === class_id ? null : class_id);
+    changeSelectedField("stats");
     setIsLlenguatgesOpen(false);
     setIsAlumnesOpen(false);
   };
@@ -98,11 +112,11 @@ const SidebarProf = () => {
       );
 
       if (!existingLanguage) {
-        console.log(`Language "${newLanguage}" not found in database, creating it...`);
+        // console.log(`Language "${newLanguage}" not found in database, creating it...`);
         const newLangResponse = await createLanguage(newLanguage);
 
         existingLanguage = {
-          idlanguage: newLangResponse.idlanguage,
+          id: newLangResponse.id,
           name: newLangResponse.name,
           restrictionId: Math.floor(Math.random() * 3) + 1,
         };
@@ -132,7 +146,7 @@ const SidebarProf = () => {
 
     if (
       typeof languageToDelete !== "object" ||
-      !languageToDelete?.idlanguage ||
+      !languageToDelete?.id ||
       !classId
     ) {
       console.error(" Datos inválidos al eliminar lenguaje:", {
@@ -143,9 +157,9 @@ const SidebarProf = () => {
     }
 
     try {
-      console.log(`Eliminando lenguaje "${languageToDelete.name}" (ID: ${languageToDelete.idlanguage}) de la clase ${classId}`);
+      // console.log(`Eliminando lenguaje "${languageToDelete.name}" (ID: ${languageToDelete.id}) de la clase ${classId}`);
 
-      await deleteLanguageFromClass(classId, languageToDelete.idlanguage); 
+      await deleteLanguageFromClass(classId, languageToDelete.id);
 
       const updatedLanguages = [...languagesByClass[classId]];
       updatedLanguages.splice(index, 1);
@@ -155,41 +169,55 @@ const SidebarProf = () => {
         [classId]: updatedLanguages,
       }));
 
-      console.log(`Lenguaje eliminado correctamente de la clase ${classId}`);
+      // console.log(`Lenguaje eliminado correctamente de la clase ${classId}`);
     } catch (error) {
       console.error(" Error deleting language:", error.message);
     }
   };
 
- const toggleLanguageActiveStatus = async (classId, index) => {
+  const toggleLanguageActiveStatus = async (classId, index) => {
     try {
       const updatedLanguages = [...languagesByClass[classId]];
       const currentLang = updatedLanguages[index];
-  
+
       const updatedLang = {
         ...currentLang,
         isActive: !currentLang.isActive
       };
-  
+
       updatedLanguages[index] = updatedLang;
-  
+
       await updateLanguages(classId, updatedLanguages);
-  
+
       setLanguagesByClass((prev) => ({
         ...prev,
         [classId]: updatedLanguages,
       }));
-  
-      console.log(`Idioma "${updatedLang.name}" ahora está ${updatedLang.isActive ? "activo" : "inactivo"}`);
+
+      // console.log(`Idioma "${updatedLang.name}" ahora está ${updatedLang.isActive ? "activo" : "inactivo"}`);
     } catch (error) {
       console.error("Error al cambiar el estado del lenguaje:", error.message);
     }
   };
 
+  const handleStudentClick = (studentId) => () => {
+    changeSelectedField("alumne");
+    changeSelectedClass(studentId);
+  }
+
+  const handleStatsClick = () => {
+    changeSelectedField("stats");
+    changeSelectedClass(openClassId);
+  }
+
+  const handleRedirect = async () => {
+    router.push('/PfSettings');
+  }
+
   return (
-    <div className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white w-1/4 h-full p-4 border-r border-gray-300 dark:border-gray-700">
+    <div className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white h-full p-4 border-r border-gray-300 dark:border-gray-700">
       <div className="text-center mb-6">
-        <div className="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 mx-auto mb-2"></div>
+        <button className="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 mx-auto mb-2" onClick={handleRedirect}></button>
         <h2 className="text-lg font-semibold">PROFESSOR</h2>
         <p className="text-sm text-gray-600 dark:text-gray-400">Admin</p>
       </div>
@@ -206,7 +234,7 @@ const SidebarProf = () => {
               </button>
 
               {openClassId === class_id && (
-                <div className="mt-1 space-y-1 pl-2">
+                <div className="mt-1 space-y-2 pl-2">
                   <button
                     className="w-full px-4 py-2 bg-gray-500 hover:bg-gray-600 rounded-md text-white"
                     onClick={() => setIsLlenguatgesOpen(!isLlenguatgesOpen)}
@@ -236,18 +264,18 @@ const SidebarProf = () => {
                                 <button onClick={() => handleEditLanguage(class_id, index, lang.name)} className="px-2 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600">✏️</button>
                                 <button onClick={() => handleDeleteLanguage(class_id, index)} className="px-1 py-1 bg-red-500 text-white rounded-md hover:bg-red-600">🗑️</button>
                               </>
-                              
+
                             )}
-                             <label className="relative inline-flex items-center cursor-pointer">
-                            <input
-                              type="checkbox"
-                              checked={lang.isActive}
-                              onChange={() => toggleLanguageActiveStatus(class_id, index)}
-                              className="sr-only peer"
-                            />
-                            <div className="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-green-500 transition-colors duration-300"></div>
-                            <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-300 peer-checked:translate-x-full"></                          div>
-                          </label>
+                            <label className="relative inline-flex items-center cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={lang.isActive}
+                                onChange={() => toggleLanguageActiveStatus(class_id, index)}
+                                className="sr-only peer"
+                              />
+                              <div className="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-green-500 transition-colors duration-300"></div>
+                              <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-300 peer-checked:translate-x-full"></                          div>
+                            </label>
 
                           </div>
                         ))
@@ -278,7 +306,11 @@ const SidebarProf = () => {
                     </div>
                   )}
 
-                  <button className="w-full px-4 py-2 bg-gray-500 hover:bg-gray-600 rounded-md text-white">📊 Estadístiques</button>
+                  <button className="w-full px-4 py-2 bg-gray-500 hover:bg-gray-600 rounded-md text-white"
+                    onClick={handleStatsClick}
+                  >
+                    📊 Estadístiques
+                  </button>
 
                   <button
                     className="w-full px-4 py-2 bg-gray-500 hover:bg-gray-600 rounded-md text-white"
@@ -291,7 +323,9 @@ const SidebarProf = () => {
                     <div className="ml-4 mt-2 space-y-2">
                       {classmate_info && classmate_info.length > 0 ? (
                         classmate_info.map((student) => (
-                          <div key={student.id} className="px-3 py-2 bg-blue-200 dark:bg-blue-800 text-black dark:text-white rounded-md">
+                          <div key={student.id} className="px-3 py-2 bg-blue-200 dark:bg-blue-800 text-black dark:text-white rounded-md"
+                            onClick={handleStudentClick(student.id)}
+                          >
                             {student.name}
                           </div>
                         ))
