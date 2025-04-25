@@ -36,9 +36,9 @@ const JoinClassForm = () => {
   return (
     <Panel>
       <PanelBox>
-      <h5 className="text-white text-1xl font-bold mb-6 text-center">
+      <div>
       <Title>Uneix-te a una classe existent</Title>
-      </h5>
+      </div>
       <Input
       placeholder="Class Code"
       value={classCode}
