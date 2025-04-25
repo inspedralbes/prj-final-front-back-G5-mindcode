@@ -155,6 +155,16 @@ const SidebarProf = ({ changeSelectedField, changeSelectedClass }) => {
       });
       return;
     }
+    
+    const countLanguages = (classId) => {
+      const languages = languagesByClass[classId] || [];
+      return languages.length;
+    };
+
+    if (countLanguages(classId) <= 1) {
+      console.error("Error: Cannot delete the last remaining language.");
+      return;
+    }
 
     try {
       // console.log(`Eliminando lenguaje "${languageToDelete.name}" (ID: ${languageToDelete.id}) de la clase ${classId}`);
@@ -180,12 +190,19 @@ const SidebarProf = ({ changeSelectedField, changeSelectedClass }) => {
       const updatedLanguages = [...languagesByClass[classId]];
       const currentLang = updatedLanguages[index];
 
+      if (currentLang.isActive && updatedLanguages.filter(lang => lang.isActive).length === 1) {
+        console.error("Error: Cannot deactivate the last remaining active language.");
+        return;
+      }
+
       const updatedLang = {
         ...currentLang,
         isActive: !currentLang.isActive
       };
 
       updatedLanguages[index] = updatedLang;
+
+
 
       await updateLanguages(classId, updatedLanguages);
 
