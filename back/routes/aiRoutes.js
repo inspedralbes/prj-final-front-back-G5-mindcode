@@ -314,9 +314,17 @@ router.post('/api/quizResponse', verifyTokenMiddleware, async (req, res) => {
         }
       }).filter(result => result !== null);
 
+      const correctAnswersCount = results.filter(result => result.isCorrect).length;
+
       const updatedQuiz = await Quiz.findByIdAndUpdate(
         quizId,
-        { $set: { userAnswers: results } },
+        { 
+          $set: { 
+            userAnswers: results,
+            correctAnswers: correctAnswersCount,
+            'questions.$[].isAnswered': true 
+          } 
+        },
         { new: true }
       );
 

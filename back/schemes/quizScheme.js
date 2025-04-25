@@ -1,9 +1,11 @@
 import mongoose from 'mongoose';
 
 const quizSchema = new mongoose.Schema({
+  correctAnswers: { type: Number, default: 0 },
   userId: { type: Number, required: true },
   classId: { type: Number, required: true },
   questions: [{
+    isAnswered: { type: Boolean, default: false },
     question_id: { type: Number, required: true },
     question_text: { type: String, required: true },
     question_type: { type: String, default: 'MCQ' },
