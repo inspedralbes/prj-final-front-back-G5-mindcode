@@ -5,6 +5,7 @@ import { googleLogin } from '../../services/firebase';
 import { useRouter } from 'next/navigation';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
+import { useAuthStore } from '../../stores/authStore';
 import dynamic from 'next/dynamic';
 import Tilt from 'react-parallax-tilt';
 
@@ -12,6 +13,7 @@ const RobotModel = dynamic(() => import('../components/RobotModel'), { ssr: fals
 
 const Signup = () => {
   const [hydrated, setHydrated] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -20,8 +22,21 @@ const Signup = () => {
 
   const handleGoogleLogin = async () => {
     try {
-      const userData = await googleLogin();
+      const { userData, photoURL } = await googleLogin();
+      console.log('User data:', userData);
       if (!userData) return;
+
+      setUserInfo({
+        ...userData,
+      });
+
+      useAuthStore.setState((state) => ({
+        user_info: {
+          ...state.user_info, 
+          photoURL,          
+        },
+      }));
+
 
       const userDataParsed = userData.userData;
       if (userDataParsed.teacher == 1) {

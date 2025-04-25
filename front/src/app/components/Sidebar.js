@@ -33,9 +33,15 @@ const Sidebar = ({handleSetCurrentLanguage}) => {
     <div className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white w-1/4 h-full p-4 border-r border-gray-300 dark:border-gray-700">
       <div className="text-center mb-6">
         <button 
-          className="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 mx-auto mb-2"
+          className="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 mx-auto mb-2 overflow-hidden"
           onClick={handleRedirect}
-        ></button>
+        >
+          <img 
+            src={user_info.photoURL} 
+            alt="avatar" 
+            className="w-full h-full object-cover"
+          />
+        </button>
         <h2 className="text-lg font-semibold">ALUMNE</h2>
       </div>
       <nav className="space-y-4">
