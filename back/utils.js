@@ -1,6 +1,8 @@
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import Message from "./schemes/mongoScheme.js"
+import { CLOUD_RESOURCE_MANAGER } from 'google-auth-library/build/src/auth/baseexternalclient.js';
 
 dotenv.config();
 
@@ -60,7 +62,7 @@ export async function getClassesInfoWithTeacher(user_id) {
     if (rows[0].teacher === 0) {
         const classId = rows[0].class;
         if (classId) {
-            class_info.push(await getClassInfo(classId));
+            class_info.push(await getClassInfo(classId, user_id));
         } else {
             console.log("No class found for student");
         }
@@ -69,7 +71,7 @@ export async function getClassesInfoWithTeacher(user_id) {
 
         if (classesWithTeacher.length > 0) {
             for (const classId of classesWithTeacher) {
-                class_info.push(await getClassInfo(classId));
+                class_info.push(await getClassInfo(classId, user_id));
             }
             console.log(class_info);
         }
@@ -102,7 +104,7 @@ export function getClassesWithTeacher(user_id) {
     });
 }
 
-export function getClassInfo(class_id) {
+export function getClassInfo(class_id, user_id) {
     return new Promise(async (resolve, reject) => {
         try {
             const connection = await createConnection();
@@ -153,9 +155,25 @@ export function getClassInfo(class_id) {
 
                 console.log(language);
                 const language_info = JSON.parse(language);
+
                 console.log(language_info);
 
-                resolve({ class_id, name, language_info, teacher_info, classmate_info });
+                const messages = await Message.find({ userId: user_id });
+
+                const languagesWithMessages = language_info.map(language => {
+                    // Find all items where language_id matches the current language's id
+                    const messagesIncluded = messages.filter(message => message.languageId === language.id);
+                    
+                    // Return the language object with the new messages array
+                    return {
+                      ...language, // Keep existing properties
+                      messages: messagesIncluded,    // Add the filtered messages
+                    };
+                  });
+
+                  console.log(languagesWithMessages)
+
+                resolve({ class_id, name, language_info: languagesWithMessages, teacher_info, classmate_info });
             }
         } catch (error) {
             reject(error);

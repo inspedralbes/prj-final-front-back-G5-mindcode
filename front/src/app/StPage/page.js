@@ -73,9 +73,9 @@ const Page = () => {
   useEffect(() => {
     console.log("classInfo", classInfo);
     if (classInfo && classInfo.length > 0) {
-      classInfo[0].language_info.forEach(language => {
+      /*classInfo[0].language_info.forEach(language => {
         language.messages = [];
-      });
+      });*/
       setIsClient(true);
       setHighlitedLanguage(classInfo[0].language_info[0])
       setMessages(classInfo[0].language_info.map(lang => ({ messages: [] })));
