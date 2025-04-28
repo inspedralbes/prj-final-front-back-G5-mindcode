@@ -6,7 +6,7 @@ import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import UserChat from "../components/UserChat";
 import { useAuthStore } from '../../stores/authStore';
-import { sendMessage } from "services/communicationManager"; 
+import { sendMessage, getUserInfo } from "services/communicationManager";
 
 
 const Page = () => {
@@ -18,7 +18,7 @@ const Page = () => {
 
   const classInfo = useAuthStore((state) => state.class_info);
   const userInfo = useAuthStore((state) => state.user_info);
-  
+
 
   const handleSendMessage = async () => {
     console.log("MESSAGE BEING SENT");
@@ -71,7 +71,8 @@ const Page = () => {
   };
 
   useEffect(() => {
-    if (classInfo) {
+    console.log("classInfo", classInfo);
+    if (classInfo && classInfo.length > 0) {
       classInfo[0].language_info.forEach(language => {
         language.messages = [];
       });
@@ -79,26 +80,28 @@ const Page = () => {
       setHighlitedLanguage(classInfo[0].language_info[0])
       setMessages(classInfo[0].language_info.map(lang => ({ messages: [] })));
       setHighlitedLanguageIndex(0);
-
-
-
     }
   }, [classInfo]);
 
+  useEffect(() => {
+    getUserInfo();
+  }
+    , []);
+
   if (!isClient) {
-    return null; // or a loading spinner, or some fallback UI
+    return null; 
   }
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50">
-      <Sidebar classInfo={classInfo} handleSetCurrentLanguage={handleSetCurrentLanguage} />
+      <Sidebar handleSetCurrentLanguage={handleSetCurrentLanguage} />
       <div className="flex flex-col w-full">
         <Navbar />
-        <UserChat 
-        language={highlitedLanguage} 
-        message={message} 
-        messages={messages[highlitedLanguageIndex].messages} 
-        handleSendMessage={handleSendMessage} 
-        handleChangeMessage={handleSetMessage} 
+        <UserChat
+          language={highlitedLanguage}
+          message={message}
+          messages={messages[highlitedLanguageIndex].messages}
+          handleSendMessage={handleSendMessage}
+          handleChangeMessage={handleSetMessage}
         />
       </div>
     </div>

@@ -1,0 +1,41 @@
+{
+    "endpoint": "/api/language/class",
+    "method": "DELETE",
+    "description": "Remove a specific language from a given class",
+    "parameters": {
+      "classId": {
+        "type": "integer",
+        "description": "The ID of the class to remove the language from"
+      },
+      "languageId": {
+        "type": "integer",
+        "description": "The ID of the language to remove from the class"
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Language removed successfully",
+        "body": {
+          "classId": "int",
+          "languages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "idlanguage": "int",
+                "name": "string",
+                "restrictionId": "integer"
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Invalid input (classId and languageId required)"
+      },
+      "404": {
+        "description": "Class not found or language not in class"
+      }
+    }
+  }
+  

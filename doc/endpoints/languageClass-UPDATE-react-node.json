@@ -1,3 +1,4 @@
+
 {
     "endpoint": "/api/language/class",
     "method": "PUT",
@@ -32,7 +33,7 @@
     },
     "responses": {
         "200": {
-            "description": "Languages modified successfully",
+            "description": "Language modified successfully",
             "body": {
                 "classId": "int",
                 "languages": {

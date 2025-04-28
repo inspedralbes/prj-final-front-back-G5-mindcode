@@ -1,10 +1,9 @@
-import { cloneUniformsGroups } from "three/src/renderers/shaders/UniformsUtils";
 import { useAuthStore } from "../stores/authStore"
 
 const URL = process.env.NEXT_PUBLIC_URL;
 
 const user_info = useAuthStore.getState().user_info
-const class_details = useAuthStore.getState().class_details
+const class_info = useAuthStore.getState().class_info
 
 // const setUser = useAuthStore((state) => state.setUser);
 // const setClass = useAuthStore((state) => state.setClass);
@@ -28,8 +27,8 @@ export async function loginGoogle(uid, name, gmail) {
       console.log("setting user info with this info: ", { userId: data.id, role: data.teacher, gmail: data.gmail, token: data.token, name: data.name });
       useAuthStore.getState().setUser({ userId: data.id, role: data.teacher, gmail: data.gmail, token: data.token, name: data.name });
       if (data.class_info) {
+        console.log("setting class info with this info: ", data.class_info);
         useAuthStore.getState().setClass(data.class_info);
-        console.log("Class details saved in store:", data.class_info);
       }
     }
     if (!data) {
@@ -81,15 +80,15 @@ export async function createClass(name) {
 
 export async function getClass(class_id) {
   try {
-      const url = `${URL}/api/class`;
-      const response = await fetch(url);
+    const url = `${URL}/api/class`;
+    const response = await fetch(url);
 
-      if (!response.ok) throw new Error(`Error getting class data: ${await response.text()}`);
+    if (!response.ok) throw new Error(`Error getting class data: ${await response.text()}`);
 
-      return await response.json();
+    return await response.json();
   } catch (error) {
-      console.error("Error in getClass:", error);
-      throw error;
+    console.error("Error in getClass:", error);
+    throw error;
   }
 }
 
@@ -137,23 +136,24 @@ export async function joinClass(class_code) {
   }
 }
 
+
 export async function chargeMessage(userId) {
-    try {
-        const response = await fetch(`${URL}/messages?userId=${userId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-        if (!response.ok) {
-            throw new Error('Error al cargar los mensajes');
-        }
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error("Error al cargar los mensajes:", error);
-        throw error;
+  try {
+    const response = await fetch(`${URL}/messages?userId=${userId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    if (!response.ok) {
+      throw new Error('Error al cargar los mensajes');
     }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error al cargar los mensajes:", error);
+    throw error;
+  }
 }
 
 
@@ -179,6 +179,8 @@ export async function getMessagesById() {
 
 
 export async function sendMessage(body) {
+  const user_info = useAuthStore.getState().user_info
+
   console.log("User token:", user_info.token);
   console.log("New Message", body)
   try {
@@ -205,22 +207,21 @@ export async function sendMessage(body) {
   }
 }
 
-export async function getStudents(class_id) {
-  try {
-    const response = await fetch(`${URL}/api/user?class_id=${class_id}`);  
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status}`);
-    }
-    const data = await response.json();
-    return data.body;  
-  } catch (error) {
-    console.error("Error fetching students:", error);
-    throw error;  
-  }
-}
+// export async function getStudents(class_id) {
+//   try {
+//     const response = await fetch(`${URL}/api/user?class_id=${class_id}`);  
+//     if (!response.ok) {
+//       throw new Error(`Error: ${response.status}`);
+//     }
+//     const data = await response.json();
+//     return data.body;  
+//   } catch (error) {
+//     console.error("Error fetching students:", error);
+//     throw error;  
+//   }
+// }
 
-// Languages
-
+// LANGUAGES
 export async function getLanguages() {
   try {
     const user_info = useAuthStore.getState().user_info;
@@ -232,8 +233,7 @@ export async function getLanguages() {
     const response = await fetch(`${URL}/api/language`, {
       method: "GET",
       headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${user_info.token}`, 
+        "Authorization": `Bearer ${user_info.token}`,
       },
     });
 
@@ -247,22 +247,7 @@ export async function getLanguages() {
     console.error("Error en Communication Manager:", error);
     throw error;
   }
-};
-
-
-export const deleteLanguage = async (idlanguage) => {
-  const response = await fetch(`${URL}/api/language/${idlanguage}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      "Authorization": `Bearer ${user_info.token}`,
-    }
-  })
-  const data = await response.json()
-  return data;
 }
-
-// Languages
 
 export async function createLanguage(name) {
   try {
@@ -286,6 +271,50 @@ export async function createLanguage(name) {
 
     const data = await response.json();
     return data;
+  } catch (error) {
+    console.error("Error in Communication Manager:", error);
+    throw error;
+  }
+}
+
+export async function addLanguageToClass(classId, language) {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+
+    if (!user_info || !user_info.token) {
+      throw new Error("No token provided");
+    }
+
+    console.log("language", language);
+
+
+  if (!classId || !language || !language.id || !language.name || !language.restrictionId) {
+
+     console.log("classId", classId );
+     console.log("language", language );
+      console.log("language.id", language.id? language.id : "No id" );
+      console.log("language.name", language.name );
+      console.log("language.restrictionId", language.restrictionId );
+    throw new Error("Class ID and valid language details are required");
+    }
+
+    console.log(`Adding language to class: ${language.name} (ID: ${language.id}, Restriction: ${language.restrictionId})`);
+
+    const response = await fetch(`${URL}/api/language/class/add`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${user_info.token}`,
+      },
+      body: JSON.stringify({ classId, language }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error adding language to class: ${errorText}`);
+    }
+
+    return await response.json();
   } catch (error) {
     console.error("Error in Communication Manager:", error);
     throw error;
@@ -319,34 +348,107 @@ export async function updateLanguages(classId, languages) {
     throw error;
   }
 }
-export async function addLanguageToClass(classId, language) {
+
+export async function deleteLanguageFromClass(classId, languageId) {
   try {
+    if (!classId || !languageId) {
+      throw new Error("Class ID and Language ID are required");
+    }
+
     const user_info = useAuthStore.getState().user_info;
 
     if (!user_info || !user_info.token) {
       throw new Error("No token provided");
     }
 
-    if (!classId || !language || !language.idlanguage || !language.name || !language.restrictionId) {
-      throw new Error("Class ID and valid language details are required");
+    const response = await fetch(
+      `${URL}/api/language/class?classId=${classId}&languageId=${languageId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${user_info.token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error deleting language from class: ${errorText}`);
     }
 
-    console.log(`🔵 Adding language to class: ${language.name} (ID: ${language.idlanguage}, Restriction: ${language.restrictionId})`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error in Communication Manager:", error);
+    throw error;
+  }
+}
 
-    const response = await fetch(`${URL}/api/language/class/add`, {
-      method: "POST",
+export async function fetchAiMessagesClassData(classId) {
+
+  const user_info = useAuthStore.getState().user_info;
+
+  const response = await fetch(`${URL}/api/stats/${classId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      "Authorization": `Bearer ${user_info.token}`,
+    }
+  })
+
+  if (!response.ok) {
+    throw new Error('Error al cargar los mensajes');
+  }
+
+  const data = await response.json();
+  
+  console.log("Data from fetchAiMessagesClassData:", data);
+  return data;
+}
+
+export async function fetchAiMessagesStudentData(studentId) {
+
+  const user_info = useAuthStore.getState().user_info;
+
+  const response = await fetch(`${URL}/api/stats/student/${studentId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      "Authorization": `Bearer ${user_info.token}`,
+    }
+  })
+
+  if (!response.ok) {
+    throw new Error('Error al cargar los mensajes');
+  }
+
+  const data = await response.json();
+  
+  console.log("Data from fetchAiMessagesClassData:", data);
+  return data;
+}
+
+
+//export userSettings function
+export async function getUserInfo() {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+    if (!user_info || !user_info.token) {
+      throw new Error("No token provided");
+    }
+
+    const response = await fetch(`${URL}/api/user/${user_info.userId}`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${user_info.token}`,
+        "Authorization": `Bearer ${user_info.token}`,  
       },
-      body: JSON.stringify({ classId, language }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`Error adding language to class: ${errorText}`);
+      throw new Error(`Error getting user info: ${errorText}`);
     }
-
     return await response.json();
   } catch (error) {
     console.error("Error in Communication Manager:", error);
@@ -426,6 +528,192 @@ export async function submitQuizResults(quizId, answers) {
     return data;
   } catch (error) {
     console.error('Error submitting quiz results:', error);
+    throw error;
+  }
+}
+export async function updateUserInfo({ id, name, gmail }) {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+
+    if (!user_info || !user_info.token) {
+      throw new Error("No token provided");
+    }
+
+    const response = await fetch(`${URL}/api/user`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${user_info.token}`,
+      },
+      body: JSON.stringify({ id, name, gmail }),
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error updating user:", error);
+    throw error;
+  }
+}
+
+export async function getClassInfo() {
+  try {
+      const user_info = useAuthStore.getState().user_info;
+      const class_info = useAuthStore.getState().class_info;
+      const classId = class_info[0]?.class_id;
+
+      const response = await fetch(`${URL}/api/class/user?class_id=${classId}`, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${user_info.token}` 
+          }
+      });
+
+      const contentType = response.headers.get('Content-Type');
+        if (!contentType || !contentType.includes('application/json')) {
+            throw new Error(`Expected JSON response but got ${contentType}`);
+        }
+
+      const data = await response.json();
+      if (!response.ok) {
+          throw new Error(data.error || 'Error fetching users');
+      }
+
+      return data; 
+  } catch (error) {
+      console.error('Error fetching users:', error);
+      throw error;
+  }
+}
+
+export async function getClassDetails() {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+    const class_info = useAuthStore.getState().class_info;
+    const classId = class_info[0]?.class_id;
+
+    if (!user_info || !user_info.token) {
+      throw new Error("No token provided");
+    }
+
+    const url = `${URL}/api/class?class_id=${classId}`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${user_info.token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error fetching class details: ${errorText}`);
+    }
+
+    const data = await response.json();
+
+    if (data && data.teacher_id) {
+      console.log("Teacher IDs for the class:", data.teacher_id);
+    } else {
+      console.warn("No teacher_id found in class details.");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching class details:", error);
+    throw error;
+  }
+}
+
+export async function leaveClass() {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+
+    if (!user_info || !user_info.token) {
+      throw new Error("No token provided");
+    }
+    const response = await fetch(`${URL}/api/class/leave`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${user_info.token}`,
+      },
+      body: JSON.stringify({ id: user_info.userId }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error leaving class: ${errorText}`);
+    }
+
+    const data = await response.json();
+    return data; 
+  } catch (error) {
+    console.error("Error leaving class:", error);
+    throw error;
+  }
+}
+
+export async function getUserById(userId) {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+
+    if (!user_info || !user_info.token) {
+      throw new Error("No token provided");
+    }
+
+    const response = await fetch(`${URL}/api/user/${userId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${user_info.token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error getting user info for ID ${userId}: ${errorText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error(`Error fetching user info for ID ${userId}:`, error);
+    throw error;
+  }
+}
+
+export async function kickClass(targetUserId) {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+
+    if (!user_info || !user_info.token) {
+      throw new Error("No token provided");
+    }
+
+    if (!targetUserId) {
+      throw new Error("No target user ID provided");
+    }
+
+    const response = await fetch(`${URL}/api/class/leave`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${user_info.token}`,
+      },
+      body: JSON.stringify({ id: targetUserId }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error kicking user from class: ${errorText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error kicking user from class:", error);
     throw error;
   }
 }

@@ -11,21 +11,21 @@ const seed = async () => {
         code: 'PY101',
         name: 'Introduction to Python',
         teacher_id: '[1]',
-        language: '[{"id": 1,"name": "Python","restrictionId": 1}]',
+        language: '[{"id": 1,"name": "Python","restrictionId": 1,"isActive":true}]',
       },
       {
         idclass: 2,
         code: 'JS201',
         name: 'JavaScript for Web Development',
         teacher_id: '[2, 5]',
-        language: '[{"id": 2,"name": "Javascript","restrictionId": 3},{"id": 1,"name": "Python","restrictionId": 1}]',
+        language: '[{"id":2,"name":"Javascript","restrictionId":3,"isActive":true},{"id":1,"name":"Python","restrictionId":1,"isActive":true}]',
       },
       {
         idclass: 3,
         code: 'JAVA301',
         name: 'Advanced Java Concepts',
         teacher_id: '[2]',
-        language: '[{"id": 3,"name": "Java","restrictionId": 2}]',
+        language: '[{"id": 3,"name": "Java","restrictionId": 2,"isActive":true}]',
       },
     ]);
 
@@ -78,9 +78,9 @@ const seed = async () => {
     ]);
 
     await Language.bulkCreate([
-      { idlanguage: 1, name: 'Python' },
-      { idlanguage: 2, name: 'JavaScript' },
-      { idlanguage: 3, name: 'Java' },
+      { id: 1, name: 'Python' },
+      { id: 2, name: 'JavaScript' },
+      { id: 3, name: 'Java' },
     ]);
 
     await Restriction.bulkCreate([
