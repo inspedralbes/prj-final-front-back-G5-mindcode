@@ -6,7 +6,7 @@ import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import UserChat from "../components/UserChat";
 import { useAuthStore } from '../../stores/authStore';
-import { sendMessage, getUserInfo } from "services/communicationManager";
+import { sendMessage, getClassMain } from "services/communicationManager";
 
 
 const Page = () => {
@@ -70,26 +70,76 @@ const Page = () => {
 
   };
 
+  const parseReceivedMessages = (language_info) => {
+
+
+    console.log("language_info: ", language_info);
+    language_info.forEach(language => {
+
+      let parsedMessages = [];
+
+      let parsedLanguage = [];
+      console.log("Language: ", language);
+
+      language.messages.forEach(message => {
+        console.log("Message: ", message);
+        console.log("Language ID: ", language.id);
+        if (message.languageId !== language.id) return; // Filter messages by languageId
+        const parsedMessage = {
+          sender: "user",
+          text: message.userContent,
+        };
+        parsedLanguage.push(parsedMessage);
+        if (message.aiContent) {
+          const aiMessage = {
+            sender: "ai",
+            text: message.aiContent,
+          };
+          parsedLanguage.push(aiMessage);
+        }
+      });
+      parsedMessages.push(...parsedLanguage);
+
+      console.log("Parsed messages: ", parsedMessages);
+
+      language.messages = parsedMessages;
+
+    })
+
+
+    return null;
+  };
+
+
+
   useEffect(() => {
     console.log("classInfo", classInfo);
     if (classInfo && classInfo.length > 0) {
+<<<<<<< HEAD
       /*classInfo[0].language_info.forEach(language => {
         language.messages = [];
       });*/
+=======
+      // classInfo[0].language_info.forEach(language => {
+      //   language.messages = [];
+      // });
+
+>>>>>>> e90a1c742b41bb378d1e04fd4007a76dcf1a6d95
       setIsClient(true);
       setHighlitedLanguage(classInfo[0].language_info[0])
-      setMessages(classInfo[0].language_info.map(lang => ({ messages: [] })));
+      const parsedMessages = parseReceivedMessages(classInfo[0].language_info);
+      setMessages(classInfo[0].language_info.map(lang => ({ messages: lang.messages })));
       setHighlitedLanguageIndex(0);
     }
   }, [classInfo]);
 
   useEffect(() => {
-    getUserInfo();
+    getClassMain();
   }
     , []);
 
   if (!isClient) {
-    return null; 
+    return null;
   }
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50">

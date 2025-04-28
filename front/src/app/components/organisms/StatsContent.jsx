@@ -99,7 +99,7 @@ const StatsContent = ({ classId, mode }) => {
         <div className="h-full">
             <TitleCard >Estadístiques</TitleCard>
 
-            <div className="flex flex-col space-y-6">
+            <div>
                 <div className='w-full max-w-[80%] mx-auto'>
                     <ButtonCollection
                         buttons={
@@ -112,8 +112,9 @@ const StatsContent = ({ classId, mode }) => {
                         }
                     />
                 </div>
+                <br />
 
-                <div className="flex flex-row flex-wrap gap-4 min-[300px]:flex-col px-4 py-4">
+                <div className="flex flex-row flex-wrap gap-4 min-[300px]:flex-col py-4">
                     <div className="w-full max-w-[80%] mx-auto min-[300px]:max-w-full">
                         <ContentWrapper className="w-full md:w-1/2 lg:w-1/3">
                             {mode === "alumne" ? (

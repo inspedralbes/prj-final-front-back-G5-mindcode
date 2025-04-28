@@ -8,7 +8,8 @@ import SidebarProf from "app/components/SidebarProf";
 import { useAuthStore } from '../../stores/authStore';
 import { useState } from "react";
 import { useEffect } from "react";
-import { getUserInfo } from "services/communicationManager";
+import { getClassMain } from "services/communicationManager";
+import StatsContent from "../components/organisms/StatsContent";
 
 const Page = () => {
   const [selectedField, setSelectedField] = useState("stats");
@@ -19,7 +20,7 @@ const Page = () => {
   const classInfo = useAuthStore((state) => state.class_info);
 
   useEffect(() => {
-    getUserInfo();
+    getClassMain();
     if (classInfo) {
       
       setSelectedClass(classInfo[0].class_id);
@@ -48,7 +49,8 @@ const Page = () => {
       <div className="flex flex-col w-full h-fullc ">
         <Navbar />
         <ContentArea >
-          {
+        {selectedField === "stats"?
+          <StatsContent classId={selectedClass?selectedClass:classInfo[0].class_id} mode={"professor"} />:
           selectedField === "alumne"?<StatsContent classId={selectedClass?selectedClass:classInfo[0].class_id} mode={"alumne"} />:
           selectedField === "llenguatges"?"isLlenguatges":
           "isClass"}

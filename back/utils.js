@@ -2,7 +2,10 @@ import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import Message from "./schemes/mongoScheme.js"
+<<<<<<< HEAD
 import { CLOUD_RESOURCE_MANAGER } from 'google-auth-library/build/src/auth/baseexternalclient.js';
+=======
+>>>>>>> e90a1c742b41bb378d1e04fd4007a76dcf1a6d95
 
 dotenv.config();
 
@@ -160,6 +163,7 @@ export function getClassInfo(class_id, user_id) {
 
                 const messages = await Message.find({ userId: user_id });
 
+<<<<<<< HEAD
                 const languagesWithMessages = language_info.map(language => {
                     // Find all items where language_id matches the current language's id
                     const messagesIncluded = messages.filter(message => message.languageId === language.id);
@@ -174,6 +178,21 @@ export function getClassInfo(class_id, user_id) {
                   console.log(languagesWithMessages)
 
                 resolve({ class_id, name, language_info: languagesWithMessages, teacher_info, classmate_info });
+=======
+                const messagesByLanguage = language_info.map(language => {
+
+                    const messagesfiltered = messages.filter(message => message.languageId === language.id);
+
+                    return {
+                        ...language,
+                        messages: messagesfiltered
+                    }
+                    
+                });
+
+                resolve({ class_id, name, language_info: messagesByLanguage, teacher_info, classmate_info,  });
+
+>>>>>>> e90a1c742b41bb378d1e04fd4007a76dcf1a6d95
             }
         } catch (error) {
             reject(error);
