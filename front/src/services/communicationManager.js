@@ -289,14 +289,14 @@ export async function addLanguageToClass(classId, language) {
     console.log("language", language);
 
 
-  if (!classId || !language || !language.id || !language.name || !language.restrictionId) {
+    if (!classId || !language || !language.id || !language.name || !language.restrictionId) {
 
-     console.log("classId", classId );
-     console.log("language", language );
-      console.log("language.id", language.id? language.id : "No id" );
-      console.log("language.name", language.name );
-      console.log("language.restrictionId", language.restrictionId );
-    throw new Error("Class ID and valid language details are required");
+      console.log("classId", classId);
+      console.log("language", language);
+      console.log("language.id", language.id ? language.id : "No id");
+      console.log("language.name", language.name);
+      console.log("language.restrictionId", language.restrictionId);
+      throw new Error("Class ID and valid language details are required");
     }
 
     console.log(`Adding language to class: ${language.name} (ID: ${language.id}, Restriction: ${language.restrictionId})`);
@@ -402,7 +402,7 @@ export async function fetchAiMessagesClassData(classId) {
   }
 
   const data = await response.json();
-  
+
   console.log("Data from fetchAiMessagesClassData:", data);
   return data;
 }
@@ -424,7 +424,7 @@ export async function fetchAiMessagesStudentData(studentId) {
   }
 
   const data = await response.json();
-  
+
   console.log("Data from fetchAiMessagesClassData:", data);
   return data;
 }
@@ -454,6 +454,27 @@ export async function getClassMain() {
   return data;
 }
 
+export async function getRestrictions() {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+    const response = await fetch(`${URL}/api/restriction`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user_info.token}`,
+      },
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error getting restrictions: ${errorText}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error in Communication Manager:", error);
+    throw error;
+  }
+};
 //export userSettings function
 export async function getUserInfo() {
   try {
@@ -466,7 +487,7 @@ export async function getUserInfo() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${user_info.token}`,  
+        "Authorization": `Bearer ${user_info.token}`,
       },
     });
 
@@ -508,32 +529,32 @@ export async function updateUserInfo({ id, name, gmail }) {
 
 export async function getClassInfo() {
   try {
-      const user_info = useAuthStore.getState().user_info;
-      const class_info = useAuthStore.getState().class_info;
-      const classId = class_info[0]?.class_id;
+    const user_info = useAuthStore.getState().user_info;
+    const class_info = useAuthStore.getState().class_info;
+    const classId = class_info[0]?.class_id;
 
-      const response = await fetch(`${URL}/api/class/user?class_id=${classId}`, {
-          method: 'GET',
-          headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${user_info.token}` 
-          }
-      });
-
-      const contentType = response.headers.get('Content-Type');
-        if (!contentType || !contentType.includes('application/json')) {
-            throw new Error(`Expected JSON response but got ${contentType}`);
-        }
-
-      const data = await response.json();
-      if (!response.ok) {
-          throw new Error(data.error || 'Error fetching users');
+    const response = await fetch(`${URL}/api/class/user?class_id=${classId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user_info.token}`
       }
+    });
 
-      return data; 
+    const contentType = response.headers.get('Content-Type');
+    if (!contentType || !contentType.includes('application/json')) {
+      throw new Error(`Expected JSON response but got ${contentType}`);
+    }
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || 'Error fetching users');
+    }
+
+    return data;
   } catch (error) {
-      console.error('Error fetching users:', error);
-      throw error;
+    console.error('Error fetching users:', error);
+    throw error;
   }
 }
 
@@ -599,7 +620,7 @@ export async function leaveClass() {
     }
 
     const data = await response.json();
-    return data; 
+    return data;
   } catch (error) {
     console.error("Error leaving class:", error);
     throw error;
