@@ -26,6 +26,9 @@ const Sidebar = ({handleSetCurrentLanguage}) => {
   const handleRedirect = async () => {
     router.push('/StSettings');
   }
+  const handleFormClick = () => {
+    router.push('/UserForm'); 
+  };
 
   return (
     <div className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white w-1/4 h-full p-4 border-r border-gray-300 dark:border-gray-700">
