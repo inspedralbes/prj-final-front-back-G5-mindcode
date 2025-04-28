@@ -1,0 +1,71 @@
+{
+  "_id": { "$oid": "680b40e8fbdcf9cf00b6c129" },
+  "correctAnswers": 1,
+  "userId": 6,
+  "classId": 1,
+  "questions": [
+    {
+      "isAnswered": true,
+      "question_id": 1,
+      "question_text": "How does list comprehension work in Python, and when would you use it?",
+      "question_type": "MCQ",
+      "options": [
+        "It's a concise way to create lists by looping through elements.",
+        "It allows you to modify each element of a list with a single statement.",
+        "It can be used for both creating and updating lists efficiently."
+      ],
+      "correct_option": 2,
+      "required": true,
+      "_id": { "$oid": "680b40e9fbdcf9cf00b6c12a" }
+    },
+    {
+      "isAnswered": true,
+      "question_id": 2,
+      "question_text": "Can you explain the preg_match function in PHP and provide an example of its usage?",
+      "question_type": "MCQ",
+      "options": [
+        "It is a built-in function used to search for patterns within strings.",
+        "It allows you to perform complex string manipulations like substitution.",
+        "It can be used with quantifiers to match specific patterns in text."
+      ],
+      "correct_option": 1,
+      "required": true,
+      "_id": { "$oid": "680b40e9fbdcf9cf00b6c12b" }
+    },
+    {
+      "isAnswered": true,
+      "question_id": 3,
+      "question_text": "What is a closure in JavaScript and how can it be used?",
+      "question_type": "MCQ",
+      "options": [
+        "A function that creates closures by referencing variables from its enclosing scope.",
+        "Closures are used to create anonymous functions that can access variables from their parent functions.",
+        "It allows for creating objects with private properties to encapsulate functionality."
+      ],
+      "correct_option": 2,
+      "required": true,
+      "_id": { "$oid": "680b40e9fbdcf9cf00b6c12c" }
+    }
+  ],
+  "userAnswers": [
+    {
+      "question_id": 1,
+      "selected_option": 1,
+      "question_type": "MCQ",
+      "_id": { "$oid": "680b40effbdcf9cf00b6c132" }
+    },
+    {
+      "question_id": 2,
+      "selected_option": 1,
+      "question_type": "MCQ",
+      "_id": { "$oid": "680b40effbdcf9cf00b6c133" }
+    },
+    {
+      "question_id": 3,
+      "selected_option": 1,
+      "question_type": "MCQ",
+      "_id": { "$oid": "680b40effbdcf9cf00b6c134" }
+    }
+  ],
+  "__v": 0
+}

@@ -1,4 +1,3 @@
-// src/app/components/atoms/Button.jsx
 "use client";
 
 import React from "react";

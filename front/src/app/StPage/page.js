@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Sidebar from "../components/Sidebar";
+import SidebarSt from "../components/SidebarSt";
 import Navbar from "../components/Navbar";
 import UserChat from "../components/UserChat";
 import { useAuthStore } from '../../stores/authStore';
@@ -93,7 +93,7 @@ const Page = () => {
   }
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50">
-      <Sidebar handleSetCurrentLanguage={handleSetCurrentLanguage} />
+      <SidebarSt handleSetCurrentLanguage={handleSetCurrentLanguage} />
       <div className="flex flex-col w-full">
         <Navbar />
         <UserChat

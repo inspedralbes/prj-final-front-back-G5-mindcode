@@ -13,7 +13,7 @@ const ClassSettings = ({ name, teacher, classMates, onLeaveClass, isStudent = tr
         <h4 className="font-semibold mb-2">Professor/a:</h4>
         {Array.isArray(teacher) ? (
           teacher.map((prof, index) => (
-            <p key={index} className="mb-1">- {prof}</p>
+            <p key={index} classFName="mb-1">- {prof}</p>
           ))
         ) : (
           <p className="mb-4">- {teacher}</p>
@@ -24,9 +24,9 @@ const ClassSettings = ({ name, teacher, classMates, onLeaveClass, isStudent = tr
           <div key={index} className="flex justify-between items-center mb-2">
             <span>- {user.name}</span>
             {!isStudent && (
-              <Button 
-                text="Eliminar" 
-                className="bg-red-600 text-white px-2 py-1 text-sm rounded-md hover:bg-red-400" 
+              <Button
+                text="Eliminar"
+                className="bg-red-600 text-white px-2 py-1 text-sm rounded-md hover:bg-red-400"
                 onClick={() => onKickUser(user)}
               />
             )}
@@ -36,9 +36,9 @@ const ClassSettings = ({ name, teacher, classMates, onLeaveClass, isStudent = tr
 
       {isStudent && (
         <div className="flex justify-center mt-4">
-          <Button 
-            text="Sortir de la classe" 
-            className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-400" 
+          <Button
+            text="Sortir de la classe"
+            className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-400"
             onClick={onLeaveClass}
           />
         </div>
