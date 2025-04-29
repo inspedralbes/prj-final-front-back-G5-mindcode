@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Button from "app/components/atoms/Button";
 import Dialog from "app/components/atoms/Dialog";
 import { updateUserInfo } from "services/communicationManager";
@@ -14,15 +14,28 @@ const Settings = ({ id, name: initialName, gmail }) => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const user_info = useAuthStore.getState().user_info;
     const router = useRouter();
+    
+    // Estados para manejo de foto
+    const [photoURL, setPhotoURL] = useState(user_info?.photoURL || null);
+    const [previewPhoto, setPreviewPhoto] = useState(user_info?.photoURL || null);
+    const fileInputRef = useRef(null);
 
     const handleSave = async () => {
         try {
-            await updateUserInfo({ id, name: editedName, gmail });
+            // Implementación para subir la foto y obtener URL
+            await updateUserInfo({ 
+                id, 
+                name: editedName, 
+                gmail,
+                photoURL: previewPhoto 
+            });
+            
             setName(editedName);
+            setPhotoURL(previewPhoto);
             setIsEditing(false);
-            setSnackbar({ message: "Nom actualitzat correctament!" });
+            setSnackbar({ message: "Dades actualitzades correctament!" });
         } catch (error) {
-            setSnackbar({ message: "Error al actualitzar el nom." });
+            setSnackbar({ message: "Error al actualitzar les dades." });
         }
     };
 
@@ -31,74 +44,143 @@ const Settings = ({ id, name: initialName, gmail }) => {
         router.push("/Login");
     };
 
+    const handlePhotoChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreviewPhoto(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const triggerFileInput = () => {
+        fileInputRef.current.click();
+    };
+
     return (
-        <div className="bg-gray-50 dark:bg-gray-900 shadow-lg rounded-xl p-8 max-w-md mx-auto transition-all duration-300 hover:shadow-xl border border-gray-100 dark:border-gray-800">
-            <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+        <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 shadow-2xl rounded-2xl p-8 max-w-md mx-auto transition-all duration-300 hover:shadow-xl border border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-center mb-8">
+                <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 relative">
                     El meu usuari
+                    <span className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-purple-500 transform translate-y-2"></span>
                 </h2>
-                <div className="relative">
-                <img 
-                    src={user_info.photoURL} 
-                    className="w-16 h-16 rounded-full object-cover absolute top-4 right-4"
-                />
-                </div>
             </div>
 
             <div className="space-y-6">
                 {isEditing ? (
-                    <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Nom
-                        </label>
-                        <input
-                            type="text"
-                            value={editedName}
-                            onChange={(e) => setEditedName(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-gray-100 transition-all duration-200"
-                            placeholder="Introdueix el teu nom"
-                        />
+                    <>
+                        <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md transition-all duration-300 border border-gray-100 dark:border-gray-700">
+                            <div className="flex flex-row gap-6 items-center">
+                                <div className="flex-1">
+                                    <label className="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-2 block">
+                                        Nom
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={editedName}
+                                        onChange={(e) => setEditedName(e.target.value)}
+                                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-gray-100 transition-all duration-200"
+                                        placeholder="Introdueix el teu nom"
+                                    />
+                                </div>
+                                
+                                <div className="flex flex-col items-center justify-center">
+                                    <label className="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-2 block">
+                                        Foto
+                                    </label>
+                                    <div className="relative group">
+                                        <div className="w-14 h-14 rounded-full overflow-hidden ring-4 ring-white dark:ring-gray-700 shadow-lg transition-all duration-300 group-hover:ring-blue-400">
+                                            <img 
+                                                src={previewPhoto || "/default-avatar.png"} 
+                                                className="w-full h-full object-cover cursor-pointer"
+                                                alt="Foto de perfil"
+                                                onClick={triggerFileInput}
+                                            />
+                                        </div>
+                                        <div 
+                                            className="absolute -bottom-3 right-0 bg-blue-600 rounded-full p-2 cursor-pointer transform transition-transform duration-300 hover:scale-110 shadow-md"
+                                            onClick={triggerFileInput}
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                            </svg>
+                                        </div>
+                                        <input 
+                                            type="file" 
+                                            ref={fileInputRef}
+                                            className="hidden" 
+                                            accept="image/*"
+                                            onChange={handlePhotoChange}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         
-                        <div className="flex justify-end mt-4 space-x-3">
+                        <div className="flex justify-end mt-6 space-x-4">
                             <Button
                                 text="Cancelar"
-                                className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                                className="px-6 py-2 rounded-lg border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors font-medium"
                                 onClick={() => {
                                     setEditedName(name);
+                                    setPreviewPhoto(photoURL);
                                     setIsEditing(false);
                                 }}
                             />
                             <Button
                                 text="Guardar"
-                                className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+                                className="px-6 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 transition-all duration-300 font-medium shadow-md hover:shadow-lg"
                                 onClick={handleSave}
                             />
                         </div>
-                    </div>
+                    </>
                 ) : (
                     <>
-                        <div className="space-y-4">
-                            <div className="flex flex-col">
-                                <span className="text-sm text-gray-500 dark:text-gray-400">Nom</span>
-                                <span className="text-lg font-medium text-gray-900 dark:text-gray-100">{name}</span>
-                            </div>
-                            
-                            <div className="flex flex-col">
-                                <span className="text-sm text-gray-500 dark:text-gray-400">Email</span>
-                                <span className="text-lg font-medium text-gray-900 dark:text-gray-100 break-all">{gmail}</span>
+                        <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg border border-gray-100 dark:border-gray-700">
+                            <div className="flex flex-row gap-6 items-center">
+                                <div className="flex-1">
+                                    <h4 className="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-2">Nom</h4>
+                                    <div className="ml-1">
+                                        <p className="text-xl font-medium text-gray-900 dark:text-gray-100">
+                                            {name}
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <div className="flex flex-col items-center justify-center">
+                                    <h4 className="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-2">Foto</h4>
+                                    <div className="w-14 h-14 rounded-full overflow-hidden ring-4 ring-white dark:ring-gray-700 shadow-lg">
+                                        <img 
+                                            src={photoURL || "/default-avatar.png"} 
+                                            className="w-full h-full object-cover"
+                                            alt="Foto de perfil"
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         
-                        <div className="border-t border-gray-200 dark:border-gray-700 pt-6 mt-6">
-                            <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
+                        <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg border border-gray-100 dark:border-gray-700">
+                            <h4 className="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-2">Email</h4>
+                            <div className="ml-1">
+                                <p className="text-xl font-medium text-gray-900 dark:text-gray-100 break-all">
+                                    {gmail}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div className="border-t border-gray-200 dark:border-gray-700 pt-6 mt-8">
+                            <div className="flex flex-col sm:flex-row sm:justify-between gap-4">
                                 <Button
                                     text="Editar dades"
-                                    className="flex-1 px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors"
+                                    className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-600 hover:to-green-700 transition-all duration-300 font-medium shadow-md hover:shadow-lg"
                                     onClick={() => setIsEditing(true)}
                                 />
                                 <Button
                                     text="Tancar sessió"
-                                    className="flex-1 px-4 py-2 rounded-lg text-white bg-red-600 hover:bg-red-500 dark:hover:bg-red-900/20 transition-colors"
+                                    className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 border border-red-400 dark:border-red-500 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-300 font-medium shadow-md hover:shadow-lg"
                                     onClick={() => setIsDialogOpen(true)}
                                 />
                             </div>

@@ -26,6 +26,8 @@ const Signup = () => {
       console.log('User data:', userData);
       if (!userData) return;
 
+
+
       setUserInfo({
         ...userData,
       });

@@ -1,8 +1,27 @@
 import express from "express";
 import { verifyTokenMiddleware } from "../tokens.js";
 import { createConnection } from "../utils.js";
+import multer from 'multer';
+import path from 'path';
+import crypto from 'crypto';
+import fs from 'fs';
 
 const router = express.Router();
+
+const uploads = './uploads';
+if (!fs.existsSync(uploads)) {
+  fs.mkdirSync(uploads);
+}
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, uploadDir),
+    filename: (req, file, cb) => {
+      const ext = path.extname(file.originalname);
+      const randomName = crypto.randomBytes(16).toString('hex') + ext;
+      cb(null, randomName);
+    }
+  });
+  const upload = multer({ storage });
 
 // Obtener información de un usuario por ID
 router.get('/:id', verifyTokenMiddleware, async (req, res) => {
@@ -54,4 +73,41 @@ router.put('/', verifyTokenMiddleware, async (req, res) => {
     }
 });
 
+router.post('/uploadimg/:id', verifyTokenMiddleware, upload.single('image'), async (req, res) => {
+    const userId = req.params.id;
+    const fileName = req.file.filename;
+  
+    try {
+      const connection = await createConnection();
+      await connection.execute(
+        'UPDATE USER SET img = ? WHERE id = ?',
+        [fileName, userId]
+      );
+      await connection.end();
+  
+      res.status(200).json({ message: 'Imagen subida correctamente', fileName });
+    } catch (error) {
+      console.error('Error subiendo imagen:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
+  router.get('/getimg/:id', verifyTokenMiddleware, upload.single('image'), async (req, res) => {
+    const userId = req.params.id;
+    const fileName = req.file.filename;
+  
+    try {
+      const connection = await createConnection();
+      await connection.execute(
+        'SELECT USER img = ? WHERE id = ?',
+        [fileName, userId]
+      );
+      await connection.end();
+  
+      res.status(200).json({ message: 'Imagen subida correctamente', fileName });
+    } catch (error) {
+      console.error('Error subiendo imagen:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
 export default router;
