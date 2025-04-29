@@ -44,7 +44,7 @@ const JoinClassForm = () => {
       value={classCode}
       onChange={(e) => setClassCode(e.target.value)}
       />
-      <Button onClick={handleJoin}>Join Class</Button>
+      <Button className="bg-white" onClick={handleJoin}>Join Class</Button>
       </PanelBox>
     </Panel>
   );

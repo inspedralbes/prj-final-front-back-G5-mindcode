@@ -4,10 +4,9 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
 import LanguageList from "../molecules/LanguageList";
 import Button from "../atoms/Button";
-import { useAuthStore} from "stores/authStore";
+import { useAuthStore } from "stores/authStore";
 
-
-const SidebarStudent = ({ handleSetCurrentLanguage }) => {
+const SidebarStudent = ({ handleSetCurrentLanguage, handleSelectGame }) => { 
   const [isLlenguatgesOpen, setIsLlenguatgesOpen] = useState(false);
   const [languages, setLanguages] = useState([]);
   const router = useRouter();
@@ -24,9 +23,14 @@ const SidebarStudent = ({ handleSetCurrentLanguage }) => {
   };
 
   return (
-    <div className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white w-1/4 h-full p-4 border-r border-gray-300 dark:border-gray-700">
+    <div className="w-1/6 h-full p-4 border-r border">
       <div className="text-center mb-6">
-        <Button onClick={handleRedirect} className="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 mx-auto mb-2"></Button>
+        <Button  
+          onClick={handleRedirect} 
+          className="w-16 h-16 flex items-center justify-center rounded-full mx-auto mb-2 text-3xl"
+        >
+          👤
+        </Button>
         <h2 className="text-lg font-semibold">ALUMNE</h2>
       </div>
 
@@ -37,7 +41,11 @@ const SidebarStudent = ({ handleSetCurrentLanguage }) => {
           isOpen={isLlenguatgesOpen} 
           toggleOpen={() => setIsLlenguatgesOpen(!isLlenguatgesOpen)}
         />
-        <Button className="bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 text-left">
+        
+        <Button 
+          onClick={handleSelectGame} // AÑADIDO evento de click
+          className="bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 text-left p-5"
+        >
           🎮 Jocs
         </Button>
       </nav>
