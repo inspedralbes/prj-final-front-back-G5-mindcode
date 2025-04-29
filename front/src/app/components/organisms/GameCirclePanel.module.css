@@ -1,19 +1,26 @@
 @layer demo {
-  .gameBackground {
-    width: 100%;
+  /* .gameBackground {
+    width: 100vw;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    background: linear-gradient(135deg, #c2e9fb, #a1c4fd);
+    background-size: 200% 200%;
+    animation: gradientShift 15s ease infinite;
+  } */
+
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
   }
 
   .cardsContainer {
-    --radius: 12vw;
-    --label-offset: calc(var(--radius) * -1 - 1rem);
     position: relative;
-    width: 400px;
-    height: 400px;
+    width: 500px;
+    height: 500px;
+    padding: 2rem;
   }
 
   .circleWrapper {
@@ -23,12 +30,50 @@
     perspective: 1000px;
   }
 
+  .cards {
+    position: absolute;
+    inset: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-radius: 50%;
+    transform-style: preserve-3d;
+    transition: transform 0.8s ease;
+  }
+
+  .cards li {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    transform-origin: center;
+    transform: rotate(calc(var(--i) * 360deg / var(--items)));
+    pointer-events: none;
+  }
+
+  .cards li > label {
+    pointer-events: auto;
+    transform: translateY(-200px);
+    cursor: pointer;
+  }
+
+  .cards li > label img {
+    width: 84px;
+    height: 84px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+  }
+
+  .cards li > label:hover img {
+    transform: scale(1.2);
+  }
+
   .centerImage {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 120px;
-    height: 120px;
+    width: 150px;
+    height: 150px;
     transform: translate(-50%, -50%);
     z-index: 10;
   }
@@ -37,53 +82,5 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
-  }
-
-  .cards {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    transition: transform 0.8s ease;
-    transform-style: preserve-3d;
-  }
-
-  .cards li {
-    position: absolute;
-    inset: 0;
-    transform-origin: center;
-    display: grid;
-    place-content: center;
-    transform: rotate(calc(var(--i) * 360deg / var(--items)));
-    pointer-events: none;
-  }
-
-  .cards li > label {
-    position: absolute;
-    inset: 0;
-    margin: auto;
-    transform: translateY(var(--label-offset));
-    width: 90px;
-    height: 90px;
-    pointer-events: auto;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.3s ease;
-  }
-
-  .cards li > label img {
-    width: 60px;
-    height: 60px;
-    object-fit: contain;
-    pointer-events: none;
-    transition: transform 0.3s ease;
-  }
-
-  .cards li > label:hover img {
-    transform: scale(1.2);
   }
 }

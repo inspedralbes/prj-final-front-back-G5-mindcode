@@ -20,7 +20,7 @@ const icons = [
   { src: "/images/Sql.png", alt: "SQL" },
 ];
 
-const LanguageCircle = () => {
+const GameCirclePanel = () => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   const handleClick = (index) => {
@@ -67,4 +67,4 @@ const LanguageCircle = () => {
   );
 };
 
-export default LanguageCircle;
+export default GameCirclePanel;
