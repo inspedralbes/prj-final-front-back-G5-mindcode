@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import styles from "../organisms/GameCirclePanel.module.css"; 
+import styles from "../organisms/GameCirclePanel.module.css";
 import Image from "next/image";
 
 const icons = [
@@ -17,25 +17,43 @@ const icons = [
 
 const LanguageCircle = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [rotation3D, setRotation3D] = useState({ x: 0, y: 0 });
+  const [selectedLanguage, setSelectedLanguage] = useState(null);
 
-  const handleClick = (index) => setActiveIndex(index);
-
-  const handleMouseMove = (e) => {
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-    const rotateX = (e.clientY - centerY) * 0.01;
-    const rotateY = (e.clientX - centerX) * -0.01;
-    setRotation3D({ x: rotateX, y: rotateY });
+  const handleClick = (index) => {
+    setActiveIndex(index);
+    setSelectedLanguage(icons[index]); // set detail view
   };
 
-  const rotation = `rotateZ(${-activeIndex * (360 / icons.length)}deg)`;
+  const handleBack = () => {
+    setSelectedLanguage(null); // back to circle
+  };
 
+  const rotation = `rotate(${-activeIndex * (360 / icons.length)}deg)`;
+
+  // 🔁 Detail view
+  if (selectedLanguage) {
+    return (
+      <div className="w-full h-full flex flex-col items-center justify-center gap-6 bg-gradient-to-br from-sky-200 to-cyan-300 text-center">
+        <Image
+          src={selectedLanguage.src}
+          alt={selectedLanguage.alt}
+          width={120}
+          height={120}
+        />
+        <h1 className="text-xl font-bold">{selectedLanguage.alt}</h1>
+        <button
+          onClick={handleBack}
+          className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition"
+        >
+          ⬅️ Tornar
+        </button>
+      </div>
+    );
+  }
+
+  // 🌀 Spinner view
   return (
-    <div
-      className={styles.cardsContainer}
-      onMouseMove={handleMouseMove}
-    >
+    <div className={styles.cardsContainer}>
       <div className={styles.centerImage}>
         <Image
           id="mainImage"
@@ -49,10 +67,7 @@ const LanguageCircle = () => {
       <div className={styles.circleWrapper}>
         <ul
           className={styles.cards}
-          style={{
-            "--items": icons.length,
-            transform: `${rotation} rotateX(${rotation3D.x}deg) rotateY(${rotation3D.y}deg)`,
-          }}
+          style={{ "--items": icons.length, transform: rotation }}
         >
           {icons.map((icon, index) => (
             <li key={index} style={{ "--i": index }}>
@@ -60,8 +75,8 @@ const LanguageCircle = () => {
                 <Image
                   src={icon.src}
                   alt={icon.alt}
-                  width={40}
-                  height={40}
+                  width={64}
+                  height={64}
                   className="hover:scale-110 transition-transform"
                 />
               </label>

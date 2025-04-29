@@ -1,92 +1,34 @@
-@import "https://codepen.io/cbolson/pen/rNEdgKo.css" layer(template);
-@layer template, demo;
-
 @layer demo {
-  .radioWrapper input[type="radio"] {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
-  }
-
-  .cardsContainer {
-    --base-rotation: 0deg;
-    --full-circle: 360deg;
-    --radius: 30vw;
-    --duration: 200ms;
-    --cards-container-size: calc(var(--radius) * 2);
-    --cards-container-padding: 2rem;
-    --border-color: transparent;
-    --label-offset: calc(var(--radius) * -1 - 1rem);
-    --label-size: 30px;
-    --label-color: #666;
-    --label-color-hover: steelblue;
-    --label-line-h: 0;
-    --label-line-h-current: 2rem;
-    --label-dot-size: 10px;
-    --title-top: 1.5rem;
-    --title-offset-y: 30px;
-    --info-top: 5rem;
-    --info-width: min(70%, 500px);
-    --info-offset-y: 30px;
-
-    box-sizing: content-box;
-    position: relative;
-    inset: 0;
-    margin: 0 auto;
-    width: 500px;
-    height: 500px;
-    padding: var(--cards-container-padding);
-  }
-
-  @media (min-width: 800px) {
-    .cardsContainer {
-      --radius: 10vw;
-      --label-size: 40px;
-      --label-dot-size: 15px;
-      --label-line-h-current: 4rem;
-      --title-top: 4rem;
-      --info-top: 8rem;
-    }
-  }
-
-  .cards {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    transition: transform 0.5s ease-in-out;
-    transform-style: preserve-3d; 
-    transition: transform 0.8s ease;
-  }
-
   .gameBackground {
     width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at center, #dee1e1 0%, #747575 100%);
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    animation: gradientShift 15s ease infinite;
-    background-size: 150% 150%;
+    overflow: hidden;
   }
 
-  
+  .cardsContainer {
+    --radius: 12vw;
+    --label-offset: calc(var(--radius) * -1 - 1rem);
+    position: relative;
+    width: 400px;
+    height: 400px;
+  }
 
-  
+  .circleWrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    perspective: 1000px;
+  }
+
   .centerImage {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
     transform: translate(-50%, -50%);
     z-index: 10;
   }
@@ -97,19 +39,20 @@
     object-fit: contain;
   }
 
-  .circleWrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    perspective: 1000px; 
+  .cards {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    transition: transform 0.8s ease;
+    transform-style: preserve-3d;
   }
-  
 
   .cards li {
     position: absolute;
     inset: 0;
-    margin: 0;
-    padding: 0;
     transform-origin: center;
     display: grid;
     place-content: center;
@@ -122,23 +65,19 @@
     inset: 0;
     margin: auto;
     transform: translateY(var(--label-offset));
-    width: var(--label-size);
-    height: var(--label-size);
+    width: 90px;
+    height: 90px;
+    pointer-events: auto;
     cursor: pointer;
-    pointer-events: initial;
-    text-align: center;
-    color: var(--label-color);
-    font-size: clamp(.8rem, 2.5vw + .04rem, 1rem);
-    transition: var(--duration) ease-in-out;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: transform 0.3s ease;
   }
-  
 
   .cards li > label img {
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     object-fit: contain;
     pointer-events: none;
     transition: transform 0.3s ease;
@@ -146,49 +85,5 @@
 
   .cards li > label:hover img {
     transform: scale(1.2);
-  }
-
-
-  .cards li > label::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%) translateY(5px);
-    width: 2px;
-    height: var(--label-line-h);
-    background-color: steelblue;
-    transition: height 300ms ease-in-out var(--label-line-delay, 0ms);
-  }
-
-  .cards li > label:hover {
-    --label-color: var(--label-color-hover);
-  }
-
-  .cards > li > h2,
-  .cards > li > p {
-    position: absolute;
-    left: 50%;
-    text-align: center;
-    transform: translate(-50%, 0);
-    transform-origin: center;
-  }
-
-  .cards > li > h2 {
-    top: var(--title-top);
-    opacity: var(--title-opacity, 0);
-    transform: translateY(var(--title-offset-y));
-    transition: var(--duration) ease-in-out var(--title-delay, 0ms);
-  }
-
-  .cards > li > p {
-    top: var(--info-top);
-    margin: 0 auto;
-    width: var(--info-width);
-    z-index: 2;
-    font-size: clamp(.8rem, 2.5vw + 0.05rem, .9rem);
-    text-align: left;
-    opacity: var(--info-opacity, 0);
-    transition: var(--duration) ease-in-out var(--info-delay, 0ms);
   }
 }

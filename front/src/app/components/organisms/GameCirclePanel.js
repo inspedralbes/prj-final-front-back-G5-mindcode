@@ -5,13 +5,16 @@ import styles from "../organisms/GameCirclePanel.module.css";
 import Image from "next/image";
 
 const icons = [
-  { src: "/images/Csharp.png", alt: "Csharp" },
   { src: "/images/css.png", alt: "CSS" },
   { src: "/images/html.png", alt: "HTML" },
   { src: "/images/java.png", alt: "Java" },
-  { src: "/images/javascript.png", alt: "JavaScript" },
-  { src: "/images/php.png", alt: "PHP" },
   { src: "/images/python.png", alt: "Python" },
+  { src: "/images/php.png", alt: "PHP" },
+  { src: "/images/javascript.png", alt: "JavaScript" },
+
+
+  { src: "/images/csharp.svg.png", alt: "Csharp" },
+
   { src: "/images/Sql.png", alt: "SQL" },
 ];
 
@@ -32,8 +35,8 @@ const LanguageCircle = () => {
             id="mainImage"
             src={icons[activeIndex].src}
             alt="Principal"
-            width={150}
-            height={150}
+            width={120}
+            height={120}
           />
         </div>
 
@@ -48,8 +51,8 @@ const LanguageCircle = () => {
                   <Image
                     src={icon.src}
                     alt={icon.alt}
-                    width={40}
-                    height={40}
+                    width={60}
+                    height={60}
                     className="hover:scale-110 transition-transform"
                   />
                 </label>
