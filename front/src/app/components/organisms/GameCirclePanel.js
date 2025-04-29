@@ -6,11 +6,13 @@ import Image from "next/image";
 
 const icons = [
   { src: "/images/css.png", alt: "CSS" },
+  { src: "/images/javascript.png", alt: "JavaScript" },
   { src: "/images/html.png", alt: "HTML" },
   { src: "/images/java.png", alt: "Java" },
   { src: "/images/python.png", alt: "Python" },
   { src: "/images/php.png", alt: "PHP" },
-  { src: "/images/javascript.png", alt: "JavaScript" },
+  { src: "/images/Sql.png", alt: "SQL" },
+
 
 
   { src: "/images/csharp.svg.png", alt: "Csharp" },
