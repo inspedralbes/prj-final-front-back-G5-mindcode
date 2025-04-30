@@ -1,0 +1,27 @@
+{
+    "endpoint": "api/form/questions",
+    "method": "GET",
+    "description": "Retrieve a list of form questions",
+    "request":{
+        "body":{
+            "form_id": "int"
+        }
+    },
+    "response": {
+        "200": {
+            "status": "success",
+            "description": "Form questions obtained successfully!",
+            "body": [
+                {
+                    "question_id": "int",
+                    "question_text": "string",
+                    "question_type": "string",
+                    "options": [
+                        "string"
+                    ],
+                    "required": "boolean"
+                }
+            ]
+        }
+    }
+}
