@@ -9,7 +9,7 @@ INSERT INTO USER (id, name, gmail, teacher, language, googleId, class) VALUES
 (3, 'Charlie Brown', 'charlie.brown@gmail.com', FALSE, '[{"id": 2,"name": "Javascript","restrictionId": 3}]', NULL, 3),
 (4, 'Diana Lee', 'diana.lee@gmail.com', FALSE, '[{"id": 3,"name": "Java","restrictionId": 2}]', NULL, NULL);
 
-INSERT INTO LANGUAGE (idlanguage, name) VALUES
+INSERT INTO LANGUAGE (id, name) VALUES
 (1, 'Python'),
 (2, 'JavaScript'),
 (3, 'Java');

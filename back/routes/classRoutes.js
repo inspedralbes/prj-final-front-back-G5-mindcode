@@ -182,7 +182,7 @@ router.post('/enroll', verifyTokenMiddleware, async (req, res) => {
                     class_info.push(await getClassInfo(class_id, verified_user_id));
                 }
 
-                res.json({ message: 'Successfully enrolled in the class', class_info });
+                res.json({ message: 'Successfully enrolled in the class', class_info, isTeacher: isTeacher });
 
             } catch (error) {
                 console.error('Error adding student to class:', error);
