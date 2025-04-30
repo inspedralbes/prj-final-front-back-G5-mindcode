@@ -12,33 +12,43 @@ import ContentWrapper from '../atoms/ContentWrapper';
 const StatsContent = ({ classId, mode }) => {
 
     const [classStats, setClassStats] = useState([]);
+    const [filteredClassData, setFilteredClassData] = useState([]);
+    const [quizzStats, setQuizzStats] = useState([]);
+    const [filteredQuizzData, setFilteredQuizzData] = useState([]);
     const [languageStats, setLanguageStats] = useState([]);
     const [messageCountByDate, setMessageCountByDate] = useState([]);
-    const [filteredData, setFilteredData] = useState([]);
-
+    
     const class_info = useAuthStore((state) => state.class_info);
 
     useEffect(() => {
         if (mode === "alumne") {
             fetchAiMessagesStudentData(classId) // CHANGE WHEN MULTIPLE CLASSES
-                .then((data) => { setClassStats(data); setFilteredData(data) })
+                .then((data) => { setClassStats(data); setFilteredClassData(data) })
+                .catch((error) => console.error('Error fetching class data:', error));
+
+            fetchQuizzesStudentData(classId) // CHANGE WHEN MULTIPLE CLASSES
+                .then((data) => { setQuizzStats(data); setFilteredQuizzData(data) })
                 .catch((error) => console.error('Error fetching class data:', error));
         } else {
             fetchAiMessagesClassData(classId) // CHANGE WHEN MULTIPLE CLASSES
-                .then((data) => { setClassStats(data); setFilteredData(data) })
+                .then((data) => { setClassStats(data); setFilteredClassData(data) })
+                .catch((error) => console.error('Error fetching class data:', error));
+
+            fetchQuizzesClassData(classId) // CHANGE WHEN MULTIPLE CLASSES
+                .then((data) => { setQuizzStats(data); setFilteredQuizzData(data) })
                 .catch((error) => console.error('Error fetching class data:', error));
         }
     }, [mode, classId]);
 
     useEffect(() => {
-        if (classStats && class_info?.[0]?.language_info && filteredData) {
-            const result = filterMessageCount(filteredData, class_info[0].language_info);
+        if (classStats && class_info?.[0]?.language_info && filteredClassData) {
+            const result = filterMessageCount(filteredClassData, class_info[0].language_info);
             setLanguageStats(result);
-            const messageCountByDate = filterDate(filteredData);
+            const messageCountByDate = filterDate(filteredClassData);
             setMessageCountByDate(messageCountByDate);
 
         }
-    }, [classStats, class_info, filteredData]);
+    }, [classStats, class_info, filteredClassData]);
 
 
     const filterMessageCount = (data, languageInfo) => {
@@ -87,12 +97,12 @@ const StatsContent = ({ classId, mode }) => {
         startDate.setDate(today.getDate() - days);
 
         // Filter the classStats array
-        const filteredData = classStats.filter((item) => {
+        const filteredClassData = classStats.filter((item) => {
             const itemDate = new Date(item.createdAt);
             return itemDate >= startDate;
         });
 
-        return filteredData;
+        return filteredClassData;
     };
 
     return (
@@ -104,10 +114,10 @@ const StatsContent = ({ classId, mode }) => {
                     <ButtonCollection
                         buttons={
                             [
-                                { label: "7d", onClick: () => setFilteredData(filterByDateRange(7, classStats)) },
-                                { label: "30d", onClick: () => setFilteredData(filterByDateRange(30, classStats)) },
-                                { label: "365d", onClick: () => setFilteredData(filterByDateRange(365, classStats)) },
-                                { label: "Tots", onClick: () => setFilteredData(classStats) },
+                                { label: "7d", onClick: () => setFilteredClassData(filterByDateRange(7, classStats)) },
+                                { label: "30d", onClick: () => setFilteredClassData(filterByDateRange(30, classStats)) },
+                                { label: "365d", onClick: () => setFilteredClassData(filterByDateRange(365, classStats)) },
+                                { label: "Tots", onClick: () => setFilteredClassData(classStats) },
                             ]
                         }
                     />
@@ -153,6 +163,30 @@ const StatsContent = ({ classId, mode }) => {
                                 <BarGraph
                                     labels={messageCountByDate.map((item) => item.date)}
                                     dataValues={messageCountByDate.map((item) => item.count)}
+                                    title={"Missatges totals d'aquesta classe"}
+                                    legend={"Missatges per llenguatge"}
+                                    barColor={"rgba(54, 162, 235, 0.5)"}
+                                    borderColor={"rgba(54, 162, 235, 1)"}
+                                />
+                            )}
+                        </ContentWrapper>
+                    </div>
+
+                    <div className="w-full max-w-[80%] mx-auto min-[300px]:max-w-full">
+                        <ContentWrapper className="w-full md:w-1/2 lg:w-1/3">
+                            {mode === "alumne" ? (
+                                <BarGraph
+                                    labels={filteredQuizzData.map((item) => item.date)}
+                                    dataValues={filteredQuizzData.map((item) => item.count)}
+                                    title={"Missatges totals d'aquest alumne"}
+                                    legend={"Missatges per llenguatge"}
+                                    barColor={"rgba(54, 162, 235, 0.5)"}
+                                    borderColor={"rgba(54, 162, 235, 1)"}
+                                />
+                            ) : (
+                                <BarGraph
+                                    labels={filteredQuizzData.map((item) => item.date)}
+                                    dataValues={filteredQuizzData.map((item) => item.count)}
                                     title={"Missatges totals d'aquesta classe"}
                                     legend={"Missatges per llenguatge"}
                                     barColor={"rgba(54, 162, 235, 0.5)"}
