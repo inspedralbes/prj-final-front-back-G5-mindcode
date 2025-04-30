@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import SidebarStudent from "../../components/organisms/SidebarStudent";
-import UserChat from "../../components/organisms/UserChat"; 
-import GameCirclePanel from "../../components/organisms/GameCirclePanel"; 
+import UserChat from "../../components/organisms/UserChat";
 import Navbar from "../../components/organisms/Navbar";
 import { useAuthStore } from "stores/authStore";
 import { sendMessage, getUserInfo } from "services/communicationManager";
@@ -14,7 +13,6 @@ const StudentDashboardPage = () => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [highlightedLanguageIndex, setHighlightedLanguageIndex] = useState(0);
-  const [selectedSection, setSelectedSection] = useState(""); 
 
   const classInfo = useAuthStore((state) => state.class_info);
 
@@ -42,9 +40,6 @@ const StudentDashboardPage = () => {
         const aiMessage = { sender: "ai", text: response };
         setMessages((prev) => {
           const newMessages = [...prev];
-          if (!newMessages[highlightedLanguageIndex]) {
-            newMessages[highlightedLanguageIndex] = { messages: [] };
-          }
           newMessages[highlightedLanguageIndex].messages.push(aiMessage);
           return newMessages;
         });
@@ -56,23 +51,15 @@ const StudentDashboardPage = () => {
 
   const handleSetCurrentLanguage = (language) => {
     setHighlightedLanguage(language);
-    setSelectedSection("chat");
     setHighlightedLanguageIndex(
       classInfo[0].language_info.findIndex((lang) => lang.id === language.id)
     );
-  };
-
-  const handleSelectGame = () => {
-    setSelectedSection("jocs"); 
-    setHighlightedLanguage(null); 
   };
 
   useEffect(() => {
     if (classInfo?.length > 0) {
       setIsClient(true);
       setMessages(classInfo[0].language_info.map(() => ({ messages: [] })));
-      setHighlightedLanguage(null);
-      setHighlightedLanguageIndex(0);
     }
   }, [classInfo]);
 
@@ -84,14 +71,11 @@ const StudentDashboardPage = () => {
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50">
-      <SidebarStudent
-        handleSetCurrentLanguage={handleSetCurrentLanguage}
-        handleSelectGame={handleSelectGame}
-      />
+      <SidebarStudent handleSetCurrentLanguage={handleSetCurrentLanguage} />
       <div className="flex flex-col w-full">
         <Navbar />
         <div className="flex-1 flex items-center justify-center">
-          {selectedSection === "chat" && highlightedLanguage ? (
+          {highlightedLanguage ? (
             <UserChat
               language={highlightedLanguage}
               message={message}
@@ -99,11 +83,9 @@ const StudentDashboardPage = () => {
               handleSendMessage={handleSendMessage}
               handleChangeMessage={setMessage}
             />
-          ) : selectedSection === "jocs" ? (
-            <GameCirclePanel />
           ) : (
             <div className="text-gray-500 text-lg text-center">
-              ✨ Selecciona un llenguatge o joc per començar ✨
+              ✨ Selecciona un llenguatge per començar ✨
             </div>
           )}
         </div>
