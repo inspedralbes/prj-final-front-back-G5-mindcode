@@ -209,7 +209,7 @@ export async function sendMessage(body) {
 
 // export async function getStudents(class_id) {
 //   try {
-//     const response = await fetch(`${URL}/api/class/user?class_id=${class_id}`);  
+//     const response = await fetch(`${URL}/api/user?class_id=${class_id}`);  
 //     if (!response.ok) {
 //       throw new Error(`Error: ${response.status}`);
 //     }
@@ -220,7 +220,6 @@ export async function sendMessage(body) {
 //     throw error;  
 //   }
 // }
-
 
 // LANGUAGES
 export async function getLanguages() {
@@ -501,7 +500,82 @@ export async function getUserInfo() {
     throw error;
   }
 }
+export async function generateQuiz(classId) {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+    if (!user_info || !user_info.token) {
+      throw new Error('No token provided. User not authenticated.');
+    }
+    const response = await fetch(`${URL}/message/api/quiz`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user_info.token}`
+      },
+      body: JSON.stringify({
+        class_id: classId
+      })
+    });
 
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Error ${response.status}: ${errorData.error || errorData.message || 'Invalid request'}`);
+    }
+
+    const data = await response.json();
+    console.log('Quiz recived:', data);
+
+    if (!data.quiz || !Array.isArray(data.quiz)) {
+      throw new Error('Quiz format is invalid');
+    }
+
+  
+    const quizId = data.quizId || data.quiz_id;
+    if (!quizId) {
+      throw new Error('Quiz ID is missing in the response');
+    }
+
+    return {
+      quiz: data.quiz,
+      quizId: quizId
+    };
+  } catch (error) {
+    console.error('Error generating quiz:', error);
+    throw error;
+  }
+}
+
+export async function submitQuizResults(quizId, answers) {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+    if (!user_info || !user_info.token) {
+      throw new Error('No token provided. User not authenticated.');
+    }
+    const response = await fetch(`${URL}/message/api/quizResponse`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user_info.token}`
+      },
+      body: JSON.stringify({
+        quizId,
+        answers
+      })
+    });
+
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      throw new Error(`Error ${response.status}: ${errorResponse.description || 'Invalid request'}`);
+    }
+
+    const data = await response.json();
+    console.log('Quiz results received:', data);
+    return data;
+  } catch (error) {
+    console.error('Error submitting quiz results:', error);
+    throw error;
+  }
+}
 export async function updateUserInfo({ id, name, gmail }) {
   try {
     const user_info = useAuthStore.getState().user_info;

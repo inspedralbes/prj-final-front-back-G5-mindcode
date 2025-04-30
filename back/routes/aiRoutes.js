@@ -1,15 +1,20 @@
 import express from "express";
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 import { createConnection } from "../utils.js";
 import { verifyTokenMiddleware } from "../tokens.js";
 import dotenv from 'dotenv';
 import Message from "../schemes/mongoScheme.js"
+import Quiz from "../schemes/quizScheme.js"
 
 dotenv.config();
 
 const router = express.Router();
 
 const AIHOST = process.env.AIHOST;
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // post a message
 router.post('/create', verifyTokenMiddleware, async (req, res) => {
@@ -170,7 +175,7 @@ router.post('/create', verifyTokenMiddleware, async (req, res) => {
 
 const sendToAI = async (message, language, restriction) => {
     console.log("sending message");
-    const response = await fetch(`${AIHOST}`, {
+    const response = await fetch(`http://${AIHOST}:4567`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -201,5 +206,180 @@ export async function saveMessage(obj) {
     const message = new Message(obj);
     await message.save();
 }
+
+router.post('/api/quiz', verifyTokenMiddleware, async (req, res) => {
+  try {
+    const userId = req.verified_user_id;
+    const { class_id } = req.body;
+    console.log("en teoria aqui se veria el classid del back: " + class_id);
+    const messages = await Message.find({ userId })
+      .sort({ _id: -1 })
+      .limit(3)
+      .select('userContent')
+      .lean();
+
+    if (!messages || messages.length === 0) {
+      return res.status(400).json({ error: "There are not enough messages to generate the questionnaire." });
+    }
+
+    const formattedMessages = messages.map(msg => msg.userContent).join("\n");
+    console.log('Messages received from user:', formattedMessages);
+    const aiResponse = await sendForQuiz(formattedMessages);
+    console.log('AI response:', aiResponse);
+
+    if (!aiResponse || !aiResponse.quiz || !Array.isArray(aiResponse.quiz)) {
+      return res.status(500).json({ error: "AI did not return a valid response:" });
+    }
+
+    const quiz = new Quiz({
+      userId,
+      classId: class_id,
+      questions: aiResponse.quiz,
+      userAnswers: [],
+    });
+
+    const savedQuiz = await quiz.save();
+    console.log('Quiz saved in MongoDB:', savedQuiz._id);
+
+    res.status(200).json({
+      quiz: aiResponse.quiz,
+      quizId: savedQuiz._id
+    });
+
+  } catch (error) {
+    console.error('Error processing quiz:', error);
+    res.status(500).json({ 
+      error: "Internal server error",
+      message: error.message 
+    });
+  }
+});
+
+router.post('/api/quizResponse', verifyTokenMiddleware, async (req, res) => {
+  try {
+    const { quizId, answers } = req.body; 
+    const userId = req.verified_user_id;
+    console.log('Received quiz response:', { quizId, answers });
+
+    if (!quizId || !answers || !Array.isArray(answers)) {
+      return res.status(400).json({
+        status: "error",
+        description: "Quiz ID and answers array are required"
+      });
+    }
+
+    const validAnswers = answers.every(answer => {
+      return answer.question_id && (answer.selected_option !== undefined || answer.value !== undefined);
+    });
+
+    if (!validAnswers) {
+      return res.status(400).json({
+        status: "error",
+        description: "Invalid answer format. Each answer must have question_id and either selected_option or value"
+      });
+    }
+  
+    try {
+      const quiz = await Quiz.findById(quizId);
+      console.log('Found quiz:', quiz);
+  
+      if (!quiz) {
+        return res.status(404).json({
+          status: "error",
+          description: "Quiz not found"
+        });
+      }
+      const results = answers.map(answer => {
+        const question = quiz.questions.find(q => q.question_id === answer.question_id);
+        if (!question) return null;
+
+        const baseAnswer = {
+          question_id: answer.question_id,
+          question_type: question.question_type
+        };
+
+        if (question.question_type === 'short_answer') {
+          return {
+            ...baseAnswer,
+            value: answer.value,
+            isCorrect: answer.value?.toLowerCase().trim() === question.correct_answer?.toLowerCase().trim()
+          };
+        } else {
+          return {
+            ...baseAnswer,
+            selected_option: answer.selected_option,
+            isCorrect: answer.selected_option === question.correct_option,
+            correct_option: question.correct_option
+          };
+        }
+      }).filter(result => result !== null);
+
+      const correctAnswersCount = results.filter(result => result.isCorrect).length;
+
+      const updatedQuiz = await Quiz.findByIdAndUpdate(
+        quizId,
+        { 
+          $set: { 
+            userAnswers: results,
+            correctAnswers: correctAnswersCount,
+            'questions.$[].isAnswered': true 
+          } 
+        },
+        { new: true }
+      );
+
+      console.log('Quiz response saved in MongoDB:', results);
+
+      res.status(200).json({
+        status: "success",
+        results,
+        questions: quiz.questions
+      });
+    } catch (error) {
+      console.error('Error processing quiz response:', error);
+      res.status(500).json({
+        status: "error",
+        description: "Internal server error while processing quiz response"
+      });
+    }
+  } catch (error) {
+    console.error('Error in quiz response route:', error);
+    res.status(500).json({
+      status: "error",
+      description: "Internal server error"
+    });
+  }
+});
+
+
+const sendForQuiz = async (formattedMessages) => {
+console.log("Sending message to AI:", formattedMessages);
+console.log("AIHOST actual:", AIHOST);
+
+const response = await fetch(`http://${AIHOST}:4567/generateQuiz`, {
+method: 'POST',
+headers: {
+    'Content-Type': 'application/json'
+},
+body: JSON.stringify({userPrompt: formattedMessages})
+});
+
+console.log("answer recieved");
+if (!response.ok) {
+throw new Error("La IA respondió con un error: " + response.statusText);
+}
+
+const aiResponse = await response.json();
+
+if (!aiResponse) {
+throw new Error("No se recibió respuesta de la IA");
+}
+
+console.log(aiResponse);
+
+console.log("answer sent back");
+
+return aiResponse;
+};
 
 export default router;
