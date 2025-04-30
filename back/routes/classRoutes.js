@@ -179,7 +179,7 @@ router.post('/enroll', verifyTokenMiddleware, async (req, res) => {
                     );
                     await connection.end();
 
-                    class_info.push(await getClassInfo(class_id));
+                    class_info.push(await getClassInfo(class_id, verified_user_id));
                 }
 
                 res.json({ message: 'Successfully enrolled in the class', class_info });

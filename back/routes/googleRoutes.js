@@ -53,7 +53,7 @@ router.post('/', async (req, res) => {
                 class_info = await getClassesInfoWithTeacher(userId);
             } else { // student
                 if (classId) {
-                    class_info.push(await getClassInfo(classId));
+                    class_info.push(await getClassInfo(classId, userId));
                 }
             }
         }

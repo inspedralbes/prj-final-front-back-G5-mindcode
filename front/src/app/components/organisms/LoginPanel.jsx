@@ -16,9 +16,9 @@ const LoginPanel = ({ onLogin }) => {
           glareMaxOpacity={0.15}
           className="w-full max-w-md"
         >
-          <h5 className="text-1xl font-bold mb-6 text-center">
+          <div>
             <Title>Autentiqueu-vos utilitzant el vostre compte a:</Title>
-          </h5>
+          </div>
 
           <Button onClick={onLogin} className="flex items-center justify-center gap-2 bg-white text-black font-semibold py-3 w-full rounded-lg">
             <svg className="w-5 h-5" viewBox="0 0 533.5 544.3">
