@@ -474,7 +474,6 @@ export async function getRestrictions() {
     throw error;
   }
 };
-//export userSettings function
 export async function getUserInfo() {
   try {
     const user_info = useAuthStore.getState().user_info;

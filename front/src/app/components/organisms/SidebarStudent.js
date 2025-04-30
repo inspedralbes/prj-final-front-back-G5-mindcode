@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import LanguageList from "../molecules/LanguageList";
 import Button from "../atoms/Button";
 import { useAuthStore } from "stores/authStore";
@@ -10,6 +10,7 @@ const SidebarStudent = ({ handleSetCurrentLanguage }) => {
   const [isLlenguatgesOpen, setIsLlenguatgesOpen] = useState(false);
   const [languages, setLanguages] = useState([]);
   const router = useRouter();
+  const pathname = usePathname();
   const classInfo = useAuthStore((state) => state.class_info);
 
   useEffect(() => {
@@ -27,7 +28,8 @@ const SidebarStudent = ({ handleSetCurrentLanguage }) => {
       <div className="text-center mb-6">
         <Button  
           onClick={handleRedirect} 
-          className="w-16 h-16 flex items-center justify-center rounded-full mx-auto mb-2 text-3xl"
+          className={`w-16 h-16 flex items-center justify-center rounded-full mx-auto mb-2 text-3xl 
+            ${pathname === '/StSettings' ? ' text-white' : ''}`}
         >
           👤
         </Button>
@@ -44,14 +46,20 @@ const SidebarStudent = ({ handleSetCurrentLanguage }) => {
 
         <Button 
           onClick={handleGoToGames}
-          className="bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 text-left p-5"
+          className={`text-left p-5 w-full
+            ${pathname === '/Jocs'
+              ? 'bg-purple-700 text-white'
+              : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'}`}
         >
           🎮 Jocs
         </Button>
 
         <Button 
           onClick={handleFormClick}
-          className="bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 text-left p-5"
+          className={`text-left p-5 w-full
+            ${pathname === '/UserForm'
+              ? 'bg-purple-700 text-white'
+              : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'}`}
         >
           📝 Qüestionari
         </Button>
