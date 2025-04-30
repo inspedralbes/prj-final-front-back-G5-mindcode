@@ -12,6 +12,8 @@ import userRoutes from './routes/userRoutes.js';
 import { testConnection, connectMongo } from './utils.js';
 import { sequelize } from "./models/index.js";
 import Message from "./schemes/mongoScheme.js"
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
 
@@ -32,6 +34,10 @@ app.use(cors("*"));
 const port = process.env.PORT;
 
 app.use(express.json());
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use("/api/language", languageRoutes);
 app.use("/api/class", classRoutes);

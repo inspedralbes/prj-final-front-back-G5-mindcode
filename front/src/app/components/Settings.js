@@ -1,7 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Button from "app/components/atoms/Button";
 import Dialog from "app/components/atoms/Dialog";
-import { updateUserInfo } from "services/communicationManager";
+import { updateUserInfo, getUserImage, uploadUserImage } from "services/communicationManager";
 import Snackbar from "app/components/atoms/Snackbar";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from '../../stores/authStore';
@@ -14,15 +14,29 @@ const Settings = ({ id, name: initialName, gmail }) => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const user_info = useAuthStore.getState().user_info;
     const router = useRouter();
-    
-    // Estados para manejo de foto
+
     const [photoURL, setPhotoURL] = useState(user_info?.photoURL || null);
+    const [userImage, setUserImage] = useState(null);
     const [previewPhoto, setPreviewPhoto] = useState(user_info?.photoURL || null);
+    const [tempImagePreview, setTempImagePreview] = useState(null);
     const fileInputRef = useRef(null);
+
+    useEffect(() => {
+        const fetchUserImage = async () => {
+            try {
+                const img = await getUserImage(id);
+                setUserImage(img);
+                setTempImagePreview(img);
+            } catch (error) {
+                console.error("Error fetching user image:", error);
+            }
+        };
+
+        fetchUserImage();
+    }, [id]);
 
     const handleSave = async () => {
         try {
-            // Implementación para subir la foto y obtener URL
             await updateUserInfo({ 
                 id, 
                 name: editedName, 
@@ -32,6 +46,7 @@ const Settings = ({ id, name: initialName, gmail }) => {
             
             setName(editedName);
             setPhotoURL(previewPhoto);
+            setUserImage(tempImagePreview);
             setIsEditing(false);
             setSnackbar({ message: "Dades actualitzades correctament!" });
         } catch (error) {
@@ -44,19 +59,33 @@ const Settings = ({ id, name: initialName, gmail }) => {
         router.push("/Login");
     };
 
-    const handlePhotoChange = (e) => {
+    const handlePhotoChange = async (e) => {
         const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setPreviewPhoto(reader.result);
-            };
-            reader.readAsDataURL(file);
+            const objectUrl = URL.createObjectURL(file);
+            setTempImagePreview(objectUrl);
+
+            try {
+                const uploadedImageUrl = await uploadUserImage(id, file);
+                setPreviewPhoto(uploadedImageUrl);
+                URL.revokeObjectURL(objectUrl);
+                setTempImagePreview(uploadedImageUrl);
+            } catch (error) {
+                console.error('Error uploading image:', error);
+                setSnackbar({ message: "Error al cargar la imagen." });
+            }
         }
     };
 
     const triggerFileInput = () => {
         fileInputRef.current.click();
+    };
+
+    // Función para cancelar la edición
+    const handleCancel = () => {
+        setEditedName(name);
+        setTempImagePreview(userImage || photoURL);
+        setIsEditing(false);
     };
 
     return (
@@ -93,7 +122,7 @@ const Settings = ({ id, name: initialName, gmail }) => {
                                     <div className="relative group">
                                         <div className="w-14 h-14 rounded-full overflow-hidden ring-4 ring-white dark:ring-gray-700 shadow-lg transition-all duration-300 group-hover:ring-blue-400">
                                             <img 
-                                                src={previewPhoto || "/default-avatar.png"} 
+                                                src={tempImagePreview || userImage || user_info.photoURL} 
                                                 className="w-full h-full object-cover cursor-pointer"
                                                 alt="Foto de perfil"
                                                 onClick={triggerFileInput}
@@ -123,11 +152,7 @@ const Settings = ({ id, name: initialName, gmail }) => {
                             <Button
                                 text="Cancelar"
                                 className="px-6 py-2 rounded-lg border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors font-medium"
-                                onClick={() => {
-                                    setEditedName(name);
-                                    setPreviewPhoto(photoURL);
-                                    setIsEditing(false);
-                                }}
+                                onClick={handleCancel}
                             />
                             <Button
                                 text="Guardar"
@@ -153,7 +178,7 @@ const Settings = ({ id, name: initialName, gmail }) => {
                                     <h4 className="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-2">Foto</h4>
                                     <div className="w-14 h-14 rounded-full overflow-hidden ring-4 ring-white dark:ring-gray-700 shadow-lg">
                                         <img 
-                                            src={photoURL || "/default-avatar.png"} 
+                                            src={userImage || photoURL} 
                                             className="w-full h-full object-cover"
                                             alt="Foto de perfil"
                                         />

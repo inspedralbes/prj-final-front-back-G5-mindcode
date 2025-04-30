@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useAuthStore } from '../../stores/authStore';
 import { useRouter } from 'next/navigation';
+import { getUserImage } from '../../services/communicationManager';
 
-const URL = process.env.NEXT_PUBLIC_URL;
-const Sidebar = ({handleSetCurrentLanguage}) => {
+const Sidebar = ({ handleSetCurrentLanguage }) => {
   const [isLlenguatgesOpen, setIsLlenguatgesOpen] = useState(false);
   const [languages, setLanguages] = useState([]);
-  const user_info = useAuthStore.getState().user_info
+  const [userImage, setUserImage] = useState(null);
+  const user_info = useAuthStore.getState().user_info;
   const router = useRouter();
   const classInfo = useAuthStore((state) => state.class_info);
 
@@ -18,29 +19,48 @@ const Sidebar = ({handleSetCurrentLanguage}) => {
     }
   }, [classInfo]);
 
+  useEffect(() => {
+    const fetchUserImage = async () => {
+      try {
+        const img = await getUserImage(user_info.userId);
+        setUserImage(img);
+      } catch (error) {
+        console.error("Error fetching user image:", error);
+      }
+    };
+
+    fetchUserImage();
+  }, [user_info]);
+
   const handleLanguageClick = async (language) => {
     console.log("Lenguaje seleccionado:", language);
-
-
     handleSetCurrentLanguage(language);
   };
 
   const handleRedirect = async () => {
     router.push('/StSettings');
-  }
+  };
 
   return (
     <div className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white w-1/4 h-full p-4 border-r border-gray-300 dark:border-gray-700">
       <div className="text-center mb-6">
-        <button 
+        <button
           className="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 mx-auto mb-2 overflow-hidden"
           onClick={handleRedirect}
         >
-          <img 
-            src={user_info.photoURL} 
-            alt="avatar" 
-            className="w-full h-full object-cover"
-          />
+          {userImage ? (
+            <img
+              src={userImage}
+              alt="avatar"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <img
+              src={user_info.photoURL}
+              alt="avatar"
+              className="w-full h-full object-cover"
+            />
+          )}
         </button>
         <h2 className="text-lg font-semibold">ALUMNE</h2>
       </div>
