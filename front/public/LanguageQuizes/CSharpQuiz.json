@@ -1,0 +1,430 @@
+{
+    "_id": { "$oid": "680b40e8fbdcf9cf00b6c600" },
+    "correctAnswers": 0,
+    "userId": 6,
+    "classId": 1,
+    "questions": [
+      {
+        "isAnswered": false,
+        "question_id": 1,
+        "question_text": "What is the entry point of a C# program?",
+        "question_type": "MCQ",
+        "options": [
+          "Main()",
+          "Start()",
+          "Initialize()"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c601" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 2,
+        "question_text": "Which keyword is used to declare a constant in C#?",
+        "question_type": "MCQ",
+        "options": [
+          "const",
+          "final",
+          "readonly"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c602" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 3,
+        "question_text": "What is the base class for all classes in C#?",
+        "question_type": "MCQ",
+        "options": [
+          "Object",
+          "Base",
+          "Super"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c603" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 4,
+        "question_text": "Which access modifier provides the most restrictive access level?",
+        "question_type": "MCQ",
+        "options": [
+          "public",
+          "protected",
+          "private"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c604" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 5,
+        "question_text": "What is the purpose of the 'using' statement in C#?",
+        "question_type": "MCQ",
+        "options": [
+          "To include namespaces",
+          "To properly dispose IDisposable objects",
+          "Both of the above"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c605" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 6,
+        "question_text": "Which type is used to store true/false values in C#?",
+        "question_type": "MCQ",
+        "options": [
+          "bool",
+          "bit",
+          "boolean"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c606" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 7,
+        "question_text": "What is the default value of an int in C#?",
+        "question_type": "MCQ",
+        "options": [
+          "0",
+          "1",
+          "null"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c607" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 8,
+        "question_text": "Which keyword is used to prevent a class from being inherited?",
+        "question_type": "MCQ",
+        "options": [
+          "static",
+          "sealed",
+          "private"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c608" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 9,
+        "question_text": "What is the purpose of the 'virtual' keyword in C#?",
+        "question_type": "MCQ",
+        "options": [
+          "To allow a method to be overridden",
+          "To make a method static",
+          "To prevent inheritance"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c609" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 10,
+        "question_text": "Which collection class represents a last-in-first-out (LIFO) structure?",
+        "question_type": "MCQ",
+        "options": [
+          "Queue",
+          "Stack",
+          "List"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c610" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 11,
+        "question_text": "What is the purpose of the 'out' keyword in C#?",
+        "question_type": "MCQ",
+        "options": [
+          "To specify an output parameter",
+          "To indicate a method returns a value",
+          "To mark a parameter as optional"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c611" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 12,
+        "question_text": "Which interface must be implemented to support foreach iteration?",
+        "question_type": "MCQ",
+        "options": [
+          "IEnumerable",
+          "ICollection",
+          "IList"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c612" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 13,
+        "question_text": "What is the purpose of the 'async' keyword in C#?",
+        "question_type": "MCQ",
+        "options": [
+          "To mark a method as asynchronous",
+          "To create a new thread",
+          "To make a method run faster"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c613" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 14,
+        "question_text": "Which method is called when an object is created in C#?",
+        "question_type": "MCQ",
+        "options": [
+          "Main()",
+          "Constructor",
+          "Initialize()"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c614" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 15,
+        "question_text": "What is the purpose of the 'params' keyword in C#?",
+        "question_type": "MCQ",
+        "options": [
+          "To specify a variable number of arguments",
+          "To pass parameters by reference",
+          "To make parameters optional"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c615" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 16,
+        "question_text": "Which keyword is used to prevent a method from being overridden?",
+        "question_type": "MCQ",
+        "options": [
+          "static",
+          "sealed",
+          "final"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c616" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 17,
+        "question_text": "What is the purpose of LINQ in C#?",
+        "question_type": "MCQ",
+        "options": [
+          "To query data from various sources",
+          "To create graphical interfaces",
+          "To handle exceptions"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c617" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 18,
+        "question_text": "Which access modifier allows access within the same assembly?",
+        "question_type": "MCQ",
+        "options": [
+          "public",
+          "internal",
+          "protected"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c618" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 19,
+        "question_text": "What is boxing in C#?",
+        "question_type": "MCQ",
+        "options": [
+          "Converting a value type to object type",
+          "Converting an object type to value type",
+          "Creating a new object"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c619" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 20,
+        "question_text": "Which keyword is used to create an alias for a namespace or type?",
+        "question_type": "MCQ",
+        "options": [
+          "alias",
+          "using",
+          "typedef"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c620" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 21,
+        "question_text": "What is the purpose of the 'yield' keyword in C#?",
+        "question_type": "MCQ",
+        "options": [
+          "To return from a method early",
+          "To implement iterator functionality",
+          "To throw an exception"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c621" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 22,
+        "question_text": "Which attribute marks a method as a unit test?",
+        "question_type": "MCQ",
+        "options": [
+          "[Test]",
+          "[TestMethod]",
+          "[TestClass]"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c622" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 23,
+        "question_text": "What is the purpose of the 'nameof' operator in C#?",
+        "question_type": "MCQ",
+        "options": [
+          "To get the name of a variable, type, or member",
+          "To create a new name for a variable",
+          "To check if a name exists"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c623" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 24,
+        "question_text": "Which collection class represents a key-value pair collection?",
+        "question_type": "MCQ",
+        "options": [
+          "List<T>",
+          "Dictionary<TKey, TValue>",
+          "HashSet<T>"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c624" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 25,
+        "question_text": "What is the purpose of the 'is' operator in C#?",
+        "question_type": "MCQ",
+        "options": [
+          "To check object type compatibility",
+          "To compare values",
+          "To assign values"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c625" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 26,
+        "question_text": "Which keyword is used to handle exceptions in C#?",
+        "question_type": "MCQ",
+        "options": [
+          "catch",
+          "handle",
+          "exception"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c626" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 27,
+        "question_text": "What is the purpose of the '??' operator in C#?",
+        "question_type": "MCQ",
+        "options": [
+          "Null coalescing operator",
+          "Ternary operator",
+          "Assignment operator"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c627" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 28,
+        "question_text": "Which interface is used to support comparison operations?",
+        "question_type": "MCQ",
+        "options": [
+          "IComparable",
+          "IEquatable",
+          "IEnumerable"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c628" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 29,
+        "question_text": "What is the purpose of the 'lock' statement in C#?",
+        "question_type": "MCQ",
+        "options": [
+          "To prevent multiple threads from executing a code block",
+          "To create read-only variables",
+          "To synchronize database access"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c629" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 30,
+        "question_text": "Which method is used to raise an event in C#?",
+        "question_type": "MCQ",
+        "options": [
+          "Invoke()",
+          "Raise()",
+          "Trigger()"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c630" }
+      }
+    ],
+    "userAnswers": [],
+    "__v": 0
+}

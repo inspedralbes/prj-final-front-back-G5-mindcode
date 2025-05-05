@@ -98,30 +98,40 @@ const CSSPage = () => {
 
   const placeFood = () => {
     const game = gameRef.current;
-
+  
     if (!quizQuestions || quizQuestions.length === 0) {
       setMessage("\u26A0\uFE0F No quiz questions available.");
       return;
     }
-
+  
+    // Reset used questions if all have been used
     if (usedQuestions.length >= quizQuestions.length) {
       setUsedQuestions([]);
     }
-
-    const remaining = quizQuestions.filter((_, i) => !usedQuestions.includes(i));
-    const randomIndex = Math.floor(Math.random() * remaining.length);
-    const questionIndex = quizQuestions.findIndex(q => q === remaining[randomIndex]);
-    
+  
+    // Get available questions (not yet used in this round)
+    const availableQuestions = quizQuestions.filter((_, index) => !usedQuestions.includes(index));
+  
+    if (availableQuestions.length === 0) {
+      setMessage("\u26A0\uFE0F No more questions available.");
+      return;
+    }
+  
+    // Select random question from available ones
+    const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+    const selectedQuestion = availableQuestions[randomIndex];
+    const questionIndex = quizQuestions.findIndex(q => q === selectedQuestion);
+  
     setUsedQuestions(prev => [...prev, questionIndex]);
-    setCurrentQuestion(remaining[randomIndex]);
+    setCurrentQuestion(selectedQuestion);
     setQuestionsCompleted(prev => prev + 1);
-
-    const q = remaining[randomIndex];
+  
+    // Rest of your food placement logic...
     const maxX = Math.floor(game.canvasWidth / gridSize) - 1;
     const maxY = Math.floor(game.canvasHeight / gridSize) - 1;
-
+  
     const foodColors = ['#3b82f6', '#6366f1', '#8b5cf6'];
-    const foods = q.options.map((option, index) => {
+    const foods = selectedQuestion.options.map((option, index) => {
       let x, y;
       do {
         x = Math.floor(Math.random() * maxX);
@@ -130,16 +140,16 @@ const CSSPage = () => {
         isPositionOccupied(x, y) ||
         game.foods.some(f => f.x === x && f.y === y)
       );
-
+  
       return {
         x,
         y,
         value: option,
         color: foodColors[index % foodColors.length],
-        isCorrect: index === q.correct_option - 1
+        isCorrect: index === selectedQuestion.correct_option - 1
       };
     });
-
+  
     game.foods = foods;
   };
 
@@ -213,10 +223,10 @@ const CSSPage = () => {
       if (head.x === food.x && head.y === food.y) {
         if (food.isCorrect) {
           setScore(prev => prev + 10);
-          setMessage(` +10 points`);
+          setMessage(`✅ +10 points`);
         } else {
           setScore(prev => Math.max(0, prev - 10));
-          setMessage(`-10 points`);
+          setMessage(`❌ -10 points`);
         }
         placeFood();
         ate = true;
@@ -292,7 +302,7 @@ const CSSPage = () => {
       ctx.roundRect(x, y, gridSize - 1, gridSize - 1, [6]);
       ctx.fill();
       
-      ctx.fillStyle = 'white';
+      ctx.fillStyle = 'white'; 
       ctx.font = 'bold 9px Arial';
       ctx.textAlign = 'center';
       
@@ -327,12 +337,17 @@ const CSSPage = () => {
     clearInterval(game.timerInterval);
     game.gameActive = false;
     setGameOver(true);
-    setMessage(`🏁 Score: ${score}`);
+    
+    const allQuestionsUsed = usedQuestions.length >= quizQuestions.length && quizQuestions.length > 0;
+    
+    setMessage(allQuestionsUsed 
+      ? `🏁 Completed all questions! Final Score: ${score}`
+      : `🏁 Final Score: ${score}`);
   };
 
   const startGame = async () => {
     setScore(0);
-    setUsedQuestions([]);
+    setUsedQuestions([]); 
     setQuestionsCompleted(0);
     setGameOver(false);
     setGameStarted(true);
@@ -340,7 +355,7 @@ const CSSPage = () => {
     if (!questionsLoaded) {
       await fetchQuestions();
     }
-
+  
     if (quizQuestions.length > 0) {
       initializeGame();
     } else {
@@ -398,7 +413,7 @@ const CSSPage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen text-black relative overflow-hidden">
+    <div className="min-h-screen text-white relative overflow-hidden">
       <canvas 
         ref={bgCanvasRef} 
         className="fixed top-0 left-0 w-full h-full -z-10 bg-gradient-to-br from-gray-900 to-blue-900"
@@ -407,35 +422,32 @@ const CSSPage = () => {
       <div className="relative z-10 p-4">
         <div className="text-center mb-4">
           <h1 className="text-3xl font-extrabold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-teal-300">
-            CSS Snake
+           🐍 CSS Snake
           </h1>
         </div>
 
-        <div className="max-w-md mx-auto bg-gray-800/80 backdrop-blur-sm rounded-lg p-4 shadow-lg border border-gray-700">
+        <div className="max-w-md mx-auto bg-gray-800/90 backdrop-blur-sm rounded-lg p-4 shadow-lg border border-gray-700">
           <div className="mb-4 flex justify-between items-center space-x-2">
-            <div className="px-3 py-2 bg-blue-600/80 text-black text-sm font-bold rounded-md shadow border border-blue-400">
+            <div className="px-3 py-2 bg-blue-600/90 text-white text-sm font-bold rounded-md shadow border border-blue-400">
               🏆 {score}
             </div>
-            <div className="px-3 py-2 bg-purple-600/80 text-black text-sm font-bold rounded-md shadow border border-purple-400">
+            <div className="px-3 py-2 bg-purple-600/90 text-white text-sm font-bold rounded-md shadow border border-purple-400">
               ⏱️ {timeLeft}s
             </div>
-            <div className="px-3 py-2 bg-green-600/80 text-black text-sm font-bold rounded-md shadow border border-green-400">
+            <div className="px-3 py-2 bg-green-600/90 text-white text-sm font-bold rounded-md shadow border border-green-400">
               ❓ {questionsCompleted}
             </div>
           </div>
 
           {currentQuestion && (
-            <div className="mb-3 p-3 bg-gray-700/50 rounded-md border border-gray-600">
+            <div className="mb-3 p-3 bg-gray-700/70 rounded-md border border-gray-600">
               <div className="font-semibold text-blue-300 mb-1 text-sm">
                 {currentQuestion.question_text}
-              </div>
-              <div className="text-xs text-gray-300 mt-2">
-                Find and eat the correct option
               </div>
             </div>
           )}
 
-          <div className="mb-3 text-center text-sm font-medium bg-gray-700/50 p-2 rounded-md border border-gray-600">
+          <div className="mb-3 text-center text-sm font-medium bg-gray-700/70 p-2 rounded-md border border-gray-600 text-white">
             {message}
           </div>
 
@@ -444,12 +456,12 @@ const CSSPage = () => {
               <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-10">
                 <div className="text-center bg-gray-800/90 p-4 rounded-lg border border-gray-600">
                   <h2 className="text-xl font-bold mb-3 text-blue-300">
-                    CSS Snake
+                   🐍 CSS Snake
                   </h2>
                  
                   <Button
                     onClick={startGame}
-                    className="bg-gradient-to-r from-green-500 to-teal-500 text-black px-6 py-2 rounded-lg text-sm font-bold shadow"
+                    className="bg-gradient-to-r from-green-500 to-teal-500 text-white px-6 py-2 rounded-lg text-sm font-bold shadow hover:from-green-600 hover:to-teal-600 transition-colors"
                   >
                     🎮 Start Game
                   </Button>
@@ -460,13 +472,13 @@ const CSSPage = () => {
             {gameOver && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-10">
                 <div className="text-center bg-gray-800/90 p-4 rounded-lg border border-gray-600">
-                  <h2 className="text-xl font-bold mb-2 text-red-800">
+                  <h2 className="text-xl font-bold mb-2 text-red-400">
                     Game Over!
                   </h2>
                   <p className="text-sm mb-3 text-white">Final Score: {score}</p>
                   <Button
                     onClick={startGame}
-                    className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-2 rounded-lg text-sm font-bold shadow"
+                    className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-2 rounded-lg text-sm font-bold shadow hover:from-blue-600 hover:to-purple-600 transition-colors"
                   >
                     🔄 Play Again
                   </Button>
@@ -481,14 +493,14 @@ const CSSPage = () => {
           </div>
         </div>
 
-        <div className="text-center mt-4">
-          <Button
-            onClick={() => router.push("/Jocs")}
-            className="bg-gradient-to-r from-purple-600 to-indigo-600 text-black px-5 py-2 rounded-lg text-sm shadow"
-          >
-            ⬅️ Back to Menu
-          </Button>
-        </div>
+        <div className="text-center mt-4 max-w-xs mx-auto"> 
+  <Button
+    onClick={() => router.push("/Jocs")}
+    className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-5 py-2 rounded-lg text-sm shadow hover:from-purple-700 hover:to-indigo-700 transition-colors w-full" // Added w-full
+  >
+    ⬅️ Back to Menu
+  </Button>
+</div>
       </div>
     </div>
   );

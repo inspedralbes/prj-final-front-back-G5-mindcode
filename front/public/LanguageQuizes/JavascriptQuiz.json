@@ -1,0 +1,430 @@
+{
+    "_id": { "$oid": "680b40e8fbdcf9cf00b6c500" },
+    "correctAnswers": 0,
+    "userId": 6,
+    "classId": 1,
+    "questions": [
+      {
+        "isAnswered": false,
+        "question_id": 1,
+        "question_text": "Which keyword is used to declare a variable in JavaScript?",
+        "question_type": "MCQ",
+        "options": [
+          "var",
+          "let",
+          "All of the above"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c501" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 2,
+        "question_text": "What will typeof null return?",
+        "question_type": "MCQ",
+        "options": [
+          "null",
+          "object",
+          "undefined"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c502" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 3,
+        "question_text": "Which method adds one or more elements to the end of an array?",
+        "question_type": "MCQ",
+        "options": [
+          "push()",
+          "pop()",
+          "shift()"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c503" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 4,
+        "question_text": "What does the '===' operator check?",
+        "question_type": "MCQ",
+        "options": [
+          "Value only",
+          "Value and type",
+          "Type only"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c504" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 5,
+        "question_text": "Which function executes a callback after a specified delay?",
+        "question_type": "MCQ",
+        "options": [
+          "setImmediate()",
+          "setTimeout()",
+          "setInterval()"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c505" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 6,
+        "question_text": "What is the result of 3 + '3' in JavaScript?",
+        "question_type": "MCQ",
+        "options": [
+          "6",
+          "33",
+          "TypeError"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c506" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 7,
+        "question_text": "Which method converts JSON string to a JavaScript object?",
+        "question_type": "MCQ",
+        "options": [
+          "JSON.parse()",
+          "JSON.stringify()",
+          "JSON.toObject()"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c507" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 8,
+        "question_text": "What is a closure in JavaScript?",
+        "question_type": "MCQ",
+        "options": [
+          "A function with no parameters",
+          "A function that remembers its lexical scope",
+          "A built-in JavaScript method"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c508" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 9,
+        "question_text": "Which keyword is used to declare a constant in JavaScript?",
+        "question_type": "MCQ",
+        "options": [
+          "const",
+          "let",
+          "var"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c509" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 10,
+        "question_text": "What does the 'this' keyword refer to in a method?",
+        "question_type": "MCQ",
+        "options": [
+          "The function itself",
+          "The global object",
+          "The object the method belongs to"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c510" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 11,
+        "question_text": "Which array method creates a new array with transformed elements?",
+        "question_type": "MCQ",
+        "options": [
+          "forEach()",
+          "map()",
+          "filter()"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c511" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 12,
+        "question_text": "What is the purpose of the 'use strict' directive?",
+        "question_type": "MCQ",
+        "options": [
+          "To enable strict mode which catches common coding mistakes",
+          "To make JavaScript run faster",
+          "To enforce type checking"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c512" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 13,
+        "question_text": "Which operator is used for exponentiation in JavaScript?",
+        "question_type": "MCQ",
+        "options": [
+          "^",
+          "**",
+          "Math.pow() only"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c513" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 14,
+        "question_text": "What is the data type of NaN?",
+        "question_type": "MCQ",
+        "options": [
+          "number",
+          "string",
+          "undefined"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c514" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 15,
+        "question_text": "Which method removes the last element from an array?",
+        "question_type": "MCQ",
+        "options": [
+          "shift()",
+          "pop()",
+          "splice()"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c515" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 16,
+        "question_text": "What does the spread operator (...) do in JavaScript?",
+        "question_type": "MCQ",
+        "options": [
+          "Expands an iterable into individual elements",
+          "Combines multiple arrays into one",
+          "Creates a deep copy of an object"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c516" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 17,
+        "question_text": "Which statement immediately exits a function?",
+        "question_type": "MCQ",
+        "options": [
+          "break",
+          "return",
+          "exit"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c517" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 18,
+        "question_text": "What is the purpose of the Promise object?",
+        "question_type": "MCQ",
+        "options": [
+          "To handle synchronous operations",
+          "To represent the eventual completion of an asynchronous operation",
+          "To create immediate function execution"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c518" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 19,
+        "question_text": "Which method is used to handle fulfilled promises?",
+        "question_type": "MCQ",
+        "options": [
+          "then()",
+          "catch()",
+          "finally()"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c519" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 20,
+        "question_text": "What is hoisting in JavaScript?",
+        "question_type": "MCQ",
+        "options": [
+          "Moving variable declarations to the top of their scope",
+          "A type of function",
+          "An array method"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c520" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 21,
+        "question_text": "Which method creates a new array with elements that pass a test?",
+        "question_type": "MCQ",
+        "options": [
+          "map()",
+          "filter()",
+          "reduce()"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c521" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 22,
+        "question_text": "What is the purpose of the async/await syntax?",
+        "question_type": "MCQ",
+        "options": [
+          "To make synchronous code look asynchronous",
+          "To write asynchronous code that looks synchronous",
+          "To create immediately invoked functions"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c522" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 23,
+        "question_text": "Which object is the top-level object in a browser environment?",
+        "question_type": "MCQ",
+        "options": [
+          "Document",
+          "Window",
+          "Global"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c523" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 24,
+        "question_text": "What does the addEventListener() method do?",
+        "question_type": "MCQ",
+        "options": [
+          "Adds a CSS class to an element",
+          "Attaches an event handler to an element",
+          "Creates a new DOM element"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c524" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 25,
+        "question_text": "Which method converts an object to a JSON string?",
+        "question_type": "MCQ",
+        "options": [
+          "JSON.parse()",
+          "JSON.stringify()",
+          "JSON.toString()"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c525" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 26,
+        "question_text": "What is the purpose of the bind() method?",
+        "question_type": "MCQ",
+        "options": [
+          "To create a new function with a specific 'this' value",
+          "To combine two functions",
+          "To bind event listeners"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c526" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 27,
+        "question_text": "Which method returns the first element that matches a CSS selector?",
+        "question_type": "MCQ",
+        "options": [
+          "document.querySelector()",
+          "document.getElementById()",
+          "document.getElementsByClassName()[0]"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c527" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 28,
+        "question_text": "What is the purpose of the localStorage object?",
+        "question_type": "MCQ",
+        "options": [
+          "To store data in the user's browser with no expiration",
+          "To store session-only data",
+          "To store data on the server"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c528" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 29,
+        "question_text": "Which symbol is used for template literals in JavaScript?",
+        "question_type": "MCQ",
+        "options": [
+          "Single quotes ('')",
+          "Double quotes (\"\")",
+          "Backticks (``)"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c529" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 30,
+        "question_text": "What does the reduce() method do?",
+        "question_type": "MCQ",
+        "options": [
+          "Reduces an array to a single value",
+          "Filters out elements from an array",
+          "Creates a new array with modified elements"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c530" }
+      }
+    ],
+    "userAnswers": [],
+    "__v": 0
+}

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import Button from "../../components/atoms/Button";
 
-const PYTHONPage = () => {
+const JAVASCRIPTPage = () => {
   const router = useRouter();
   const canvasRef = useRef(null);
   const bgCanvasRef = useRef(null);
@@ -80,7 +80,7 @@ const PYTHONPage = () => {
 
   const fetchQuestions = async () => {
     try {
-      const res = await fetch("/LanguageQuizes/PythonQuiz.json");
+      const res = await fetch("/LanguageQuizes/JavascriptQuiz.json");
       const data = await res.json();
       setQuizQuestions(data.questions);
       setQuestionsLoaded(true);
@@ -422,7 +422,7 @@ const PYTHONPage = () => {
       <div className="relative z-10 p-4">
         <div className="text-center mb-4">
           <h1 className="text-3xl font-extrabold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-teal-300">
-           🐍 PYHTON Snake
+           🐍 JAVASCRIPT Snake
           </h1>
         </div>
 
@@ -456,7 +456,7 @@ const PYTHONPage = () => {
               <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-10">
                 <div className="text-center bg-gray-800/90 p-4 rounded-lg border border-gray-600">
                   <h2 className="text-xl font-bold mb-3 text-blue-300">
-                   🐍 PYHTON Snake
+                   🐍 JAVASCRIPT Snake
                   </h2>
                  
                   <Button
@@ -506,4 +506,4 @@ const PYTHONPage = () => {
   );
 };
 
-export default PYTHONPage;
+export default JAVASCRIPTPage;

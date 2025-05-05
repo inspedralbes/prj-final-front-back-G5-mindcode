@@ -17,13 +17,21 @@ const JocsPage = () => {
     router.push("/StPage");
   };
 
+  if (!classInfo || classInfo.length === 0) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-200">
+        ⏳ Carregant informació de la classe...
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50">
       <SidebarStudent handleSetCurrentLanguage={handleSetCurrentLanguage} />
       <div className="flex flex-col w-full">
         <Navbar />
         <div className="flex-1 flex items-center justify-center">
-          <GameCirclePanel />
+          <GameCirclePanel languages={classInfo[0]?.language_info || []} />
         </div>
       </div>
     </div>
