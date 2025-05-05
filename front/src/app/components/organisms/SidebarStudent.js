@@ -5,10 +5,13 @@ import { useRouter, usePathname } from 'next/navigation';
 import LanguageList from "../molecules/LanguageList";
 import Button from "../atoms/Button";
 import { useAuthStore } from "stores/authStore";
+import { getUserImage } from '../../../services/communicationManager';
 
 const SidebarStudent = ({ handleSetCurrentLanguage }) => {
   const [isLlenguatgesOpen, setIsLlenguatgesOpen] = useState(false);
   const [languages, setLanguages] = useState([]);
+  const [userImage, setUserImage] = useState(null);
+  const user_info = useAuthStore.getState().user_info;
   const router = useRouter();
   const pathname = usePathname();
   const classInfo = useAuthStore((state) => state.class_info);
@@ -23,16 +26,48 @@ const SidebarStudent = ({ handleSetCurrentLanguage }) => {
   const handleFormClick = () => router.push('/UserForm');
   const handleGoToGames = () => router.push('/Jocs');
 
+  useEffect(() => {
+    if (classInfo && classInfo.length > 0) {
+      if (classInfo[0]?.language_info && JSON.stringify(classInfo[0].language_info) !== JSON.stringify(languages)) {
+        setLanguages(classInfo[0].language_info);
+      }
+    }
+  }, [classInfo]);
+
+  useEffect(() => {
+    const fetchUserImage = async () => {
+      try {
+        const img = await getUserImage(user_info.userId);
+        setUserImage(img);
+      } catch (error) {
+        console.error("Error fetching user image:", error);
+      }
+    };
+
+    fetchUserImage();
+  }, [user_info]);
+
   return (
-    <div className="w-1/6 h-full p-4 border-r border">
+    <div className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white w-1/4 h-full p-4 border-r border-gray-300 dark:border-gray-700">
       <div className="text-center mb-6">
-        <Button  
+        <button  
           onClick={handleRedirect} 
-          className={`w-16 h-16 flex items-center justify-center rounded-full mx-auto mb-2 text-3xl 
-            ${pathname === '/StSettings' ? ' text-white' : ''}`}
+          className="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 mx-auto mb-2 overflow-hidden"
         >
-          👤
-        </Button>
+          {userImage ? (
+            <img
+              src={userImage}
+              alt="avatar"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <img
+              src={user_info.photoURL}
+              alt="avatar"
+              className="w-full h-full object-cover"
+            />
+          )}
+        </button>
         <h2 className="text-lg font-semibold">ALUMNE</h2>
       </div>
 

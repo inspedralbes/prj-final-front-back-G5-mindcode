@@ -674,17 +674,25 @@ export async function getClassDetails() {
 export async function leaveClass() {
   try {
     const user_info = useAuthStore.getState().user_info;
+    const class_info = useAuthStore.getState().class_info;
 
     if (!user_info || !user_info.token) {
       throw new Error("No token provided");
     }
+
+    if (!class_info || class_info.length === 0) {
+      throw new Error("No class information available");
+    }
+
+    const class_id = class_info[0]?.class_id;
+
     const response = await fetch(`${URL}/api/class/leave`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${user_info.token}`,
       },
-      body: JSON.stringify({ id: user_info.userId }),
+      body: JSON.stringify({ id: user_info.userId, class_id }),
     });
 
     if (!response.ok) {
@@ -762,3 +770,56 @@ export async function kickClass(targetUserId) {
   }
 }
 
+export async function getUserImage(userId) {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+
+    if (!user_info || !user_info.token) {
+      throw new Error("No token provided");
+    }
+
+    const response = await fetch(`${URL}/api/user/getimg/${userId}`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${user_info.token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error fetching user image: ${errorText}`);
+    }
+
+    const data = await response.json();
+    return data.img || null;
+  } catch (error) {
+    console.error("Error fetching user image:", error);
+    throw error;
+  }
+}
+
+export async function uploadUserImage(userId, imageFile) {
+  const formData = new FormData();
+  formData.append('image', imageFile);
+
+  try {
+    const response = await fetch(`${URL}/api/user/uploadimg/${userId}`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${useAuthStore.getState().user_info.token}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error uploading image: ${response.status} - ${response.statusText} - ${errorText}`);
+    }
+
+    const data = await response.json();
+    return `${URL}/uploads/${data.fileName}`;
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    throw error;
+  }
+}
