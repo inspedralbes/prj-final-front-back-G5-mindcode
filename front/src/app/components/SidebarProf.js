@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import {
   getLanguages,
   addLanguageToClass,
@@ -6,60 +6,75 @@ import {
   updateLanguages,
   deleteLanguageFromClass
 } from "services/communicationManager.js";
+import DialogComponent from "./molecules/DialogComponent";
+import BigButtonCollection from "./molecules/BigButtonCollection";
 import { useAuthStore } from "../../stores/authStore";
 import { useRouter } from 'next/navigation';
 
-const SidebarProf = ({ changeSelectedField, changeSelectedClass }) => {
+const SidebarProf = forwardRef((props, ref) => {
   const [openClassId, setOpenClassId] = useState(null);
   const [newLanguage, setNewLanguage] = useState("");
   const [showInput, setShowInput] = useState(false);
   const [isLlenguatgesOpen, setIsLlenguatgesOpen] = useState(false);
   const [isAlumnesOpen, setIsAlumnesOpen] = useState(false);
   const [languagesByClass, setLanguagesByClass] = useState({});
-  const [editingLanguage, setEditingLanguage] = useState({ classId: null, index: null, name: '' });
+  const [editingLanguage, setEditingLanguage] = useState({ classId: null, index: null });
+  const [isStudent, setIsStudent] = useState(false);
+  const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      console.log("languagesByClass:", languagesByClass);
-    }, 5000);
-
-    return () => clearInterval(intervalId); // Cleanup on component unmount
-  }, [languagesByClass]);
+  const handleOpen = () => setOpen(!open);
 
   const user_info = useAuthStore((state) => state.user_info);
   const class_info = useAuthStore((state) => state.class_info);
   const router = useRouter();
 
-  const handleEditLanguage = (classId, index, name) => {
-    setEditingLanguage({ classId, index, name });
+  // Expose this function to parent via ref
+  useImperativeHandle(ref, () => ({
+    handleSaveEdit0,
+    handleSaveEdit1,
+    handleSaveEdit2,
+    // Add other functions here if needed
+  }));
+
+  const handleEditLanguage = (classId, index, isStudent) => {
+    props.changeSelectedLanguage(languagesByClass[classId][index]);
+    props.changeSelectedField("llenguatges");
+    setEditingLanguage({ classId, index });
+    setIsStudent(isStudent);
   };
 
-  const handleSaveEdit = async () => {
-    if (!editingLanguage.classId || editingLanguage.index === null || !editingLanguage.name) {
+  const handleSaveEdit = async (restrictionId) => {
+    console.log(restrictionId);
+    if (!editingLanguage.classId || editingLanguage.index === null || restrictionId == null) {
       console.error("Error: Invalid input for editing language.");
       return;
     }
+    if (isStudent) {
 
-    try {
-      const updatedLanguages = [...languagesByClass[editingLanguage.classId]];
-      const previousLanguage = updatedLanguages[editingLanguage.index];
-      const updatedLanguage = {
-        ...previousLanguage,
-        name: editingLanguage.name,
-      };
-      updatedLanguages[editingLanguage.index] = updatedLanguage;
+    } else {
 
-      await updateLanguages(editingLanguage.classId, updatedLanguages);
+      try {
+        const updatedLanguages = [...languagesByClass[editingLanguage.classId]];
+        const previousLanguage = updatedLanguages[editingLanguage.index];
+        const updatedLanguage = {
+          ...previousLanguage,
+          restrictionId: restrictionId,
+        };
+        updatedLanguages[editingLanguage.index] = updatedLanguage;
 
-      setLanguagesByClass((prev) => ({
-        ...prev,
-        [editingLanguage.classId]: updatedLanguages,
-      }));
+        await updateLanguages(editingLanguage.classId, updatedLanguages);
 
-      setEditingLanguage({ classId: null, index: null, name: '' });
-    } catch (error) {
-      console.error("Error updating language:", error);
+        setLanguagesByClass((prev) => ({
+          ...prev,
+          [editingLanguage.classId]: updatedLanguages,
+        }));
+
+        setEditingLanguage({ classId: null, index: null });
+      } catch (error) {
+        console.error("Error updating language:", error);
+      }
     }
+
   };
 
   useEffect(() => {
@@ -75,21 +90,21 @@ const SidebarProf = ({ changeSelectedField, changeSelectedClass }) => {
           isActive: lang.isActive ?? true,
         }));
 
-        console.log("initial languages", initialLanguages[classItem.class_id]);
+      console.log("initial languages", initialLanguages[classItem.class_id]);
     });
     setLanguagesByClass(initialLanguages);
   }, [class_info]);
 
   const handleClassClick = (class_id) => {
     setOpenClassId(openClassId === class_id ? null : class_id);
-    changeSelectedField("stats");
+    props.changeSelectedField("stats");
     setIsLlenguatgesOpen(false);
     setIsAlumnesOpen(false);
   };
 
   useEffect(() => {
     if (openClassId) {
-      changeSelectedClass(openClassId);
+      props.changeSelectedClass(openClassId);
     }
   }, [openClassId]);
 
@@ -156,6 +171,16 @@ const SidebarProf = ({ changeSelectedField, changeSelectedClass }) => {
       return;
     }
 
+    const countLanguages = (classId) => {
+      const languages = languagesByClass[classId] || [];
+      return languages.length;
+    };
+
+    if (countLanguages(classId) <= 1) {
+      console.error("Error: Cannot delete the last remaining language.");
+      return;
+    }
+
     try {
       // console.log(`Eliminando lenguaje "${languageToDelete.name}" (ID: ${languageToDelete.id}) de la clase ${classId}`);
 
@@ -180,12 +205,19 @@ const SidebarProf = ({ changeSelectedField, changeSelectedClass }) => {
       const updatedLanguages = [...languagesByClass[classId]];
       const currentLang = updatedLanguages[index];
 
+      if (currentLang.isActive && updatedLanguages.filter(lang => lang.isActive).length === 1) {
+        console.error("Error: Cannot deactivate the last remaining active language.");
+        return;
+      }
+
       const updatedLang = {
         ...currentLang,
         isActive: !currentLang.isActive
       };
 
       updatedLanguages[index] = updatedLang;
+
+
 
       await updateLanguages(classId, updatedLanguages);
 
@@ -201,17 +233,32 @@ const SidebarProf = ({ changeSelectedField, changeSelectedClass }) => {
   };
 
   const handleStudentClick = (studentId) => () => {
-    changeSelectedField("alumne");
-    changeSelectedClass(studentId);
+    props.changeSelectedField("alumne");
+    props.changeSelectedClass(studentId);
   }
 
   const handleStatsClick = () => {
-    changeSelectedField("stats");
-    changeSelectedClass(openClassId);
+    props.changeSelectedField("stats");
+    props.changeSelectedClass(openClassId);
   }
 
   const handleRedirect = async () => {
     router.push('/PfSettings');
+  }
+
+  const handleSaveEdit0 = () => {
+    handleSaveEdit(0);
+    setOpen(false);
+  }
+
+  const handleSaveEdit1 = () => {
+    handleSaveEdit(1);
+    setOpen(false);
+  }
+
+  const handleSaveEdit2 = () => {
+    handleSaveEdit(2);
+    setOpen(false);
   }
 
   return (
@@ -247,25 +294,11 @@ const SidebarProf = ({ changeSelectedField, changeSelectedClass }) => {
                       {languagesByClass[class_id] && languagesByClass[class_id].length > 0 ? (
                         languagesByClass[class_id].map((lang, index) => (
                           <div key={index} className="flex items-center gap-2">
-                            {editingLanguage.classId === class_id && editingLanguage.index === index ? (
-                              <div className="flex gap-2">
-                                <input
-                                  type="text"
-                                  value={editingLanguage.name}
-                                  onChange={(e) => setEditingLanguage({ ...editingLanguage, name: e.target.value })}
-                                  className="w-32 px-2 py-1 border border-gray-300 rounded-md dark:bg-gray-700 dark:text-white text-sm"
-                                />
-                                <button onClick={handleSaveEdit} className="px-2 py-1 bg-green-500 text-white rounded-md hover:bg-green-600">✅</button>
-                                <button onClick={() => setEditingLanguage({ classId: null, index: null, name: '' })} className="px-2 py-1 bg-red-500 text-white rounded-md hover:bg-red-600">✖</button>
-                              </div>
-                            ) : (
-                              <>
-                                <button className="w-3/4 px-3 py-2 bg-green-500 hover:bg-green-700 rounded-md text-white">{lang.name}</button>
-                                <button onClick={() => handleEditLanguage(class_id, index, lang.name)} className="px-2 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600">✏️</button>
-                                <button onClick={() => handleDeleteLanguage(class_id, index)} className="px-1 py-1 bg-red-500 text-white rounded-md hover:bg-red-600">🗑️</button>
-                              </>
 
-                            )}
+                            <button className={`w-3/4 px-3 py-2 ${lang.restrictionId==2?"bg-green-500 hover:bg-green-700":lang.restrictionId==1?"bg-yellow-500 hover:bg-yellow-700":"bg-red-500 hover:bg-red-700"} rounded-md text-white`}>{lang.name}</button>
+                            <button onClick={() => handleEditLanguage(class_id, index, false)} className="px-2 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600">✏️</button>
+                            <button onClick={() => handleDeleteLanguage(class_id, index)} className="px-1 py-1 bg-red-500 text-white rounded-md hover:bg-red-600">🗑️</button>
+
                             <label className="relative inline-flex items-center cursor-pointer">
                               <input
                                 type="checkbox"
@@ -342,8 +375,9 @@ const SidebarProf = ({ changeSelectedField, changeSelectedClass }) => {
           <p className="text-sm text-gray-500 dark:text-gray-400">No tienes clases asignadas</p>
         )}
       </nav>
+      
     </div>
   );
-};
+});
 
 export default SidebarProf;

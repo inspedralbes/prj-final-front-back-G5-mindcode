@@ -1,60 +1,53 @@
 "use client";
 
 import React, { useState } from "react";
-import { joinClass } from "../../../services/communicationManager"; // Import joinClass function
-import BaseForm from "../molecules/BaseForm";
+import { joinClass } from "../../../services/communicationManager";
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '../../../stores/authStore';
- 
+import Title from "app/components/atoms/Title";
+import Input from "app/components/atoms/Input";
+import Button from "app/components/atoms/Button";
+import PanelBox from "app/components/atoms/PanelBox";
+import Panel from "app/components/atoms/Panel";
 
+const JoinClassForm = () => {
+  const userInfo = useAuthStore.getState();
+  const router = useRouter();
+  const [classCode, setClassCode] = useState("");
 
-const JoinClassForm = ({  }) => {
-    const userInfo = useAuthStore.getState();
-    const router = useRouter();
-    const [classCode, setClassCode] = useState(""); // Add state for class code
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-
-    const topText = "Uneix-te a una classe existent"
-
-    const handleJoin = async () => {
-        if ( classCode) {
-          try {
-            console.log("Attempting to join class...");
-            const response = await joinClass(classCode);
-            console.log("Join class response:", response);
-    
-            if (response.class_info) {
-              if (userInfo.role == 1)
-                router.push('/PfPage');
-              else
-                router.push('/StPage');
-            } else {
-              alert("Failed to join class. Please check your details.");
-            }
-          } catch (error) {
-            console.error("Error joining class:", error);
-            alert("An error occurred while joining the class.");
-          }
+  const handleJoin = async () => {
+    if (classCode) {
+      try {
+        const response = await joinClass(classCode);
+        if (response.class_info) {
+          router.push(userInfo.role == 1 ? '/PfPage' : '/StPage');
         } else {
-          alert("Please enter all required fields.");
+          alert("Failed to join class. Please check your details.");
         }
-      };
-    
-      if (isAuthenticated) {
-        
+      } catch (error) {
+        console.error("Error joining class:", error);
+        alert("An error occurred while joining the class.");
       }
-    return (
-        
-        <div className="flex-1 flex">
-          <BaseForm topText={topText} sendButtonText={"Join Class"} onSendButtonClick={handleJoin} formValues={
-            [
-              {placeholder: "Class Code", text: classCode, handleOnChange: (e) => setClassCode(e.target.value)}
-            ]
-          } />
-           
-        </div>
-    )
+    } else {
+      alert("Please enter the class code.");
+    }
+  };
+
+  return (
+    <Panel>
+      <PanelBox>
+      <div>
+      <Title>Uneix-te a una classe existent</Title>
+      </div>
+      <Input
+      placeholder="Class Code"
+      value={classCode}
+      onChange={(e) => setClassCode(e.target.value)}
+      />
+      <Button className="bg-white" onClick={handleJoin}>Join Class</Button>
+      </PanelBox>
+    </Panel>
+  );
 };
 
 export default JoinClassForm;

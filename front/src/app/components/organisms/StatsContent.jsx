@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { useAuthStore } from '../../../stores/authStore';
 import { fetchAiMessagesClassData, fetchAiMessagesStudentData } from '../../../services/communicationManager';
 import ButtonCollection from '../molecules/ButtonCollection';
+import ContentWrapper from '../atoms/ContentWrapper';
 
 
 
@@ -95,59 +96,74 @@ const StatsContent = ({ classId, mode }) => {
     };
 
     return (
-        <div className="">
+        <div className="h-full">
             <TitleCard >Estadístiques</TitleCard>
-            <div className='w-full max-w-[80%] mx-auto'>
-                <ButtonCollection
-                    buttons={
-                        [
-                            { label: "7d", onClick: () => setFilteredData(filterByDateRange(7, classStats)) },
-                            { label: "30d", onClick: () => setFilteredData(filterByDateRange(30, classStats)) },
-                            { label: "365d", onClick: () => setFilteredData(filterByDateRange(365, classStats)) },
-                            { label: "Tots", onClick: () => setFilteredData(classStats) },
-                        ]
-                    }
-                />
-            </div>
-            <div className='w-full max-w-[80%] mx-auto'>
-                {mode === "alumne" ?
-                    <BarGraph
-                        labels={languageStats.map(item => item.languageName)}
-                        dataValues={languageStats.map(item => item.messageCount)}
-                        title={"Missatges totals d'aquest alumne"}
-                        legend={"Missatges per llenguatge"}
-                        barColor={"rgba(54, 162, 235, 0.5)"}
-                        borderColor={'rgba(54, 162, 235, 1)'} />
-                    :
-                    <BarGraph
-                        labels={languageStats.map(item => item.languageName)}
-                        dataValues={languageStats.map(item => item.messageCount)}
-                        title={"Missatges totals d'aquesta classe"}
-                        legend={"Missatges per llenguatge"}
-                        barColor={"rgba(54, 162, 235, 0.5)"}
-                        borderColor={'rgba(54, 162, 235, 1)'} />
-                }
 
+            <div>
+                <div className='w-full max-w-[80%] mx-auto'>
+                    <ButtonCollection
+                        buttons={
+                            [
+                                { label: "7d", onClick: () => setFilteredData(filterByDateRange(7, classStats)) },
+                                { label: "30d", onClick: () => setFilteredData(filterByDateRange(30, classStats)) },
+                                { label: "365d", onClick: () => setFilteredData(filterByDateRange(365, classStats)) },
+                                { label: "Tots", onClick: () => setFilteredData(classStats) },
+                            ]
+                        }
+                    />
+                </div>
+                <br />
+
+                <div className="flex flex-row flex-wrap gap-4 min-[300px]:flex-col py-4">
+                    <div className="w-full max-w-[80%] mx-auto min-[300px]:max-w-full">
+                        <ContentWrapper className="w-full md:w-1/2 lg:w-1/3">
+                            {mode === "alumne" ? (
+                                <BarGraph
+                                    labels={languageStats.map((item) => item.languageName)}
+                                    dataValues={languageStats.map((item) => item.messageCount)}
+                                    title={"Missatges totals d'aquest alumne"}
+                                    legend={"Missatges per llenguatge"}
+                                    barColor={"rgba(54, 162, 235, 0.5)"}
+                                    borderColor={"rgba(54, 162, 235, 1)"}
+                                />
+                            ) : (
+                                <BarGraph
+                                    labels={languageStats.map((item) => item.languageName)}
+                                    dataValues={languageStats.map((item) => item.messageCount)}
+                                    title={"Missatges totals d'aquesta classe"}
+                                    legend={"Missatges per llenguatge"}
+                                    barColor={"rgba(54, 162, 235, 0.5)"}
+                                    borderColor={"rgba(54, 162, 235, 1)"}
+                                />
+                            )}
+                        </ContentWrapper>
+                    </div>
+                    <div className="w-full max-w-[80%] mx-auto min-[300px]:max-w-full">
+                        <ContentWrapper className="w-full md:w-1/2 lg:w-1/3">
+                            {mode === "alumne" ? (
+                                <BarGraph
+                                    labels={messageCountByDate.map((item) => item.date)}
+                                    dataValues={messageCountByDate.map((item) => item.count)}
+                                    title={"Missatges totals d'aquest alumne"}
+                                    legend={"Missatges per llenguatge"}
+                                    barColor={"rgba(54, 162, 235, 0.5)"}
+                                    borderColor={"rgba(54, 162, 235, 1)"}
+                                />
+                            ) : (
+                                <BarGraph
+                                    labels={messageCountByDate.map((item) => item.date)}
+                                    dataValues={messageCountByDate.map((item) => item.count)}
+                                    title={"Missatges totals d'aquesta classe"}
+                                    legend={"Missatges per llenguatge"}
+                                    barColor={"rgba(54, 162, 235, 0.5)"}
+                                    borderColor={"rgba(54, 162, 235, 1)"}
+                                />
+                            )}
+                        </ContentWrapper>
+                    </div>
+                </div>
             </div>
-            <div className='w-full max-w-[80%] mx-auto'>
-                {mode === "alumne" ?
-                    <BarGraph
-                        labels={messageCountByDate.map(item => item.date)}
-                        dataValues={messageCountByDate.map(item => item.count)}
-                        title={"Missatges totals d'aquest alumne"}
-                        legend={"Missatges per llenguatge"}
-                        barColor={"rgba(54, 162, 235, 0.5)"}
-                        borderColor={'rgba(54, 162, 235, 1)'} />
-                    :
-                    <BarGraph
-                        labels={messageCountByDate.map(item => item.date)}
-                        dataValues={messageCountByDate.map(item => item.count)}
-                        title={"Missatges totals d'aquesta classe"}
-                        legend={"Missatges per llenguatge"}
-                        barColor={"rgba(54, 162, 235, 0.5)"}
-                        borderColor={'rgba(54, 162, 235, 1)'} />
-                }
-            </div>
+
         </div>
     );
 };

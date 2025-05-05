@@ -209,7 +209,7 @@ export async function sendMessage(body) {
 
 // export async function getStudents(class_id) {
 //   try {
-//     const response = await fetch(`${URL}/api/class/user?class_id=${class_id}`);  
+//     const response = await fetch(`${URL}/api/user?class_id=${class_id}`);  
 //     if (!response.ok) {
 //       throw new Error(`Error: ${response.status}`);
 //     }
@@ -220,7 +220,6 @@ export async function sendMessage(body) {
 //     throw error;  
 //   }
 // }
-
 
 // LANGUAGES
 export async function getLanguages() {
@@ -289,14 +288,14 @@ export async function addLanguageToClass(classId, language) {
     console.log("language", language);
 
 
-  if (!classId || !language || !language.id || !language.name || !language.restrictionId) {
+    if (!classId || !language || !language.id || !language.name || !language.restrictionId) {
 
-     console.log("classId", classId );
-     console.log("language", language );
-      console.log("language.id", language.id? language.id : "No id" );
-      console.log("language.name", language.name );
-      console.log("language.restrictionId", language.restrictionId );
-    throw new Error("Class ID and valid language details are required");
+      console.log("classId", classId);
+      console.log("language", language);
+      console.log("language.id", language.id ? language.id : "No id");
+      console.log("language.name", language.name);
+      console.log("language.restrictionId", language.restrictionId);
+      throw new Error("Class ID and valid language details are required");
     }
 
     console.log(`Adding language to class: ${language.name} (ID: ${language.id}, Restriction: ${language.restrictionId})`);
@@ -402,7 +401,7 @@ export async function fetchAiMessagesClassData(classId) {
   }
 
   const data = await response.json();
-  
+
   console.log("Data from fetchAiMessagesClassData:", data);
   return data;
 }
@@ -424,13 +423,57 @@ export async function fetchAiMessagesStudentData(studentId) {
   }
 
   const data = await response.json();
-  
+
   console.log("Data from fetchAiMessagesClassData:", data);
   return data;
 }
 
+export async function getClassMain() {
+  const user_info = useAuthStore.getState().user_info;
+  console.log("GETTING CLASS INFO");
+  const response = await fetch(`${URL}/api/class/user/info`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      "Authorization": `Bearer ${user_info.token}`,
+    }
+  });
 
-//export userSettings function
+  if (!response.ok) {
+    throw new Error('Error al cargar la clase');
+  }
+  const data = await response.json();
+
+  console.log("Data recieved: ", data);
+
+  if (data && data.class_info) {
+    useAuthStore.getState().setClass(data.class_info);
+    console.log("Class details saved in store:", data.class_info);
+  }
+  return data;
+}
+
+export async function getRestrictions() {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+    const response = await fetch(`${URL}/api/restriction`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user_info.token}`,
+      },
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error getting restrictions: ${errorText}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error in Communication Manager:", error);
+    throw error;
+  }
+};
 export async function getUserInfo() {
   try {
     const user_info = useAuthStore.getState().user_info;
@@ -442,7 +485,7 @@ export async function getUserInfo() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${user_info.token}`,  
+        "Authorization": `Bearer ${user_info.token}`,
       },
     });
 
@@ -456,7 +499,82 @@ export async function getUserInfo() {
     throw error;
   }
 }
+export async function generateQuiz(classId) {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+    if (!user_info || !user_info.token) {
+      throw new Error('No token provided. User not authenticated.');
+    }
+    const response = await fetch(`${URL}/message/api/quiz`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user_info.token}`
+      },
+      body: JSON.stringify({
+        class_id: classId
+      })
+    });
 
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Error ${response.status}: ${errorData.error || errorData.message || 'Invalid request'}`);
+    }
+
+    const data = await response.json();
+    console.log('Quiz recived:', data);
+
+    if (!data.quiz || !Array.isArray(data.quiz)) {
+      throw new Error('Quiz format is invalid');
+    }
+
+  
+    const quizId = data.quizId || data.quiz_id;
+    if (!quizId) {
+      throw new Error('Quiz ID is missing in the response');
+    }
+
+    return {
+      quiz: data.quiz,
+      quizId: quizId
+    };
+  } catch (error) {
+    console.error('Error generating quiz:', error);
+    throw error;
+  }
+}
+
+export async function submitQuizResults(quizId, answers) {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+    if (!user_info || !user_info.token) {
+      throw new Error('No token provided. User not authenticated.');
+    }
+    const response = await fetch(`${URL}/message/api/quizResponse`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user_info.token}`
+      },
+      body: JSON.stringify({
+        quizId,
+        answers
+      })
+    });
+
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      throw new Error(`Error ${response.status}: ${errorResponse.description || 'Invalid request'}`);
+    }
+
+    const data = await response.json();
+    console.log('Quiz results received:', data);
+    return data;
+  } catch (error) {
+    console.error('Error submitting quiz results:', error);
+    throw error;
+  }
+}
 export async function updateUserInfo({ id, name, gmail }) {
   try {
     const user_info = useAuthStore.getState().user_info;
@@ -484,32 +602,32 @@ export async function updateUserInfo({ id, name, gmail }) {
 
 export async function getClassInfo() {
   try {
-      const user_info = useAuthStore.getState().user_info;
-      const class_info = useAuthStore.getState().class_info;
-      const classId = class_info[0]?.class_id;
+    const user_info = useAuthStore.getState().user_info;
+    const class_info = useAuthStore.getState().class_info;
+    const classId = class_info[0]?.class_id;
 
-      const response = await fetch(`${URL}/api/class/user?class_id=${classId}`, {
-          method: 'GET',
-          headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${user_info.token}` 
-          }
-      });
-
-      const contentType = response.headers.get('Content-Type');
-        if (!contentType || !contentType.includes('application/json')) {
-            throw new Error(`Expected JSON response but got ${contentType}`);
-        }
-
-      const data = await response.json();
-      if (!response.ok) {
-          throw new Error(data.error || 'Error fetching users');
+    const response = await fetch(`${URL}/api/class/user?class_id=${classId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user_info.token}`
       }
+    });
 
-      return data; 
+    const contentType = response.headers.get('Content-Type');
+    if (!contentType || !contentType.includes('application/json')) {
+      throw new Error(`Expected JSON response but got ${contentType}`);
+    }
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || 'Error fetching users');
+    }
+
+    return data;
   } catch (error) {
-      console.error('Error fetching users:', error);
-      throw error;
+    console.error('Error fetching users:', error);
+    throw error;
   }
 }
 
@@ -575,7 +693,7 @@ export async function leaveClass() {
     }
 
     const data = await response.json();
-    return data; 
+    return data;
   } catch (error) {
     console.error("Error leaving class:", error);
     throw error;

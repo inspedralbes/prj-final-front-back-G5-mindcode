@@ -1,7 +1,7 @@
 "use client";
 import React, {useEffect, useState} from "react";
 import Navbar from "app/components/Navbar";
-import Sidebar from "app/components/Sidebar";
+import SidebarSt from "app/components/SidebarSt";
 import Settings from "app/components/Settings";
 import ClassSettings from "app/components/ClassSettings";
 import { getUserInfo, getClassInfo, getClassDetails, leaveClass, getUserById, kickClass } from "services/communicationManager";
