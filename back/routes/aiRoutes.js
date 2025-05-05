@@ -161,8 +161,23 @@ router.post('/create', verifyTokenMiddleware, async (req, res) => {
       // objToSaveMongoDB.aiThought = thinkTagContent ? thinkTagContent[1] : '';
       saveMessage(objToSaveMongoDB);
 
-      setTimeout(async () => {
-        try {
+      try {
+        const connection = await createConnection();
+        const [result] = await connection.execute(
+          'UPDATE USER SET message_count = message_count + 1 WHERE id = ?',
+          [verified_user_id]
+        );
+
+        const [rows] = await connection.execute(
+          'SELECT message_count FROM USER WHERE id = ?',
+          [verified_user_id]
+        );
+
+        const messageCount = rows[0].message_count;
+        console.log(`Contador de mensajes: ${messageCount}`);
+
+        if (messageCount >= 5) {
+          console.log('5 mensajes detectados, generando quiz...');
           const messages = await Message.find({ 
             userId: verified_user_id,
             classId: class_id 
@@ -171,27 +186,31 @@ router.post('/create', verifyTokenMiddleware, async (req, res) => {
           .limit(5)
           .lean();
 
-          if (messages.length === 5) {
-            console.log('5 mensajes detectados, generando quiz...');
-            const formattedMessages = messages.map(msg => msg.userContent).join('\n');
-            const quizResponse = await sendForQuiz(formattedMessages);
+          const formattedMessages = messages.map(msg => msg.userContent).join('\n');
+          const quizResponse = await sendForQuiz(formattedMessages);
 
-            if (quizResponse && quizResponse.quiz && Array.isArray(quizResponse.quiz)) {
-              const quiz = new Quiz({
-                userId: verified_user_id,
-                classId: class_id,
-                questions: quizResponse.quiz,
-                userAnswers: [],
-                createdAt: new Date()
-              });
-              await quiz.save();
-              console.log('Quiz saved in MongoDB:', quiz._id);
-            }
+          if (quizResponse && quizResponse.quiz && Array.isArray(quizResponse.quiz)) {
+            const quiz = new Quiz({
+              userId: verified_user_id,
+              classId: class_id,
+              questions: quizResponse.quiz,
+              userAnswers: [],
+              createdAt: new Date()
+            });
+            await quiz.save();
+            console.log('Quiz generated and saved in MongoDB:', quiz._id);
+
+            await connection.execute(
+              'UPDATE USER SET message_count = 0 WHERE id = ?',
+              [verified_user_id]
+            );
           }
-        } catch (error) {
-          console.error('Error generating quiz:', error);
         }
-      }, 0);
+
+        await connection.end();
+      } catch (error) {
+        console.error('Error al procesar mensajes:', error);
+      }
 
       res.status(200).json(restOfContent);
   } catch (error) {
