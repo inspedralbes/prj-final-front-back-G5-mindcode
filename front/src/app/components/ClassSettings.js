@@ -58,8 +58,8 @@ const ClassSettings = ({ name, teacher, classMates, onLeaveClass, isStudent = tr
                 <span className="text-lg font-medium text-gray-900 dark:text-gray-100">{user.name}</span>
                 {!isStudent && (
                   <Button
-                    text="Eliminar"
-                    className="px-4 py-1.5 rounded-lg text-sm bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 transition-all duration-300 shadow-md hover:shadow-lg"
+                    children="Eliminar"
+                    className="inline-flex items-center justify-center px-2 py-1 rounded-md text-xs bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 transition-all duration-300 shadow-sm hover:shadow-md w-auto"
                     onClick={() => handleKickUser(user)}
                   />
                 )}
@@ -73,14 +73,14 @@ const ClassSettings = ({ name, teacher, classMates, onLeaveClass, isStudent = tr
         <div className="flex justify-center">
           {isStudent ? (
             <Button
-              text="Sortir de la classe"
+              children="Sortir de la classe"
               className="px-6 py-3 rounded-xl bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 border border-red-400 dark:border-red-500 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-300 font-medium shadow-md hover:shadow-lg"
               onClick={handleLeaveClass}
             />
           ) : (
             <Button
-              text="Torna"
-              className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 transition-all duration-300 font-medium shadow-md hover:shadow-lg"
+              children="Tancar Classe"
+              className="px-6 py-3 rounded-xl bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 border border-red-400 dark:border-red-500 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-300 font-medium shadow-md hover:shadow-lg"
               onClick={onLeaveClass}
             />
           )}

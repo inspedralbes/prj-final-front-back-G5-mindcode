@@ -150,12 +150,12 @@ const Settings = ({ id, name: initialName, gmail }) => {
                         
                         <div className="flex justify-end mt-6 space-x-4">
                             <Button
-                                text="Cancelar"
+                                children="Cancelar"
                                 className="px-6 py-2 rounded-lg border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors font-medium"
                                 onClick={handleCancel}
                             />
                             <Button
-                                text="Guardar"
+                                children="Guardar"
                                 className="px-6 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 transition-all duration-300 font-medium shadow-md hover:shadow-lg"
                                 onClick={handleSave}
                             />
@@ -199,12 +199,12 @@ const Settings = ({ id, name: initialName, gmail }) => {
                         <div className="border-t border-gray-200 dark:border-gray-700 pt-6 mt-8">
                             <div className="flex flex-col sm:flex-row sm:justify-between gap-4">
                                 <Button
-                                    text="Editar dades"
+                                    children="Editar dades"
                                     className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-600 hover:to-green-700 transition-all duration-300 font-medium shadow-md hover:shadow-lg"
                                     onClick={() => setIsEditing(true)}
                                 />
                                 <Button
-                                    text="Tancar sessió"
+                                    children="Tancar sessió"
                                     className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 border border-red-400 dark:border-red-500 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-300 font-medium shadow-md hover:shadow-lg"
                                     onClick={() => setIsDialogOpen(true)}
                                 />

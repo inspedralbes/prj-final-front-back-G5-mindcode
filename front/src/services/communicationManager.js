@@ -674,17 +674,25 @@ export async function getClassDetails() {
 export async function leaveClass() {
   try {
     const user_info = useAuthStore.getState().user_info;
+    const class_info = useAuthStore.getState().class_info;
 
     if (!user_info || !user_info.token) {
       throw new Error("No token provided");
     }
+
+    if (!class_info || class_info.length === 0) {
+      throw new Error("No class information available");
+    }
+
+    const class_id = class_info[0]?.class_id;
+
     const response = await fetch(`${URL}/api/class/leave`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${user_info.token}`,
       },
-      body: JSON.stringify({ id: user_info.userId }),
+      body: JSON.stringify({ id: user_info.userId, class_id }),
     });
 
     if (!response.ok) {
