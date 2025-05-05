@@ -21,7 +21,7 @@ const Signup = () => {
 
       const userDataParsed = userData.userData;
 
-      // Toast per un login exitós
+
       if (userDataParsed.teacher == 1) {
         toast.success('Benvingut/da, professor/a!');
         if (userData.hasClass) {
@@ -29,7 +29,7 @@ const Signup = () => {
         } else {
           router.push('/CreateClass');
         }
-        // Toast per un login informació
+
       } else {
         toast.info('Benvingut/da, alumne!');
         if (userData.hasClass) {
@@ -38,7 +38,7 @@ const Signup = () => {
           router.push('/JoinClass');
         }
       }
-      // Toast per mostrar error al login
+
     } catch (error) {
       console.error('Error en el login:', error);
       toast.error('Hi ha hagut un error iniciant sessió. Torneu-ho a intentar.');
