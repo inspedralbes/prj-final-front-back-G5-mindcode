@@ -1,10 +1,9 @@
 "use client";
-
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import Button from "../../components/atoms/Button";
 
-const CSSPage = () => {
+const CSHARPPage = () => {
   const router = useRouter();
   const canvasRef = useRef(null);
   const bgCanvasRef = useRef(null);
@@ -60,7 +59,8 @@ const CSSPage = () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     particles.current.forEach(p => {
       p.x += p.speedX;
@@ -80,7 +80,7 @@ const CSSPage = () => {
 
   const fetchQuestions = async () => {
     try {
-      const res = await fetch("/LanguageQuizes/CssQuiz.json");
+      const res = await fetch("/LanguageQuizes/CSharpQuiz.json");
       const data = await res.json();
       setQuizQuestions(data.questions);
       setQuestionsLoaded(true);
@@ -98,30 +98,36 @@ const CSSPage = () => {
 
   const placeFood = () => {
     const game = gameRef.current;
-
+  
     if (!quizQuestions || quizQuestions.length === 0) {
       setMessage("\u26A0\uFE0F No quiz questions available.");
       return;
     }
-
+  
     if (usedQuestions.length >= quizQuestions.length) {
       setUsedQuestions([]);
     }
-
-    const remaining = quizQuestions.filter((_, i) => !usedQuestions.includes(i));
-    const randomIndex = Math.floor(Math.random() * remaining.length);
-    const questionIndex = quizQuestions.findIndex(q => q === remaining[randomIndex]);
-    
+  
+    const availableQuestions = quizQuestions.filter((_, index) => !usedQuestions.includes(index));
+  
+    if (availableQuestions.length === 0) {
+      setMessage("\u26A0\uFE0F No more questions available.");
+      return;
+    }
+  
+    const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+    const selectedQuestion = availableQuestions[randomIndex];
+    const questionIndex = quizQuestions.findIndex(q => q === selectedQuestion);
+  
     setUsedQuestions(prev => [...prev, questionIndex]);
-    setCurrentQuestion(remaining[randomIndex]);
+    setCurrentQuestion(selectedQuestion);
     setQuestionsCompleted(prev => prev + 1);
-
-    const q = remaining[randomIndex];
+  
     const maxX = Math.floor(game.canvasWidth / gridSize) - 1;
     const maxY = Math.floor(game.canvasHeight / gridSize) - 1;
-
+  
     const foodColors = ['#3b82f6', '#6366f1', '#8b5cf6'];
-    const foods = q.options.map((option, index) => {
+    const foods = selectedQuestion.options.map((option, index) => {
       let x, y;
       do {
         x = Math.floor(Math.random() * maxX);
@@ -130,16 +136,16 @@ const CSSPage = () => {
         isPositionOccupied(x, y) ||
         game.foods.some(f => f.x === x && f.y === y)
       );
-
+  
       return {
         x,
         y,
         value: option,
         color: foodColors[index % foodColors.length],
-        isCorrect: index === q.correct_option - 1
+        isCorrect: index === selectedQuestion.correct_option - 1
       };
     });
-
+  
     game.foods = foods;
   };
 
@@ -150,7 +156,7 @@ const CSSPage = () => {
     const context = canvas.getContext('2d');
     const game = gameRef.current;
 
-    canvas.width = canvas.parentElement.clientWidth;
+    canvas.width = 600; 
     canvas.height = 400;
 
     game.canvasContext = context;
@@ -213,10 +219,10 @@ const CSSPage = () => {
       if (head.x === food.x && head.y === food.y) {
         if (food.isCorrect) {
           setScore(prev => prev + 10);
-          setMessage(` +10 points`);
+          setMessage(`✅ +10 points`);
         } else {
           setScore(prev => Math.max(0, prev - 10));
-          setMessage(`-10 points`);
+          setMessage(`❌ -10 points`);
         }
         placeFood();
         ate = true;
@@ -231,11 +237,9 @@ const CSSPage = () => {
   const drawGame = () => {
     const game = gameRef.current;
     const ctx = game.canvasContext;
+    if (!ctx) return;
 
-    const gradient = ctx.createLinearGradient(0, 0, game.canvasWidth, game.canvasHeight);
-    gradient.addColorStop(0, 'rgba(15, 23, 42, 0.8)');
-    gradient.addColorStop(1, 'rgba(30, 41, 59, 0.8)');
-    ctx.fillStyle = gradient;
+    ctx.fillStyle = '#1e293b';
     ctx.fillRect(0, 0, game.canvasWidth, game.canvasHeight);
 
     ctx.strokeStyle = 'rgba(100, 130, 200, 0.1)';
@@ -253,19 +257,16 @@ const CSSPage = () => {
       ctx.stroke();
     }
 
+  
     game.snake.forEach((segment, index) => {
       const x = segment.x * gridSize;
       const y = segment.y * gridSize;
       
       if (index === 0) {
-        const headGradient = ctx.createRadialGradient(
-          x + gridSize/2, y + gridSize/2, 0,
-          x + gridSize/2, y + gridSize/2, gridSize
-        );
-        headGradient.addColorStop(0, '#60a5fa');
-        headGradient.addColorStop(1, 'rgba(96, 165, 250, 0.1)');
-        ctx.fillStyle = headGradient;
-        ctx.fillRect(x - gridSize/2, y - gridSize/2, gridSize*2, gridSize*2);
+        ctx.fillStyle = 'rgba(96, 165, 250, 0.3)';
+        ctx.beginPath();
+        ctx.arc(x + gridSize/2, y + gridSize/2, gridSize, 0, Math.PI * 2);
+        ctx.fill();
       }
       
       ctx.fillStyle = index === 0 ? '#60a5fa' : '#3b82f6';
@@ -278,25 +279,28 @@ const CSSPage = () => {
       const x = food.x * gridSize;
       const y = food.y * gridSize;
       
-      const glowGradient = ctx.createRadialGradient(
-        x + gridSize/2, y + gridSize/2, 0,
-        x + gridSize/2, y + gridSize/2, gridSize
-      );
-      glowGradient.addColorStop(0, food.color);
-      glowGradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
-      ctx.fillStyle = glowGradient;
-      ctx.fillRect(x - gridSize/2, y - gridSize/2, gridSize*2, gridSize*2);
+      ctx.fillStyle = `${food.color}30`;
+      ctx.beginPath();
+      ctx.arc(x + gridSize/2, y + gridSize/2, gridSize * 1.2, 0, Math.PI * 2);
+      ctx.fill();
       
       ctx.fillStyle = food.color;
       ctx.beginPath();
-      ctx.roundRect(x, y, gridSize - 1, gridSize - 1, [6]);
+      ctx.roundRect(
+        x - gridSize * 0.1,  
+        y - gridSize * 0.1,  
+        gridSize * 1.2 - 1,  
+        gridSize * 1.2 - 1,  
+        [8]  
+      );
       ctx.fill();
       
       ctx.fillStyle = 'white';
-      ctx.font = 'bold 9px Arial';
+      ctx.font = 'bold 15px Arial';  
       ctx.textAlign = 'center';
       
-      const maxCharsPerLine = 12;
+      const maxCharsPerLine = 10;  
+      
       if (food.value.length > maxCharsPerLine) {
         const words = food.value.split(' ');
         let lines = [];
@@ -313,10 +317,18 @@ const CSSPage = () => {
         lines.push(currentLine);
         
         lines.forEach((line, i) => {
-          ctx.fillText(line, x + gridSize/2, y + gridSize/2 - (lines.length - 1) * 5 + i * 10);
+          ctx.fillText(
+            line, 
+            x + gridSize/2, 
+            y + gridSize/2 - (lines.length - 1) * 6 + i * 12  
+          );
         });
       } else {
-        ctx.fillText(food.value, x + gridSize/2, y + gridSize/2 + 4);
+        ctx.fillText(
+          food.value, 
+          x + gridSize/2, 
+          y + gridSize/2 + 5  
+        );
       }
     });
   };
@@ -327,12 +339,17 @@ const CSSPage = () => {
     clearInterval(game.timerInterval);
     game.gameActive = false;
     setGameOver(true);
-    setMessage(`🏁 Score: ${score}`);
+    
+    const allQuestionsUsed = usedQuestions.length >= quizQuestions.length && quizQuestions.length > 0;
+    
+    setMessage(allQuestionsUsed 
+      ? `🏁 Completed all questions! Final Score: ${score}`
+      : `🏁 Final Score: ${score}`);
   };
 
   const startGame = async () => {
     setScore(0);
-    setUsedQuestions([]);
+    setUsedQuestions([]); 
     setQuestionsCompleted(0);
     setGameOver(false);
     setGameStarted(true);
@@ -340,7 +357,7 @@ const CSSPage = () => {
     if (!questionsLoaded) {
       await fetchQuestions();
     }
-
+  
     if (quizQuestions.length > 0) {
       initializeGame();
     } else {
@@ -380,13 +397,6 @@ const CSSPage = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      if (canvasRef.current) {
-        canvasRef.current.width = canvasRef.current.parentElement.clientWidth;
-        if (gameRef.current.canvasContext) {
-          gameRef.current.canvasWidth = canvasRef.current.width;
-          drawGame();
-        }
-      }
       if (bgCanvasRef.current) {
         bgCanvasRef.current.width = window.innerWidth;
         bgCanvasRef.current.height = window.innerHeight;
@@ -394,104 +404,102 @@ const CSSPage = () => {
     };
 
     window.addEventListener('resize', handleResize);
+    handleResize(); 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   return (
-    <div className="min-h-screen text-black relative overflow-hidden">
+    <div className="min-h-screen text-white relative overflow-hidden">
       <canvas 
         ref={bgCanvasRef} 
         className="fixed top-0 left-0 w-full h-full -z-10 bg-gradient-to-br from-gray-900 to-blue-900"
       />
       
-      <div className="relative z-10 p-4">
-        <div className="text-center mb-4">
-          <h1 className="text-3xl font-extrabold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-teal-300">
-            CSS Snake
-          </h1>
-        </div>
+      <div className="relative z-10 p-4 flex flex-col items-center">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-4">
+            <h1 className="text-3xl font-extrabold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-teal-300">
+              🐍 C# Snake
+            </h1>
+          </div>
 
-        <div className="max-w-md mx-auto bg-gray-800/80 backdrop-blur-sm rounded-lg p-4 shadow-lg border border-gray-700">
+          <div className="bg-gray-800/90 backdrop-blur-sm rounded-lg p-4 shadow-lg border border-gray-700">
           <div className="mb-4 flex justify-between items-center space-x-2">
-            <div className="px-3 py-2 bg-blue-600/80 text-black text-sm font-bold rounded-md shadow border border-blue-400">
-              🏆 {score}
-            </div>
-            <div className="px-3 py-2 bg-purple-600/80 text-black text-sm font-bold rounded-md shadow border border-purple-400">
-              ⏱️ {timeLeft}s
-            </div>
-            <div className="px-3 py-2 bg-green-600/80 text-black text-sm font-bold rounded-md shadow border border-green-400">
-              ❓ {questionsCompleted}
-            </div>
+          <div className="px-3 py-2 bg-blue-600 text-white text-sm font-bold rounded-md shadow border border-blue-400">
+          🏆 {score}
           </div>
-
-          {currentQuestion && (
-            <div className="mb-3 p-3 bg-gray-700/50 rounded-md border border-gray-600">
-              <div className="font-semibold text-blue-300 mb-1 text-sm">
-                {currentQuestion.question_text}
-              </div>
-              <div className="text-xs text-gray-300 mt-2">
-              </div>
-            </div>
-          )}
-
-          <div className="mb-3 text-center text-sm font-medium bg-gray-700/50 p-2 rounded-md border border-gray-600">
-            {message}
-          </div>
-
-          <div className="relative rounded-lg overflow-hidden border border-gray-600 shadow-lg">
-            {!gameStarted && !gameOver && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-10">
-                <div className="text-center bg-gray-800/90 p-4 rounded-lg border border-gray-600">
-                  <h2 className="text-xl font-bold mb-3 text-blue-300">
-                    CSS Snake
-                  </h2>
-                 
-                  <Button
-  onClick={startGame}
-  className="bg-gradient-to-br from-green-400 via-teal-400 to-cyan-400 text-white px-6 py-2 rounded-xl text-sm font-bold shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out border border-white/20 backdrop-blur-sm"
->
-  🎮 Start Game
-</Button>
-
+          <div className="px-3 py-2 bg-red-500 text-white text-sm font-bold rounded-md shadow border border-amber-400">
+  ⏱️ {timeLeft}s
+</div>
+          <div className="px-3 py-2 bg-green-600 text-white text-sm font-bold rounded-md shadow border border-green-400">
+    ❓ {questionsCompleted}
+  </div>
+</div>
+            {currentQuestion && (
+              <div className="mb-3 p-3 bg-gray-700/70 rounded-md border border-gray-600">
+                <div className="font-semibold text-blue-300 mb-1 text-sm">
+                  {currentQuestion.question_text}
                 </div>
               </div>
             )}
 
-            {gameOver && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-10">
-                <div className="text-center bg-gray-800/90 p-4 rounded-lg border border-gray-600">
-                  <h2 className="text-xl font-bold mb-2 text-red-800">
-                    Game Over!
-                  </h2>
-                  <p className="text-sm mb-3 text-white">Final Score: {score}</p>
-                  <Button
-                    onClick={startGame}
-                    className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-2 rounded-lg text-sm font-bold shadow"
-                  >
-                    🔄 Play Again
-                  </Button>
+            <div className="mb-3 text-center text-sm font-medium bg-gray-700/70 p-2 rounded-md border border-gray-600 text-white">
+              {message}
+            </div>
+
+            <div className="relative rounded-lg overflow-hidden border border-gray-600 shadow-lg">
+              {!gameStarted && !gameOver && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-10">
+                  <div className="text-center bg-gray-800/90 p-4 rounded-lg border border-gray-600">
+                    <h2 className="text-xl font-bold mb-3 text-blue-300">
+                      🐍 C# Snake
+                    </h2>
+                    <Button
+                      onClick={startGame}
+                      className="bg-gradient-to-r from-green-500 to-teal-500 text-white px-6 py-2 rounded-lg text-sm font-bold shadow hover:from-green-600 hover:to-teal-600 transition-colors"
+                    >
+                      🎮 Start Game
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            <canvas 
-              ref={canvasRef} 
-              className="w-full h-[400px] bg-gray-900/30"
-            />
+              {gameOver && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-10">
+                  <div className="text-center bg-gray-800/90 p-4 rounded-lg border border-gray-600">
+                    <h2 className="text-xl font-bold mb-2 text-red-400">
+                      Game Over!
+                    </h2>
+                    <p className="text-sm mb-3 text-white">Final Score: {score}</p>
+                    <Button
+                      onClick={startGame}
+                      className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-2 rounded-lg text-sm font-bold shadow hover:from-blue-600 hover:to-purple-600 transition-colors"
+                    >
+                      🔄 Play Again
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              <canvas 
+                ref={canvasRef} 
+                className="w-full h-[400px] bg-gray-900/30"
+              />
+            </div>
           </div>
-        </div>
 
-        <div className="text-center mt-4">
-          <Button
-            onClick={() => router.push("/Jocs")}
-            className="bg-gradient-to-r from-purple-600 to-indigo-600 text-black px-5 py-2 rounded-lg text-sm shadow"
+          <div className="text-center mt-4 max-w-xs mx-auto"> 
+        <Button
+          onClick={() => router.push("/Jocs")}
+          className="bg-gradient-to-r from-red-500 to-purple-500 text-white px-6 py-2 rounded-lg text-sm font-bold shadow hover:from-blue-600 hover:to-red  -600 transition-colors"
           >
-            ⬅️ Back to Menu
-          </Button>
+          ⬅️ Back to Menu
+        </Button>
+        </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default CSSPage;
+export default CSHARPPage;
