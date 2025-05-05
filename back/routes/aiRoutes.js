@@ -157,20 +157,47 @@ router.post('/create', verifyTokenMiddleware, async (req, res) => {
             console.log("No <think> tag found in the response.");
         }
 
-        res.status(200).json(restOfContent);
-    } catch (error) {
-        console.error("Error en el servidor:", error);
+      // objToSaveMongoDB.aiContent = restOfContent;
+      // objToSaveMongoDB.aiThought = thinkTagContent ? thinkTagContent[1] : '';
+      saveMessage(objToSaveMongoDB);
 
-        // Manejo de errores específicos
-        // if (error.message.includes('La IA respondió con un error')) {
-        //     res.status(502).json({ error: 'Error en la comunicación con la IA: ' + error.message });
-        // } else if (error.message.includes('No se recibió respuesta de la IA')) {
-        //     res.status(504).json({ error: 'La IA no está disponible en este momento.' });
-        // } else {
-        //     res.status(500).json({ error: 'Hubo un problema al procesar la solicitud.' });
-        // }
+      setTimeout(async () => {
+        try {
+          const messages = await Message.find({ 
+            userId: verified_user_id,
+            classId: class_id 
+          })
+          .sort({ _id: -1 })
+          .limit(5)
+          .lean();
 
-    }
+          if (messages.length === 5) {
+            console.log('5 mensajes detectados, generando quiz...');
+            const formattedMessages = messages.map(msg => msg.userContent).join('\n');
+            const quizResponse = await sendForQuiz(formattedMessages);
+
+            if (quizResponse && quizResponse.quiz && Array.isArray(quizResponse.quiz)) {
+              const quiz = new Quiz({
+                userId: verified_user_id,
+                classId: class_id,
+                questions: quizResponse.quiz,
+                userAnswers: [],
+                createdAt: new Date()
+              });
+              await quiz.save();
+              console.log('Quiz saved in MongoDB:', quiz._id);
+            }
+          }
+        } catch (error) {
+          console.error('Error generating quiz:', error);
+        }
+      }, 0);
+
+      res.status(200).json(restOfContent);
+  } catch (error) {
+      console.error("Error en el servidor:", error);
+      res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 const sendToAI = async (message, language, restriction) => {
@@ -381,5 +408,24 @@ console.log("answer sent back");
 
 return aiResponse;
 };
+
+router.get('/check-quiz', verifyTokenMiddleware, async (req, res) => {
+  try {
+    const userId = req.verified_user_id;
+    const latestQuiz = await Quiz.findOne({
+      userId: userId,
+      'questions.isAnswered': { $ne: true }
+    }).sort({ createdAt: -1 });
+
+    res.status(200).json({
+      quizAvailable: !!latestQuiz,
+      quiz: latestQuiz?.questions || null,
+      quizId: latestQuiz?._id || null
+    });
+  } catch (error) {
+    console.error('Error checking quiz:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 export default router;

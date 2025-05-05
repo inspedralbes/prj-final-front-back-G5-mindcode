@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useAuthStore } from '../../stores/authStore';
 import { useRouter } from 'next/navigation';
+import { checkQuizAvailability } from '../../services/communicationManager';
 
 const URL = process.env.NEXT_PUBLIC_URL;
 const Sidebar = ({handleSetCurrentLanguage}) => {
   const [isLlenguatgesOpen, setIsLlenguatgesOpen] = useState(false);
   const [languages, setLanguages] = useState([]);
+  const [isQuizAvailable, setIsQuizAvailable] = useState(false);
+  const [quizAvailable, setQuizAvailable] = useState(false);
   const user_info = useAuthStore.getState().user_info
   const router = useRouter();
   const classInfo = useAuthStore((state) => state.class_info);
@@ -17,6 +20,24 @@ const Sidebar = ({handleSetCurrentLanguage}) => {
       }
     }
   }, [classInfo]);
+
+  const checkForQuiz = async () => {
+    try {
+      const data = await checkQuizAvailability();
+      setQuizAvailable(data.quizAvailable);
+      setIsQuizAvailable(data.quizAvailable);
+    } catch (error) {
+      console.error('Error checking quiz:', error);
+    }
+  };
+
+  useEffect(() => {
+    checkForQuiz();
+
+    const interval = setInterval(checkForQuiz, 10000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleLanguageClick = async (language) => {
     console.log("Lenguaje seleccionado:", language);
@@ -69,9 +90,11 @@ const Sidebar = ({handleSetCurrentLanguage}) => {
         </button>
         <button 
           onClick={handleFormClick}
-          className="w-full px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded-md hover:bg-gray-400 dark:hover:bg-gray-500 text-left"
+          disabled={!isQuizAvailable}
+          className={`w-full px-4 py-2 rounded-md text-left flex items-center justify-between ${isQuizAvailable ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-gray-300 dark:bg-gray-600 cursor-not-allowed opacity-50'}`}
         >
-          📝 Qüestionari
+          <span>📝 Qüestionari</span>
+          {isQuizAvailable && <span className="animate-pulse text-yellow-300">⚡</span>}
         </button>
       </nav>
     </div>
