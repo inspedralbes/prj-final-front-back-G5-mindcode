@@ -11,9 +11,9 @@ import PanelBox from "app/components/atoms/PanelBox";
 import Panel from "app/components/atoms/Panel";
 
 const JoinClassForm = () => {
-  const userInfo = useAuthStore.getState();
   const router = useRouter();
   const [classCode, setClassCode] = useState("");
+  const userInfo = useAuthStore((state) => state.user_info);
 
   const handleJoin = async () => {
     if (classCode) {
