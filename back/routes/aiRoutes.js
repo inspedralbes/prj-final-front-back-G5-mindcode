@@ -134,9 +134,6 @@ router.post('/create', verifyTokenMiddleware, async (req, res) => {
 
     objToSaveMongoDB.language = languageToSend.name;
 
-
-    saveMessage(objToSaveMongoDB);
-
     try {
         const aiResponse = await sendToAI(message, languageToSend.name, restriction);
 
@@ -157,9 +154,9 @@ router.post('/create', verifyTokenMiddleware, async (req, res) => {
             console.log("No <think> tag found in the response.");
         }
 
-      // objToSaveMongoDB.aiContent = restOfContent;
-      // objToSaveMongoDB.aiThought = thinkTagContent ? thinkTagContent[1] : '';
-      saveMessage(objToSaveMongoDB);
+      objToSaveMongoDB.aiContent = restOfContent;
+      objToSaveMongoDB.aiThought = thinkTagContent ? thinkTagContent[1] : '';
+      
 
       try {
         const connection = await createConnection();
@@ -210,12 +207,14 @@ router.post('/create', verifyTokenMiddleware, async (req, res) => {
         await connection.end();
       } catch (error) {
         console.error('Error al procesar mensajes:', error);
-      }
+      } 
 
       res.status(200).json(restOfContent);
   } catch (error) {
       console.error("Error en el servidor:", error);
       res.status(500).json({ error: "Internal server error" });
+  } finally {
+    saveMessage(objToSaveMongoDB);
   }
 });
 
