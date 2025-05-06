@@ -6,10 +6,11 @@ import Navbar from "../components/organisms/Navbar";
 import ContentArea from "../components/ContentArea";
 import SidebarProf from "app/components/SidebarProf";
 import { useAuthStore } from '../../stores/authStore';
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useRef } from "react";
-import { getClassMain, getRestrictions } from "services/communicationManager";
+import { getClassMain, getRestrictions, getUserRole } from "services/communicationManager";
 import StatsContent from "../components/organisms/StatsContent";
 import EditRestrictions from "app/components/organisms/EditRestrictions";
 
@@ -19,10 +20,24 @@ const Page = () => {
   const [selectedLanguage, setSelectedLanguage] = useState(null);
   const [restrictions, setRestrictions] = useState(null);
   const [loading, setLoading] = useState(true);
-
   const classInfo = useAuthStore((state) => state.class_info);
-
   const childRef = useRef(null);
+  const router = useRouter();
+  
+  useEffect(() => {
+        const checkUserRole = async () => {
+          try {
+            const response = await getUserRole();
+            if (response === 0) {
+              router.push("/Login");
+            }
+          } catch (error) {
+            console.error("Error checking user role:", error);
+            router.push("/Login");  
+          }
+        };
+        checkUserRole();
+      }, []);
 
   useEffect(() => {
     getClassMain();

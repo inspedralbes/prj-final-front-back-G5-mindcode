@@ -5,7 +5,7 @@ import SidebarStudent from "../../components/organisms/SidebarStudent";
 import UserChat from "../../components/organisms/UserChat";
 import Navbar from "../../components/organisms/Navbar";
 import { useAuthStore } from "stores/authStore";
-import { sendMessage, getUserInfo } from "services/communicationManager";
+import { sendMessage, getUserInfo, getUserRole } from "services/communicationManager";
 
 const StudentDashboardPage = () => {
   const [isClient, setIsClient] = useState(false);

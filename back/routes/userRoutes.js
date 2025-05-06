@@ -139,4 +139,28 @@ router.post('/uploadimg/:id', verifyTokenMiddleware, upload.single('image'), asy
       res.status(500).json({ error: 'Internal server error' });
     }
   });
+
+  router.get('/role', verifyTokenMiddleware, async (req, res) => {
+    const userId = req.verified_user_id; 
+  
+    try {
+      const connection = await createConnection();
+      const [rows] = await connection.execute(
+        'SELECT teacher FROM USER WHERE id = ?',
+        [userId]
+      );
+      await connection.end();
+  
+      if (rows.length === 0) {
+        return res.status(404).json({ message: `Usuario no encontrado con ID: ${userId}` });
+      }
+  
+      const user = rows[0];
+      return res.json(user.teacher);
+    } catch (err) {
+      console.error("Error al verificar el rol:", err);
+      return res.status(500).json({ message: "Error al verificar el rol", error: err.message });
+    }
+  });
+
 export default router;

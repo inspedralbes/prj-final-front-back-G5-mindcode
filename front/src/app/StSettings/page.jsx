@@ -15,6 +15,7 @@ import {
   leaveClass,
   getUserById,
 } from "services/communicationManager";
+import ContentArea from "../components/ContentArea";
 
 const StSettings = () => {
   const [userSettings, setUserSettings] = useState(null);
@@ -102,6 +103,7 @@ const StSettings = () => {
       <SidebarStudent handleSetCurrentLanguage={handleSetCurrentLanguage} />
       <div className="flex flex-col w-full">
         <Navbar />
+        <ContentArea>
         <div className="flex flex-grow flex-wrap items-center justify-center gap-4 p-4">
           <Settings
             id={userSettings.id}
@@ -118,6 +120,7 @@ const StSettings = () => {
             />
           )}
         </div>
+        </ContentArea>
       </div>
 
       {isDialogOpen && (

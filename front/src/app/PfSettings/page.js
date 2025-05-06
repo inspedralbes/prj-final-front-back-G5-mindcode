@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import Navbar from "../components/organisms/Navbar";
 import Settings from "app/components/Settings";
 import ClassSettings from "app/components/ClassSettings";
-import { getUserInfo, getClassInfo, getClassDetails, leaveClass, getUserById, kickClass } from "services/communicationManager";
+import { getUserInfo, getClassInfo, getClassDetails, leaveClass, getUserById, kickClass, getUserRole } from "services/communicationManager";
 import Dialog from "app/components/atoms/Dialog";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from '../../stores/authStore';
@@ -20,7 +20,22 @@ const PfSettings = () => {
     const [highlitedLanguageIndex, setHighlitedLanguageIndex] = useState(0);
     const router = useRouter();
     const classInfo = useAuthStore((state) => state.class_info);
-  
+    
+    useEffect(() => {
+      const checkUserRole = async () => {
+        try {
+          const response = await getUserRole();
+          if (!response.isTeacher) {
+            router.push("/Login");
+          }
+        } catch (error) {
+          console.error("Error checking user role:", error);
+          router.push("/Login");  
+        }
+      };
+      checkUserRole();
+    }, []);
+
     useEffect(() => {
       const fetchUser = async () => {
         try {

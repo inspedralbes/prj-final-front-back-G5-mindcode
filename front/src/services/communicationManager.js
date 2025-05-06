@@ -823,3 +823,29 @@ export async function uploadUserImage(userId, imageFile) {
     throw error;
   }
 }
+
+export async function getUserRole() {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+    if (!user_info || !user_info.token) {
+      throw new Error("No token provided");
+    }
+
+    const response = await fetch(`${URL}/api/user/role`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${user_info.token}`,
+      },
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error getting user role: ${errorText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error in Communication Manager:", error);
+    throw error;
+  }
+}
