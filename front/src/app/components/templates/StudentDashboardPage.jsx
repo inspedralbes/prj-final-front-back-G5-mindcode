@@ -56,9 +56,50 @@ const StudentDashboardPage = () => {
     );
   };
 
+  const parseReceivedMessages = (language_info) => {
+
+
+    console.log("language_info: ", language_info);
+    language_info.forEach(language => {
+
+      let parsedMessages = [];
+
+      let parsedLanguage = [];
+      console.log("Language: ", language);
+
+      language.messages.forEach(message => {
+        console.log("Message: ", message);
+        console.log("Language ID: ", language.id);
+        if (message.languageId !== language.id) return; // Filter messages by languageId
+        const parsedMessage = {
+          sender: "user",
+          text: message.userContent,
+        };
+        parsedLanguage.push(parsedMessage);
+        if (message.aiContent) {
+          const aiMessage = {
+            sender: "ai",
+            text: message.aiContent,
+          };
+          parsedLanguage.push(aiMessage);
+        }
+      });
+      parsedMessages.push(...parsedLanguage);
+
+      console.log("Parsed messages: ", parsedMessages);
+
+      language.messages = parsedMessages;
+
+    })
+
+
+    return null;
+  };
+
   useEffect(() => {
     if (classInfo?.length > 0) {
       setIsClient(true);
+      parseReceivedMessages(classInfo[0].language_info);
       setMessages(classInfo[0].language_info.map(() => ({ messages: [] })));
     }
   }, [classInfo]);
