@@ -175,7 +175,7 @@ router.post('/create', verifyTokenMiddleware, async (req, res) => {
 
 const sendToAI = async (message, language, restriction) => {
     console.log("sending message");
-    const response = await fetch(`http://${AIHOST}:4567`, {
+    const response = await fetch(`${AIHOST}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
