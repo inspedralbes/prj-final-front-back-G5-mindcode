@@ -100,7 +100,7 @@ const StudentDashboardPage = () => {
     if (classInfo?.length > 0) {
       setIsClient(true);
       parseReceivedMessages(classInfo[0].language_info);
-      setMessages(classInfo[0].language_info.map(() => ({ messages: [] })));
+      setMessages(classInfo[0].language_info.map((lang) => ({ messages: lang.messages })));
     }
   }, [classInfo]);
 
