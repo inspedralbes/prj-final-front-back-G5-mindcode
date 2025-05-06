@@ -14,7 +14,7 @@ const BarGraph = ({ labels, dataValues, title, legend, barColor, borderColor }) 
 
     useEffect(() => {
         if (chartRef.current) {
-          chartRef.current.update(); // Smooth update (no full re-render)
+          chartRef.current.update();
         }
       }, [labels, dataValues, textColor]);
 

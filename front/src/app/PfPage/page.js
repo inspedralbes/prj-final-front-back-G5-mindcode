@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import Navbar from "../components/Navbar";
+import Navbar from "../components/organisms/Navbar";
 import ContentArea from "../components/ContentArea";
 import SidebarProf from "app/components/SidebarProf";
 import { useAuthStore } from '../../stores/authStore';

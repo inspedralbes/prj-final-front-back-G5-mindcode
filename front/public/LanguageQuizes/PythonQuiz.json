@@ -1,0 +1,430 @@
+{
+    "_id": { "$oid": "680b40e8fbdcf9cf00b6c800" },
+    "correctAnswers": 0,
+    "userId": 6,
+    "classId": 1,
+    "questions": [
+      {
+        "isAnswered": false,
+        "question_id": 1,
+        "question_text": "Which of the following is the correct way to declare a variable in Python?",
+        "question_type": "MCQ",
+        "options": [
+          "var x = 5",
+          "x = 5",
+          "int x = 5"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c801" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 2,
+        "question_text": "What is the output of `print(type(3.14))` in Python?",
+        "question_type": "MCQ",
+        "options": [
+          "<class 'int'>",
+          "<class 'float'>",
+          "<class 'decimal'>"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c802" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 3,
+        "question_text": "Which keyword is used to define a function in Python?",
+        "question_type": "MCQ",
+        "options": [
+          "def",
+          "function",
+          "func"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c803" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 4,
+        "question_text": "How do you create a single-line comment in Python?",
+        "question_type": "MCQ",
+        "options": [
+          "// This is a comment",
+          "# This is a comment",
+          "/* This is a comment */"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c804" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 5,
+        "question_text": "Which of the following is NOT a valid data structure in Python?",
+        "question_type": "MCQ",
+        "options": [
+          "List",
+          "Tuple",
+          "Array"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c805" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 6,
+        "question_text": "What is the output of `print(2 ** 3)` in Python?",
+        "question_type": "MCQ",
+        "options": [
+          "6",
+          "8",
+          "9"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c806" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 7,
+        "question_text": "Which method is used to add an item to the end of a list?",
+        "question_type": "MCQ",
+        "options": [
+          "append()",
+          "add()",
+          "insert()"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c807" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 8,
+        "question_text": "What is the correct way to create a dictionary in Python?",
+        "question_type": "MCQ",
+        "options": [
+          "{'name': 'John', 'age': 30}",
+          "['name': 'John', 'age': 30]",
+          "('name': 'John', 'age': 30)"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c808" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 9,
+        "question_text": "Which keyword is used for conditional execution in Python?",
+        "question_type": "MCQ",
+        "options": [
+          "if",
+          "when",
+          "case"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c809" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 10,
+        "question_text": "What does the `range(5)` function return?",
+        "question_type": "MCQ",
+        "options": [
+          "[0, 1, 2, 3, 4]",
+          "[1, 2, 3, 4, 5]",
+          "[0, 1, 2, 3, 4, 5]"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c810" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 11,
+        "question_text": "Which module is used for working with regular expressions in Python?",
+        "question_type": "MCQ",
+        "options": [
+          "regex",
+          "re",
+          "pyregex"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c811" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 12,
+        "question_text": "What is the purpose of the `__init__` method in Python classes?",
+        "question_type": "MCQ",
+        "options": [
+          "To initialize the class attributes",
+          "To terminate the class instance",
+          "To import modules"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c812" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 13,
+        "question_text": "Which operator is used for string concatenation in Python?",
+        "question_type": "MCQ",
+        "options": [
+          "+",
+          "&",
+          "concat"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c813" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 14,
+        "question_text": "What is the output of `print('Hello'[::-1])`?",
+        "question_type": "MCQ",
+        "options": [
+          "Hello",
+          "olleH",
+          "Error"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c814" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 15,
+        "question_text": "Which method is used to read user input in Python 3?",
+        "question_type": "MCQ",
+        "options": [
+          "input()",
+          "raw_input()",
+          "get_input()"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c815" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 16,
+        "question_text": "What does the `pass` statement do in Python?",
+        "question_type": "MCQ",
+        "options": [
+          "Terminates the program",
+          "Does nothing (a null operation)",
+          "Skips the current iteration in a loop"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c816" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 17,
+        "question_text": "Which of the following is used to open a file in Python?",
+        "question_type": "MCQ",
+        "options": [
+          "open()",
+          "file()",
+          "read_file()"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c817" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 18,
+        "question_text": "What is the purpose of the `lambda` keyword in Python?",
+        "question_type": "MCQ",
+        "options": [
+          "To create anonymous functions",
+          "To define class methods",
+          "To import modules"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c818" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 19,
+        "question_text": "Which module would you use to work with dates and times?",
+        "question_type": "MCQ",
+        "options": [
+          "datetime",
+          "time",
+          "Both datetime and time"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c819" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 20,
+        "question_text": "What is the correct way to handle exceptions in Python?",
+        "question_type": "MCQ",
+        "options": [
+          "try-except block",
+          "try-catch block",
+          "error-handle block"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c820" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 21,
+        "question_text": "Which of the following is NOT a valid Python variable name?",
+        "question_type": "MCQ",
+        "options": [
+          "my_var",
+          "_myvar",
+          "2myvar"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c821" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 22,
+        "question_text": "What is the purpose of the `self` parameter in Python class methods?",
+        "question_type": "MCQ",
+        "options": [
+          "To refer to the class instance",
+          "To indicate a static method",
+          "To import external libraries"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c822" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 23,
+        "question_text": "Which function is used to get the length of a list?",
+        "question_type": "MCQ",
+        "options": [
+          "count()",
+          "size()",
+          "len()"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c823" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 24,
+        "question_text": "What does the `zip()` function do?",
+        "question_type": "MCQ",
+        "options": [
+          "Compresses files",
+          "Combines iterables element-wise",
+          "Encrypts data"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c824" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 25,
+        "question_text": "Which of the following is used to create a virtual environment in Python?",
+        "question_type": "MCQ",
+        "options": [
+          "venv",
+          "virtualenv",
+          "Both venv and virtualenv"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c825" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 26,
+        "question_text": "What is the output of `print(bool([]))`?",
+        "question_type": "MCQ",
+        "options": [
+          "True",
+          "False",
+          "Error"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c826" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 27,
+        "question_text": "Which decorator is used to define a static method in a class?",
+        "question_type": "MCQ",
+        "options": [
+          "@staticmethod",
+          "@static",
+          "@classmethod"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c827" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 28,
+        "question_text": "What is the purpose of the `__name__` variable?",
+        "question_type": "MCQ",
+        "options": [
+          "To get the name of the current module",
+          "To get the name of a function",
+          "To get the name of a variable"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c828" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 29,
+        "question_text": "Which function is used to sort a list in place?",
+        "question_type": "MCQ",
+        "options": [
+          "sorted()",
+          "sort()",
+          "order()"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c829" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 30,
+        "question_text": "What is the correct way to import only the sqrt function from the math module?",
+        "question_type": "MCQ",
+        "options": [
+          "import sqrt from math",
+          "from math import sqrt",
+          "import math.sqrt"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c830" }
+      }
+    ],
+    "userAnswers": [],
+    "__v": 0
+}

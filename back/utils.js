@@ -2,7 +2,6 @@ import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import Message from "./schemes/mongoScheme.js"
-import { CLOUD_RESOURCE_MANAGER } from 'google-auth-library/build/src/auth/baseexternalclient.js';
 
 dotenv.config();
 
@@ -155,6 +154,7 @@ export function getClassInfo(class_id, user_id) {
 
                 console.log(language);
                 const language_info = JSON.parse(language);
+
                 console.log(language_info);
 
                 const messages = await Message.find({ userId: user_id });

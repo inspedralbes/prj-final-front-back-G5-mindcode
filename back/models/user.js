@@ -13,6 +13,7 @@ const User = sequelize.define('User', {
   teacher: DataTypes.BOOLEAN,
   language: DataTypes.TEXT,
   googleId: DataTypes.TEXT,
+  img: DataTypes.TEXT,
   class: {
     type: DataTypes.INTEGER,
     references: {

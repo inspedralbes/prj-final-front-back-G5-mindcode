@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useEffect, useState } from "react";
-import Sidebar from "../components/Sidebar";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/organisms/Navbar";
 import UserForm from '../components/UserForm';
 import { useAuthStore } from '../../stores/authStore';
 import { useRouter } from "next/navigation";
+import SidebarStudent from "../components/organisms/SidebarStudent";
 
 const ChatForm = (questions,loading,setLoading,handleAnswerSelect,handleSubmit,error,selectedAnswers,results) => {
 
@@ -19,11 +19,13 @@ const ChatForm = (questions,loading,setLoading,handleAnswerSelect,handleSubmit,e
     setHighlitedLanguage(language);
     setHighlitedLanguageIndex(classInfo[0].language_info.findIndex(lang => lang.id === language.id));
     router.push("/StPage");
+    router.push("/Jocs");
+
   };
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50">
-      <Sidebar classInfo={classInfo} handleSetCurrentLanguage={handleSetCurrentLanguage} />
+      <SidebarStudent classInfo={classInfo} handleSetCurrentLanguage={handleSetCurrentLanguage} />
       <div className="flex flex-col w-full">
         <Navbar />
         <UserForm

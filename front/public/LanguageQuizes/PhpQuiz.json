@@ -1,0 +1,430 @@
+{
+    "_id": { "$oid": "680b40e8fbdcf9cf00b6c700" },
+    "correctAnswers": 0,
+    "userId": 6,
+    "classId": 1,
+    "questions": [
+      {
+        "isAnswered": false,
+        "question_id": 1,
+        "question_text": "What does PHP stand for?",
+        "question_type": "MCQ",
+        "options": [
+          "Personal Home Page",
+          "PHP: Hypertext Preprocessor",
+          "Preprocessed Hypertext Page"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c701" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 2,
+        "question_text": "What is the default file extension for PHP files?",
+        "question_type": "MCQ",
+        "options": [
+          ".html",
+          ".php",
+          ".xml"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c702" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 3,
+        "question_text": "Which superglobal variable holds information about headers, paths, and script locations?",
+        "question_type": "MCQ",
+        "options": [
+          "$_GET",
+          "$_SERVER",
+          "$_ENV"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c703" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 4,
+        "question_text": "How do you concatenate strings in PHP?",
+        "question_type": "MCQ",
+        "options": [
+          "Using the + operator",
+          "Using the . operator",
+          "Using the & operator"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c704" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 5,
+        "question_text": "Which function outputs text in PHP?",
+        "question_type": "MCQ",
+        "options": [
+          "print()",
+          "echo()",
+          "Both echo and print"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c705" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 6,
+        "question_text": "What is the correct way to start a PHP session?",
+        "question_type": "MCQ",
+        "options": [
+          "session_start();",
+          "start_session();",
+          "session_begin();"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c706" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 7,
+        "question_text": "Which operator is used to check if two values are equal and of the same type?",
+        "question_type": "MCQ",
+        "options": [
+          "==",
+          "===",
+          "="
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c707" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 8,
+        "question_text": "What is the correct way to create a function in PHP?",
+        "question_type": "MCQ",
+        "options": [
+          "function myFunction()",
+          "create myFunction()",
+          "new function myFunction()"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c708" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 9,
+        "question_text": "Which function is used to redirect a user to a different page?",
+        "question_type": "MCQ",
+        "options": [
+          "redirect()",
+          "header()",
+          "location()"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c709" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 10,
+        "question_text": "What is the correct way to include a file in PHP?",
+        "question_type": "MCQ",
+        "options": [
+          "include 'file.php';",
+          "require 'file.php';",
+          "Both include and require"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c710" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 11,
+        "question_text": "Which function converts a string to lowercase?",
+        "question_type": "MCQ",
+        "options": [
+          "strtolower()",
+          "strlower()",
+          "lowercase()"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c711" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 12,
+        "question_text": "What is the correct way to create an array in PHP?",
+        "question_type": "MCQ",
+        "options": [
+          "$array = array();",
+          "$array = [];",
+          "Both of the above"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c712" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 13,
+        "question_text": "Which function returns the length of a string?",
+        "question_type": "MCQ",
+        "options": [
+          "len()",
+          "strlen()",
+          "length()"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c713" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 14,
+        "question_text": "What is the correct way to create a constant in PHP?",
+        "question_type": "MCQ",
+        "options": [
+          "const MY_CONSTANT = 'value';",
+          "define('MY_CONSTANT', 'value');",
+          "Both of the above"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c714" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 15,
+        "question_text": "Which function is used to get the current date and time?",
+        "question_type": "MCQ",
+        "options": [
+          "time()",
+          "date()",
+          "datetime()"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c715" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 16,
+        "question_text": "What is the correct way to connect to a MySQL database?",
+        "question_type": "MCQ",
+        "options": [
+          "mysqli_connect()",
+          "mysql_connect()",
+          "connect_mysql()"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c716" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 17,
+        "question_text": "Which function is used to destroy a session?",
+        "question_type": "MCQ",
+        "options": [
+          "session_destroy()",
+          "destroy_session()",
+          "remove_session()"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c717" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 18,
+        "question_text": "What is the correct way to handle form data submitted via POST?",
+        "question_type": "MCQ",
+        "options": [
+          "$_POST['fieldname']",
+          "$POST['fieldname']",
+          "$_GET['fieldname']"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c718" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 19,
+        "question_text": "Which function is used to send email in PHP?",
+        "question_type": "MCQ",
+        "options": [
+          "sendmail()",
+          "mail()",
+          "smtp()"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c719" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 20,
+        "question_text": "What is the correct way to get the IP address of the client?",
+        "question_type": "MCQ",
+        "options": [
+          "$_SERVER['REMOTE_ADDR']",
+          "$_CLIENT['IP']",
+          "$_IP['ADDRESS']"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c720" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 21,
+        "question_text": "Which function is used to encode data into JSON format?",
+        "question_type": "MCQ",
+        "options": [
+          "to_json()",
+          "json_encode()",
+          "json_convert()"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c721" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 22,
+        "question_text": "What is the correct way to declare a static method?",
+        "question_type": "MCQ",
+        "options": [
+          "static function methodName()",
+          "function static methodName()",
+          "function methodName() static"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c722" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 23,
+        "question_text": "Which function is used to get the contents of a file?",
+        "question_type": "MCQ",
+        "options": [
+          "file_get_contents()",
+          "readfile()",
+          "Both of the above"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c723" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 24,
+        "question_text": "What is the correct way to handle exceptions in PHP?",
+        "question_type": "MCQ",
+        "options": [
+          "try-catch block",
+          "error() function",
+          "exception() function"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c724" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 25,
+        "question_text": "Which function is used to check if a variable is an array?",
+        "question_type": "MCQ",
+        "options": [
+          "is_array()",
+          "array_check()",
+          "check_array()"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c725" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 26,
+        "question_text": "What is the correct way to sort an array in ascending order?",
+        "question_type": "MCQ",
+        "options": [
+          "sort()",
+          "asort()",
+          "rsort()"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c726" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 27,
+        "question_text": "Which function is used to remove whitespace from the beginning and end of a string?",
+        "question_type": "MCQ",
+        "options": [
+          "trim()",
+          "strip()",
+          "clean()"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c727" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 28,
+        "question_text": "What is the correct way to declare a namespace?",
+        "question_type": "MCQ",
+        "options": [
+          "namespace MyNamespace;",
+          "MyNamespace namespace;",
+          "namespace = MyNamespace;"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c728" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 29,
+        "question_text": "Which function is used to get the current working directory?",
+        "question_type": "MCQ",
+        "options": [
+          "getcwd()",
+          "current_dir()",
+          "dir()"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c729" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 30,
+        "question_text": "What is the correct way to create a cookie?",
+        "question_type": "MCQ",
+        "options": [
+          "create_cookie()",
+          "setcookie()",
+          "make_cookie()"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c730" }
+      }
+    ],
+    "userAnswers": [],
+    "__v": 0
+}

@@ -42,7 +42,7 @@ const CreateClassForm = () => {
           onChange={(e) => setClassName(e.target.value)}
         />
 
-        <Button onClick={handleCreate}>Create Class</Button>
+        <Button className="bg-white" onClick={handleCreate}>Create Class</Button>
       </PanelBox>
     </Panel>
   );
