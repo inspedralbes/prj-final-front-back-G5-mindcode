@@ -423,18 +423,21 @@ const PHPPage = () => {
             </h1>
           </div>
 
-          <div className="bg-gray-800/90 backdrop-blur-sm rounded-lg p-4 shadow-lg border border-gray-700">
+        <div className="bg-gray-800/90 backdrop-blur-sm rounded-lg p-4 shadow-lg border border-gray-700">
           <div className="mb-4 flex justify-between items-center space-x-2">
           <div className="px-3 py-2 bg-blue-600 text-white text-sm font-bold rounded-md shadow border border-blue-400">
           🏆 {score}
           </div>
           <div className="px-3 py-2 bg-red-500 text-white text-sm font-bold rounded-md shadow border border-amber-400">
-  ⏱️ {timeLeft}s
-</div>
+          ⏱️{timeLeft}s
+         </div>
           <div className="px-3 py-2 bg-green-600 text-white text-sm font-bold rounded-md shadow border border-green-400">
-    ❓ {questionsCompleted}
-  </div>
-</div>
+            ❓ {questionsCompleted}
+          </div>
+          </div> 
+          <div className="mb-3 text-center text-sm font-medium bg-gray-700/70 p-2 rounded-md border border-gray-600 text-white">
+              {message}
+            </div>
             {currentQuestion && (
               <div className="mb-3 p-3 bg-gray-700/70 rounded-md border border-gray-600">
                 <div className="font-semibold text-blue-300 mb-1 text-sm">
@@ -442,10 +445,6 @@ const PHPPage = () => {
                 </div>
               </div>
             )}
-
-            <div className="mb-3 text-center text-sm font-medium bg-gray-700/70 p-2 rounded-md border border-gray-600 text-white">
-              {message}
-            </div>
 
             <div className="relative rounded-lg overflow-hidden border border-gray-600 shadow-lg">
               {!gameStarted && !gameOver && (

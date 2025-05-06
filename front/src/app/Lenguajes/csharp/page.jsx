@@ -429,12 +429,12 @@ const CSHARPPage = () => {
           🏆 {score}
           </div>
           <div className="px-3 py-2 bg-red-500 text-white text-sm font-bold rounded-md shadow border border-amber-400">
-  ⏱️ {timeLeft}s
-</div>
+        ⏱️ {timeLeft}s
+      </div>
           <div className="px-3 py-2 bg-green-600 text-white text-sm font-bold rounded-md shadow border border-green-400">
-    ❓ {questionsCompleted}
-  </div>
-</div>
+        ❓ {questionsCompleted}
+          </div>
+        </div>
             {currentQuestion && (
               <div className="mb-3 p-3 bg-gray-700/70 rounded-md border border-gray-600">
                 <div className="font-semibold text-blue-300 mb-1 text-sm">
