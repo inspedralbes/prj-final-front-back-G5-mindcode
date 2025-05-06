@@ -80,7 +80,7 @@ const PYTHONPage = () => {
 
   const fetchQuestions = async () => {
     try {
-      const res = await fetch("/LanguageQuizes/PyhtonQuiz.json");
+      const res = await fetch("/LanguageQuizes/PythonQuiz.json");
       const data = await res.json();
       setQuizQuestions(data.questions);
       setQuestionsLoaded(true);
