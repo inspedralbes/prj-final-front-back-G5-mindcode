@@ -18,6 +18,7 @@ const Page = () => {
   const [selectedClass, setSelectedClass] = useState(null);
   const [selectedLanguage, setSelectedLanguage] = useState(null);
   const [restrictions, setRestrictions] = useState(null);
+  const [selectedClassPosition, setSelectedClassPosition] = useState(0);
   const [loading, setLoading] = useState(true);
 
   const classInfo = useAuthStore((state) => state.class_info);
@@ -51,6 +52,10 @@ const Page = () => {
     setSelectedLanguage(value);
   };
 
+  const changeSelectedClassPosition = (value) => {
+    setSelectedClassPosition(value);
+  };
+
   const handleEdit0 = () => {
     if (childRef.current) {
       const result = childRef.current.handleSaveEdit0();
@@ -78,14 +83,14 @@ const Page = () => {
   return (
     <div className="flex h-screen relative bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50">
       <div className="w-[25vw]">
-        <SidebarProf ref={childRef} changeSelectedField={changeSelectedField} changeSelectedClass={changeSelectedClass} changeSelectedLanguage={changeSelectedLanguage} />
+        <SidebarProf ref={childRef} changeSelectedField={changeSelectedField} changeSelectedClass={changeSelectedClass} changeSelectedLanguage={changeSelectedLanguage} changeSelectedClassPosition={changeSelectedClassPosition} />
       </div>
       <div className="flex flex-col w-full h-fullc ">
         <Navbar />
         <ContentArea >
         {selectedField === "stats"?
-          <StatsContent classId={selectedClass?selectedClass:classInfo[0].class_id} mode={"professor"} />:
-          selectedField === "alumne"?<StatsContent classId={selectedClass?selectedClass:classInfo[0].class_id} mode={"alumne"} />:
+          <StatsContent classId={selectedClass?selectedClass:classInfo[selectedClassPosition].class_id} mode={"professor"} index={selectedClassPosition} />:
+          selectedField === "alumne"?<StatsContent classId={selectedClass?selectedClass:classInfo[selectedClassPosition].class_id} mode={"alumne"} index={selectedClassPosition} />:
           selectedField === "llenguatges"?<EditRestrictions buttons={[
             {
               text: restrictions[2].content,

@@ -4,12 +4,13 @@ import BarGraph from '../atoms/BarGraph';
 import { useState, useEffect } from 'react';
 import { useAuthStore } from '../../../stores/authStore';
 import { fetchAiMessagesClassData, fetchAiMessagesStudentData } from '../../../services/communicationManager';
+import { fetchQuizzesClassData, fetchQuizzesStudentData } from '../../../services/communicationManager';
 import ButtonCollection from '../molecules/ButtonCollection';
 import ContentWrapper from '../atoms/ContentWrapper';
 
 
 
-const StatsContent = ({ classId, mode }) => {
+const StatsContent = ({ classId, classPosition, mode }) => {
 
     const [classStats, setClassStats] = useState([]);
     const [filteredClassData, setFilteredClassData] = useState([]);
@@ -50,8 +51,33 @@ const StatsContent = ({ classId, mode }) => {
         }
     }, [classStats, class_info, filteredClassData]);
 
+    useEffect(() => {
+        if(quizzStats && class_info?.[0]?.classmate_info && filteredQuizzData) {
+            const result = filterQuizzCount(filteredQuizzData, class_info[0].classmate_info);
+            setFilteredQuizzData(result);
+        }
+    }, []);
+
 
     const filterMessageCount = (data, languageInfo) => {
+        // Create a map of message counts grouped by userId
+        const messageCountMap = data.reduce((acc, curr) => {
+            acc[curr.userId] = (acc[curr.userId] || 0) + 1;
+            return acc;
+        }, {});
+
+        // Generate the final array based on language_info
+        const result = languageInfo.map((language) => ({
+            userId: language.id,
+            languageName: language.name,
+            messageCount: messageCountMap[language.id] || 0,
+        }));
+
+        // console.log(result);
+        return result;
+    };
+
+    const filterQuizzCount = (data, languageInfo) => {
         // Create a map of message counts grouped by languageId
         const messageCountMap = data.reduce((acc, curr) => {
             acc[curr.languageId] = (acc[curr.languageId] || 0) + 1;
@@ -178,8 +204,8 @@ const StatsContent = ({ classId, mode }) => {
                                 <BarGraph
                                     labels={filteredQuizzData.map((item) => item.date)}
                                     dataValues={filteredQuizzData.map((item) => item.count)}
-                                    title={"Missatges totals d'aquest alumne"}
-                                    legend={"Missatges per llenguatge"}
+                                    title={"Quizz totals d'aquest alumne"}
+                                    legend={"Nº de quizz totals"}
                                     barColor={"rgba(54, 162, 235, 0.5)"}
                                     borderColor={"rgba(54, 162, 235, 1)"}
                                 />
@@ -187,8 +213,8 @@ const StatsContent = ({ classId, mode }) => {
                                 <BarGraph
                                     labels={filteredQuizzData.map((item) => item.date)}
                                     dataValues={filteredQuizzData.map((item) => item.count)}
-                                    title={"Missatges totals d'aquesta classe"}
-                                    legend={"Missatges per llenguatge"}
+                                    title={"Quizz totals d'aquesta classe"}
+                                    legend={"Nº de quizz totals"}
                                     barColor={"rgba(54, 162, 235, 0.5)"}
                                     borderColor={"rgba(54, 162, 235, 1)"}
                                 />

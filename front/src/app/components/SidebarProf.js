@@ -95,8 +95,9 @@ const SidebarProf = forwardRef((props, ref) => {
     setLanguagesByClass(initialLanguages);
   }, [class_info]);
 
-  const handleClassClick = (class_id) => {
+  const handleClassClick = (class_id, index) => {
     setOpenClassId(openClassId === class_id ? null : class_id);
+    props.changeSelectedClassPosition(index);
     props.changeSelectedField("stats");
     setIsLlenguatgesOpen(false);
     setIsAlumnesOpen(false);
@@ -271,11 +272,11 @@ const SidebarProf = forwardRef((props, ref) => {
 
       <nav className="space-y-2">
         {class_info && class_info.length > 0 ? (
-          class_info.map(({ class_id, name, classmate_info }) => (
+          class_info.map(({ class_id, name, classmate_info }, index) => (
             <div key={class_id}>
               <button
                 className="w-full px-4 py-2 bg-gray-700 hover:bg-blue-500 text-white rounded-md flex justify-between items-center"
-                onClick={() => handleClassClick(class_id)}
+                onClick={() => handleClassClick(class_id, index)}
               >
                 {name} <span>▼</span>
               </button>

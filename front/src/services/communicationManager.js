@@ -428,6 +428,50 @@ export async function fetchAiMessagesStudentData(studentId) {
   return data;
 }
 
+export async function fetchQuizzesClassData(classId) {
+
+  const user_info = useAuthStore.getState().user_info;
+
+  const response = await fetch(`${URL}/api/stats/quizz/${classId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      "Authorization": `Bearer ${user_info.token}`,
+    }
+  })
+
+  if (!response.ok) {
+    throw new Error('Error al cargar los mensajes');
+  }
+
+  const data = await response.json();
+
+  console.log("Data from fetchQuizzesClassData:", data);
+  return data;
+}
+
+export async function fetchQuizzesStudentData(studentId) {
+
+  const user_info = useAuthStore.getState().user_info;
+
+  const response = await fetch(`${URL}/api/stats/quizz/student/${studentId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      "Authorization": `Bearer ${user_info.token}`,
+    }
+  })
+
+  if (!response.ok) {
+    throw new Error('Error al cargar los mensajes');
+  }
+
+  const data = await response.json();
+
+  console.log("Data from fetchQuizzesStudentData:", data);
+  return data;
+}
+
 export async function getClassMain() {
   const user_info = useAuthStore.getState().user_info;
   console.log("GETTING CLASS INFO");
