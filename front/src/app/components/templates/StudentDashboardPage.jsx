@@ -74,8 +74,8 @@ const StudentDashboardPage = () => {
       <SidebarStudent handleSetCurrentLanguage={handleSetCurrentLanguage} />
       <div className="flex flex-col w-full">
         <Navbar />
-        <div className="flex-1 flex items-center justify-center">
-          {highlightedLanguage ? (
+        <div className="flex-1 overflow-y-auto p-4">
+        {highlightedLanguage ? (
             <UserChat
               language={highlightedLanguage}
               message={message}
