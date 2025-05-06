@@ -769,6 +769,34 @@ export async function kickClass(targetUserId) {
     throw error;
   }
 }
+export async function checkQuizAvailability() {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+
+    if (!user_info || !user_info.token) {
+      throw new Error("No token provided");
+    }
+
+    const response = await fetch(`${URL}/message/check-quiz`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user_info.token}`,
+      },
+    });
+    
+    if (!response.ok) {
+      throw new Error('Error checking quiz availability');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error checking quiz availability:', error);
+    throw error;
+  }
+}
+
 
 export async function getUserImage(userId) {
   try {

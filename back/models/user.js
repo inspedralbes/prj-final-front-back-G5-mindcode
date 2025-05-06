@@ -20,7 +20,11 @@ const User = sequelize.define('User', {
       model: Class,
       key: 'idclass',
     },
-  }
+  },
+  message_count: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
 }, {
   tableName: 'USER',
   timestamps: false,

@@ -32,7 +32,7 @@ const UserChat = ({ language, message, messages, handleSendMessage, handleChange
           </div>
         ))}
       </div>
-      <div className="mt-4 flex items-center space-x-4">
+      <div className="mt-4 mb-4 flex items-center space-x-4">
         <textarea
           placeholder="Escriu un missatge..."
           value={message}
