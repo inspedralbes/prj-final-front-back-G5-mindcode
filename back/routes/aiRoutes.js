@@ -134,9 +134,6 @@ router.post('/create', verifyTokenMiddleware, async (req, res) => {
 
     objToSaveMongoDB.language = languageToSend.name;
 
-
-    saveMessage(objToSaveMongoDB);
-
     try {
         const aiResponse = await sendToAI(message, languageToSend.name, restriction);
 
@@ -157,25 +154,73 @@ router.post('/create', verifyTokenMiddleware, async (req, res) => {
             console.log("No <think> tag found in the response.");
         }
 
-        res.status(200).json(restOfContent);
-    } catch (error) {
-        console.error("Error en el servidor:", error);
+      objToSaveMongoDB.aiContent = restOfContent;
+      objToSaveMongoDB.aiThought = thinkTagContent ? thinkTagContent[1] : '';
+      
 
-        // Manejo de errores específicos
-        // if (error.message.includes('La IA respondió con un error')) {
-        //     res.status(502).json({ error: 'Error en la comunicación con la IA: ' + error.message });
-        // } else if (error.message.includes('No se recibió respuesta de la IA')) {
-        //     res.status(504).json({ error: 'La IA no está disponible en este momento.' });
-        // } else {
-        //     res.status(500).json({ error: 'Hubo un problema al procesar la solicitud.' });
-        // }
+      try {
+        const connection = await createConnection();
+        const [result] = await connection.execute(
+          'UPDATE USER SET message_count = message_count + 1 WHERE id = ?',
+          [verified_user_id]
+        );
 
-    }
+        const [rows] = await connection.execute(
+          'SELECT message_count FROM USER WHERE id = ?',
+          [verified_user_id]
+        );
+
+        const messageCount = rows[0].message_count;
+        console.log(`Contador de mensajes: ${messageCount}`);
+
+        if (messageCount >= 5) {
+          console.log('5 mensajes detectados, generando quiz...');
+          const messages = await Message.find({ 
+            userId: verified_user_id,
+            classId: class_id 
+          })
+          .sort({ _id: -1 })
+          .limit(5)
+          .lean();
+
+          const formattedMessages = messages.map(msg => msg.userContent).join('\n');
+          const quizResponse = await sendForQuiz(formattedMessages);
+
+          if (quizResponse && quizResponse.quiz && Array.isArray(quizResponse.quiz)) {
+            const quiz = new Quiz({
+              userId: verified_user_id,
+              classId: class_id,
+              questions: quizResponse.quiz,
+              userAnswers: [],
+              createdAt: new Date()
+            });
+            await quiz.save();
+            console.log('Quiz generated and saved in MongoDB:', quiz._id);
+
+            await connection.execute(
+              'UPDATE USER SET message_count = 0 WHERE id = ?',
+              [verified_user_id]
+            );
+          }
+        }
+
+        await connection.end();
+      } catch (error) {
+        console.error('Error al procesar mensajes:', error);
+      } 
+
+      res.status(200).json(restOfContent);
+  } catch (error) {
+      console.error("Error en el servidor:", error);
+      res.status(500).json({ error: "Internal server error" });
+  } finally {
+    saveMessage(objToSaveMongoDB);
+  }
 });
 
 const sendToAI = async (message, language, restriction) => {
     console.log("sending message");
-    const response = await fetch(`http://${AIHOST}:4567`, {
+    const response = await fetch(`${AIHOST}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -381,5 +426,24 @@ console.log("answer sent back");
 
 return aiResponse;
 };
+
+router.get('/check-quiz', verifyTokenMiddleware, async (req, res) => {
+  try {
+    const userId = req.verified_user_id;
+    const latestQuiz = await Quiz.findOne({
+      userId: userId,
+      'questions.isAnswered': { $ne: true }
+    }).sort({ createdAt: -1 });
+
+    res.status(200).json({
+      quizAvailable: !!latestQuiz,
+      quiz: latestQuiz?.questions || null,
+      quizId: latestQuiz?._id || null
+    });
+  } catch (error) {
+    console.error('Error checking quiz:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 export default router;

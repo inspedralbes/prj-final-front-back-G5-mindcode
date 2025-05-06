@@ -5,6 +5,7 @@ import { googleLogin } from "../../services/firebase";
 import { useRouter } from "next/navigation";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
+import { useAuthStore } from '../../stores/authStore';
 import dynamic from "next/dynamic";
 import Tilt from "react-parallax-tilt";
 
@@ -14,6 +15,7 @@ const RobotModel = dynamic(() => import("../components/RobotModel"), { ssr: fals
 
 const Signup = () => {
   const [hydrated, setHydrated] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -22,15 +24,30 @@ const Signup = () => {
 
   const handleGoogleLogin = async () => {
     try {
-      const userData = await googleLogin();
+      const { userData, photoURL } = await googleLogin();
+      console.log('User data:', userData);
       if (!userData) return;
 
-      const { userData: userDataParsed, hasClass } = userData;
-      router.push(
-        userDataParsed.teacher == 1
-          ? hasClass ? "/PfPage" : "/CreateClass"
-          : hasClass ? "/StPage" : "/JoinClass"
-      );
+
+
+      setUserInfo({
+        ...userData,
+      });
+
+      useAuthStore.setState((state) => ({
+        user_info: {
+          ...state.user_info, 
+          photoURL,          
+        },
+      }));
+
+
+      const userDataParsed = userData.userData;
+      if (userDataParsed.teacher == 1) {
+        router.push(userData.hasClass ? '/PfPage' : '/CreateClass');
+      } else {
+        router.push(userData.hasClass ? '/StPage' : '/JoinClass');
+      }
     } catch (error) {
       console.error("Login error:", error);
     }

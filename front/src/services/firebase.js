@@ -26,6 +26,7 @@ export const googleLogin = async () => {
     const uid = user.uid;
     const name = user.displayName;
     const gmail = user.email;
+    const photoURL = user.photoURL;
 
     if (!gmail.endsWith("@inspedralbes.cat")) {
       console.log("Incorrect Credentials");
@@ -33,7 +34,7 @@ export const googleLogin = async () => {
     }
 
     const userData = await loginGoogle(uid, name, gmail);
-    return userData;
+    return {userData, photoURL};
 
   } catch (error) {
     console.error("Error signing in with Google:", error);

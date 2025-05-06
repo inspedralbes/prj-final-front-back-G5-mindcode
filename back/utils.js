@@ -152,10 +152,9 @@ export function getClassInfo(class_id, user_id) {
 
 
 
-                console.log(language);
                 const language_info = JSON.parse(language);
 
-                console.log(language_info);
+                console.log("Language info: ", language_info);
 
                 const messages = await Message.find({ userId: user_id });
 

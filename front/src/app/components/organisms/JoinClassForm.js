@@ -11,9 +11,9 @@ import PanelBox from "app/components/atoms/PanelBox";
 import Panel from "app/components/atoms/Panel";
 
 const JoinClassForm = () => {
-  const userInfo = useAuthStore.getState();
   const router = useRouter();
   const [classCode, setClassCode] = useState("");
+  const userInfo = useAuthStore((state) => state.user_info);
 
   const handleJoin = async () => {
     if (classCode) {
@@ -35,7 +35,7 @@ const JoinClassForm = () => {
 
   return (
     <Panel>
-      <PanelBox>
+      <PanelBox className=" ml-200">
       <div>
       <Title>Uneix-te a una classe existent</Title>
       </div>
@@ -44,7 +44,7 @@ const JoinClassForm = () => {
       value={classCode}
       onChange={(e) => setClassCode(e.target.value)}
       />
-      <Button onClick={handleJoin}>Join Class</Button>
+      <Button className="bg-white" onClick={handleJoin}>Join Class</Button>
       </PanelBox>
     </Panel>
   );

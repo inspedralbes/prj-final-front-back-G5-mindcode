@@ -220,14 +220,16 @@ router.post('/enroll', verifyTokenMiddleware, async (req, res) => {
 
 
   router.put('/leave', verifyTokenMiddleware, async (req, res) => {
-    const { id } = req.body;
+    const { id, class_id } = req.body;
 
-    if (!id) {
-        return res.status(400).json({ error: 'User ID is required' });
+    if (!id || !class_id) {
+        return res.status(400).json({ error: 'User ID and Class ID are required' });
     }
 
     try {
         const connection = await createConnection();
+
+        // Eliminar al usuario de la clase (campo `class` en la tabla `USER`)
         const [result] = await connection.execute(
             'UPDATE USER SET class = NULL WHERE id = ?',
             [id]
@@ -238,20 +240,33 @@ router.post('/enroll', verifyTokenMiddleware, async (req, res) => {
             return res.status(404).json({ error: 'User not found or already not in any class' });
         }
 
-        const [userRows] = await connection.execute(
-            'SELECT teacher FROM USER WHERE id = ?',
-            [id]
+        // Obtener el array de teacher_id de la clase
+        const [classRows] = await connection.execute(
+            'SELECT teacher_id FROM CLASS WHERE idclass = ?',
+            [class_id]
         );
 
-        if (userRows.length > 0 && userRows[0].teacher === 1) {
+        if (classRows.length === 0) {
+            await connection.end();
+            return res.status(404).json({ error: 'Class not found' });
+        }
+
+        let teacherIds = JSON.parse(classRows[0].teacher_id);
+
+        // Eliminar el ID del usuario del array de teacher_id si existe
+        if (teacherIds.includes(id)) {
+            teacherIds = teacherIds.filter((teacherId) => teacherId !== id);
+
+            // Actualizar el campo teacher_id en la tabla CLASS
             await connection.execute(
-                'UPDATE USER SET teacher = 0 WHERE id = ?',
-                [id]
+                'UPDATE CLASS SET teacher_id = ? WHERE idclass = ?',
+                [JSON.stringify(teacherIds), class_id]
             );
         }
 
         await connection.end();
-        res.status(200).json({ message: 'Successfully left the class' });
+
+        res.status(200).json({ message: 'Successfully left the class and removed from teacher_id array if applicable' });
     } catch (error) {
         console.error('Error leaving class:', error);
         res.status(500).json({ error: 'Internal server error' });

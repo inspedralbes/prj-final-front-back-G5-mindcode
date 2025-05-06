@@ -4,7 +4,8 @@ import {
   addLanguageToClass,
   createLanguage,
   updateLanguages,
-  deleteLanguageFromClass
+  deleteLanguageFromClass,
+  getUserImage
 } from "services/communicationManager.js";
 import DialogComponent from "./molecules/DialogComponent";
 import BigButtonCollection from "./molecules/BigButtonCollection";
@@ -21,7 +22,7 @@ const SidebarProf = forwardRef((props, ref) => {
   const [editingLanguage, setEditingLanguage] = useState({ classId: null, index: null });
   const [isStudent, setIsStudent] = useState(false);
   const [open, setOpen] = useState(false);
-
+  const [userImage, setUserImage] = useState(null);
   const handleOpen = () => setOpen(!open);
 
   const user_info = useAuthStore((state) => state.user_info);
@@ -76,6 +77,19 @@ const SidebarProf = forwardRef((props, ref) => {
     }
 
   };
+
+  useEffect(() => {
+      const fetchUserImage = async () => {
+        try {
+          const img = await getUserImage(user_info.userId);
+          setUserImage(img);
+        } catch (error) {
+          console.error("Error fetching user image:", error);
+        }
+      };
+  
+      fetchUserImage();
+    }, [user_info]);
 
   useEffect(() => {
     const initialLanguages = {};
@@ -265,7 +279,21 @@ const SidebarProf = forwardRef((props, ref) => {
   return (
     <div className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white h-full p-4 border-r border-gray-300 dark:border-gray-700">
       <div className="text-center mb-6">
-        <button className="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 mx-auto mb-2" onClick={handleRedirect}></button>
+        <button className="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 mx-auto mb-2 overflow-hidden" onClick={handleRedirect}>
+          {userImage ? (
+            <img
+              src={userImage}
+              alt="avatar"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <img
+              src={user_info.photoURL}
+              alt="avatar"
+              className="w-full h-full object-cover"
+            />
+          )}
+        </button>
         <h2 className="text-lg font-semibold">PROFESSOR</h2>
         <p className="text-sm text-gray-600 dark:text-gray-400">Admin</p>
       </div>

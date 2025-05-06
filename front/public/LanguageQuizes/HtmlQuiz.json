@@ -1,0 +1,430 @@
+{
+    "_id": { "$oid": "680b40e8fbdcf9cf00b6c300" },
+    "correctAnswers": 0,
+    "userId": 6,
+    "classId": 1,
+    "questions": [
+      {
+        "isAnswered": false,
+        "question_id": 1,
+        "question_text": "What does HTML stand for?",
+        "question_type": "MCQ",
+        "options": [
+          "Hyper Text Markup Language",
+          "High Tech Markup Language",
+          "Hyperlinks and Text Markup Language"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c301" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 2,
+        "question_text": "Which tag is used to create a hyperlink in HTML?",
+        "question_type": "MCQ",
+        "options": [
+          "<link>",
+          "<a>",
+          "<href>"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c302" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 3,
+        "question_text": "What is the correct HTML element for the largest heading?",
+        "question_type": "MCQ",
+        "options": [
+          "<h6>",
+          "<heading>",
+          "<h1>"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c303" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 4,
+        "question_text": "Which HTML element is used to define paragraph text?",
+        "question_type": "MCQ",
+        "options": [
+          "<para>",
+          "<p>",
+          "<text>"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c304" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 5,
+        "question_text": "Which attribute is used to specify an alternate text for an image?",
+        "question_type": "MCQ",
+        "options": [
+          "src",
+          "alt",
+          "title"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c305" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 6,
+        "question_text": "What is the correct HTML for inserting a line break?",
+        "question_type": "MCQ",
+        "options": [
+          "<br>",
+          "<lb>",
+          "<break>"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c306" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 7,
+        "question_text": "Which HTML element is used to define a table row?",
+        "question_type": "MCQ",
+        "options": [
+          "<tr>",
+          "<td>",
+          "<th>"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c307" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 8,
+        "question_text": "Which HTML5 element is used for navigation links?",
+        "question_type": "MCQ",
+        "options": [
+          "<nav>",
+          "<links>",
+          "<navigate>"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c308" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 9,
+        "question_text": "What is the correct HTML for creating a checkbox?",
+        "question_type": "MCQ",
+        "options": [
+          "<input type='check'>",
+          "<checkbox>",
+          "<input type='checkbox'>"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c309" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 10,
+        "question_text": "Which HTML element is used to define a list item?",
+        "question_type": "MCQ",
+        "options": [
+          "<li>",
+          "<list>",
+          "<ul>"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c310" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 11,
+        "question_text": "Which HTML element is used to define an unordered list?",
+        "question_type": "MCQ",
+        "options": [
+          "<ol>",
+          "<ul>",
+          "<list>"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c311" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 12,
+        "question_text": "Which HTML5 element is used to define a footer for a document or section?",
+        "question_type": "MCQ",
+        "options": [
+          "<bottom>",
+          "<footer>",
+          "<foot>"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c312" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 13,
+        "question_text": "Which HTML attribute specifies an input field as required?",
+        "question_type": "MCQ",
+        "options": [
+          "validate",
+          "required",
+          "mandatory"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c313" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 14,
+        "question_text": "Which HTML element is used to define a drop-down list?",
+        "question_type": "MCQ",
+        "options": [
+          "<input>",
+          "<select>",
+          "<dropdown>"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c314" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 15,
+        "question_text": "Which HTML element is used to display a scalar measurement within a known range?",
+        "question_type": "MCQ",
+        "options": [
+          "<range>",
+          "<meter>",
+          "<measure>"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c315" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 16,
+        "question_text": "Which HTML5 element is used to define independent, self-contained content?",
+        "question_type": "MCQ",
+        "options": [
+          "<section>",
+          "<article>",
+          "<independent>"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c316" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 17,
+        "question_text": "Which HTML element is used to define emphasized text?",
+        "question_type": "MCQ",
+        "options": [
+          "<bold>",
+          "<strong>",
+          "<em>"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c317" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 18,
+        "question_text": "Which HTML element is used to define a header for a document or section?",
+        "question_type": "MCQ",
+        "options": [
+          "<head>",
+          "<header>",
+          "<heading>"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c318" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 19,
+        "question_text": "Which HTML element is used to define a section in a document?",
+        "question_type": "MCQ",
+        "options": [
+          "<div>",
+          "<section>",
+          "<area>"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c319" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 20,
+        "question_text": "Which HTML element is used to define a table header cell?",
+        "question_type": "MCQ",
+        "options": [
+          "<td>",
+          "<th>",
+          "<thead>"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c320" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 21,
+        "question_text": "Which HTML element is used to define a table data cell?",
+        "question_type": "MCQ",
+        "options": [
+          "<td>",
+          "<tr>",
+          "<th>"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c321" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 22,
+        "question_text": "Which HTML element is used to embed JavaScript code?",
+        "question_type": "MCQ",
+        "options": [
+          "<javascript>",
+          "<script>",
+          "<js>"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c322" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 23,
+        "question_text": "Which HTML element is used to define a caption for a figure?",
+        "question_type": "MCQ",
+        "options": [
+          "<caption>",
+          "<figcaption>",
+          "<figure>"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c323" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 24,
+        "question_text": "Which HTML element is used to define a clickable button?",
+        "question_type": "MCQ",
+        "options": [
+          "<button>",
+          "<click>",
+          "<input type='button'>"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c324" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 25,
+        "question_text": "Which HTML element is used to define a multi-line text input control?",
+        "question_type": "MCQ",
+        "options": [
+          "<input type='text'>",
+          "<textbox>",
+          "<textarea>"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c325" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 26,
+        "question_text": "Which HTML element is used to define a relationship between a document and an external resource?",
+        "question_type": "MCQ",
+        "options": [
+          "<link>",
+          "<a>",
+          "<rel>"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c326" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 27,
+        "question_text": "Which HTML element is used to define the document's body?",
+        "question_type": "MCQ",
+        "options": [
+          "<body>",
+          "<main>",
+          "<html>"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c327" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 28,
+        "question_text": "Which HTML element is used to define a thematic break or horizontal rule?",
+        "question_type": "MCQ",
+        "options": [
+          "<break>",
+          "<hr>",
+          "<line>"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c328" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 29,
+        "question_text": "Which HTML element is used to define a description list?",
+        "question_type": "MCQ",
+        "options": [
+          "<dl>",
+          "<ol>",
+          "<ul>"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c329" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 30,
+        "question_text": "Which HTML element is used to define superscript text?",
+        "question_type": "MCQ",
+        "options": [
+          "<super>",
+          "<sup>",
+          "<sub>"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c330" }
+      }
+    ],
+    "userAnswers": [],
+    "__v": 0
+}

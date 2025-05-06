@@ -1,0 +1,430 @@
+{
+    "_id": { "$oid": "680b40e8fbdcf9cf00b6c900" },
+    "correctAnswers": 0,
+    "userId": 6,
+    "classId": 1,
+    "questions": [
+      {
+        "isAnswered": false,
+        "question_id": 1,
+        "question_text": "Which SQL statement is used to retrieve data from a database?",
+        "question_type": "MCQ",
+        "options": [
+          "GET",
+          "SELECT",
+          "QUERY"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c901" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 2,
+        "question_text": "Which SQL clause is used to filter records?",
+        "question_type": "MCQ",
+        "options": [
+          "FILTER BY",
+          "WHERE",
+          "HAVING"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c902" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 3,
+        "question_text": "Which SQL keyword is used to sort the result set?",
+        "question_type": "MCQ",
+        "options": [
+          "ORDER BY",
+          "SORT BY",
+          "GROUP BY"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c903" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 4,
+        "question_text": "Which operator is used to select values within a range in SQL?",
+        "question_type": "MCQ",
+        "options": [
+          "WITHIN",
+          "BETWEEN",
+          "RANGE"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c904" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 5,
+        "question_text": "Which SQL statement is used to insert new data into a database?",
+        "question_type": "MCQ",
+        "options": [
+          "INSERT INTO",
+          "ADD RECORD",
+          "CREATE ROW"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c905" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 6,
+        "question_text": "Which SQL function is used to count the number of rows?",
+        "question_type": "MCQ",
+        "options": [
+          "COUNT()",
+          "SUM()",
+          "TOTAL()"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c906" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 7,
+        "question_text": "Which SQL keyword is used to eliminate duplicate rows from the result set?",
+        "question_type": "MCQ",
+        "options": [
+          "UNIQUE",
+          "DISTINCT",
+          "DIFFERENT"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c907" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 8,
+        "question_text": "Which SQL statement is used to update existing records in a table?",
+        "question_type": "MCQ",
+        "options": [
+          "MODIFY",
+          "UPDATE",
+          "CHANGE"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c908" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 9,
+        "question_text": "Which SQL statement is used to delete records from a table?",
+        "question_type": "MCQ",
+        "options": [
+          "REMOVE",
+          "DELETE",
+          "ERASE"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c909" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 10,
+        "question_text": "Which SQL keyword is used to combine rows from two or more tables?",
+        "question_type": "MCQ",
+        "options": [
+          "JOIN",
+          "COMBINE",
+          "MERGE"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c910" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 11,
+        "question_text": "Which type of JOIN returns all rows from the left table and matched rows from the right table?",
+        "question_type": "MCQ",
+        "options": [
+          "INNER JOIN",
+          "LEFT JOIN",
+          "RIGHT JOIN"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c911" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 12,
+        "question_text": "Which SQL constraint ensures that a column cannot have NULL values?",
+        "question_type": "MCQ",
+        "options": [
+          "NOT NULL",
+          "UNIQUE",
+          "PRIMARY KEY"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c912" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 13,
+        "question_text": "Which SQL function is used to find the highest value in a column?",
+        "question_type": "MCQ",
+        "options": [
+          "MAX()",
+          "HIGHEST()",
+          "TOP()"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c913" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 14,
+        "question_text": "Which SQL keyword is used to group rows that have the same values?",
+        "question_type": "MCQ",
+        "options": [
+          "GROUP BY",
+          "ORDER BY",
+          "PARTITION BY"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c914" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 15,
+        "question_text": "Which SQL statement is used to create a new table?",
+        "question_type": "MCQ",
+        "options": [
+          "CREATE TABLE",
+          "NEW TABLE",
+          "ADD TABLE"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c915" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 16,
+        "question_text": "Which SQL constraint uniquely identifies each record in a table?",
+        "question_type": "MCQ",
+        "options": [
+          "UNIQUE",
+          "PRIMARY KEY",
+          "IDENTIFIER"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c916" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 17,
+        "question_text": "Which SQL keyword is used to search for a specified pattern in a column?",
+        "question_type": "MCQ",
+        "options": [
+          "FIND",
+          "LIKE",
+          "MATCH"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c917" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 18,
+        "question_text": "Which SQL function is used to calculate the average value of a numeric column?",
+        "question_type": "MCQ",
+        "options": [
+          "MEAN()",
+          "AVG()",
+          "AVERAGE()"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c918" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 19,
+        "question_text": "Which SQL statement is used to add a new column to an existing table?",
+        "question_type": "MCQ",
+        "options": [
+          "ADD COLUMN",
+          "ALTER TABLE",
+          "MODIFY TABLE"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c919" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 20,
+        "question_text": "Which SQL keyword is used to combine the result sets of two or more SELECT statements?",
+        "question_type": "MCQ",
+        "options": [
+          "COMBINE",
+          "UNION",
+          "JOIN"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c920" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 21,
+        "question_text": "Which SQL function is used to extract a substring from a string?",
+        "question_type": "MCQ",
+        "options": [
+          "EXTRACT()",
+          "SUBSTRING()",
+          "GETSTR()"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c921" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 22,
+        "question_text": "Which SQL constraint ensures that all values in a column are unique?",
+        "question_type": "MCQ",
+        "options": [
+          "PRIMARY KEY",
+          "UNIQUE",
+          "IDENTIFIER"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c922" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 23,
+        "question_text": "Which SQL keyword is used to specify a condition while grouping?",
+        "question_type": "MCQ",
+        "options": [
+          "WHERE",
+          "HAVING",
+          "FILTER"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c923" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 24,
+        "question_text": "Which SQL function is used to return the current date and time?",
+        "question_type": "MCQ",
+        "options": [
+          "NOW()",
+          "CURRENT_DATE()",
+          "TODAY()"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c924" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 25,
+        "question_text": "Which SQL statement is used to change the data type of a column?",
+        "question_type": "MCQ",
+        "options": [
+          "MODIFY COLUMN",
+          "ALTER COLUMN",
+          "CHANGE TYPE"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c925" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 26,
+        "question_text": "Which SQL keyword is used to create an index on a table?",
+        "question_type": "MCQ",
+        "options": [
+          "CREATE INDEX",
+          "ADD INDEX",
+          "MAKE INDEX"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c926" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 27,
+        "question_text": "Which SQL function is used to convert a value to uppercase?",
+        "question_type": "MCQ",
+        "options": [
+          "UPPER()",
+          "TOUPPER()",
+          "UCASE()"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c927" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 28,
+        "question_text": "Which SQL constraint is used to enforce referential integrity between tables?",
+        "question_type": "MCQ",
+        "options": [
+          "PRIMARY KEY",
+          "FOREIGN KEY",
+          "REFERENCE"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c928" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 29,
+        "question_text": "Which SQL keyword is used to limit the number of rows returned?",
+        "question_type": "MCQ",
+        "options": [
+          "LIMIT",
+          "TOP",
+          "Both LIMIT and TOP depending on the database"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c929" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 30,
+        "question_text": "Which SQL statement is used to remove a table from a database?",
+        "question_type": "MCQ",
+        "options": [
+          "DELETE TABLE",
+          "DROP TABLE",
+          "REMOVE TABLE"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c930" }
+      }
+    ],
+    "userAnswers": [],
+    "__v": 0
+}
