@@ -5,7 +5,8 @@ import SidebarStudent from "../../components/organisms/SidebarStudent";
 import UserChat from "../../components/organisms/UserChat";
 import Navbar from "../../components/organisms/Navbar";
 import { useAuthStore } from "stores/authStore";
-import { sendMessage, getUserInfo, getUserRole } from "services/communicationManager";
+import { sendMessage, getUserInfo } from "services/communicationManager";
+import { useRouter } from "next/navigation";
 
 const StudentDashboardPage = () => {
   const [isClient, setIsClient] = useState(false);
@@ -13,8 +14,9 @@ const StudentDashboardPage = () => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [highlightedLanguageIndex, setHighlightedLanguageIndex] = useState(0);
-
+  const router = useRouter();
   const classInfo = useAuthStore((state) => state.class_info);
+  const user_info = useAuthStore.getState().user_info;
 
   const handleSendMessage = async () => {
     if (!message.trim()) return;
@@ -29,7 +31,6 @@ const StudentDashboardPage = () => {
       return newMessages;
     });
     setMessage("");
-
     try {
       const response = await sendMessage({
         message: message.trim(),
@@ -48,6 +49,24 @@ const StudentDashboardPage = () => {
       console.error("Error sending message:", error);
     }
   };
+
+  const checkUserRole = async () => {
+      try {
+        if (!user_info) {
+          return;
+        }
+        if (user_info.role === 1) {
+          router.push("/Login");
+        }
+      } catch (error) {
+        console.error("Error checking user role:", error);
+        router.push("/Login");  
+      }
+    };
+
+  useEffect(() => {
+    checkUserRole();
+     }, [user_info]);
 
   const handleSetCurrentLanguage = (language) => {
     setHighlightedLanguage(language);

@@ -24,7 +24,7 @@ const ClassSettings = ({ name, teacher, classMates, onLeaveClass, isStudent = tr
   };
 
   return (
-    <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 shadow-2xl rounded-2xl p-8 max-w-md mx-auto transition-all duration-300 hover:shadow-xl border border-gray-200 dark:border-gray-700">
+    <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 shadow-2xl rounded-2xl p-11 w-[450px] transition-all duration-300 hover:shadow-xl border border-gray-200 dark:border-gray-700">
       <div className="flex items-center justify-center mb-8">
         <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 relative">
           {name}

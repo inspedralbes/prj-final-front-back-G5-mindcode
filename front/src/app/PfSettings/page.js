@@ -8,6 +8,7 @@ import Dialog from "app/components/atoms/Dialog";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from '../../stores/authStore';
 import SidebarProf from "app/components/SidebarProf";
+import ContentArea from "../components/ContentArea";
 
 const PfSettings = () => {
     const [userSettings, setUserSettings] = useState(null);
@@ -20,21 +21,25 @@ const PfSettings = () => {
     const [highlitedLanguageIndex, setHighlitedLanguageIndex] = useState(0);
     const router = useRouter();
     const classInfo = useAuthStore((state) => state.class_info);
+    const user_info = useAuthStore.getState().user_info;
     
-    useEffect(() => {
-      const checkUserRole = async () => {
-        try {
-          const response = await getUserRole();
-          if (!response.isTeacher) {
-            router.push("/Login");
-          }
-        } catch (error) {
-          console.error("Error checking user role:", error);
-          router.push("/Login");  
-        }
-      };
-      checkUserRole();
-    }, []);
+    const checkUserRole = async () => {
+            try {
+              if (!user_info) {
+                return;
+              }
+              if (user_info.role === 0) {
+                router.push("/Login");
+              }
+            } catch (error) {
+              console.error("Error checking user role:", error);
+              router.push("/Login");  
+            }
+          };
+      
+        useEffect(() => {
+          checkUserRole();
+           }, [user_info]);
 
     useEffect(() => {
       const fetchUser = async () => {
@@ -146,25 +151,28 @@ const PfSettings = () => {
         </div>
         <div className="flex flex-col w-full">
           <Navbar className="w-full" />
-          <div className="flex flex-grow flex-wrap items-center justify-center gap-4 p-4">
-            <Settings
-              id={userSettings.id}
-              name={userSettings.name}
-              gmail={userSettings.gmail}
-              className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3"
-            />
-            {classSettings && (
-              <ClassSettings
-                name={classSettings.className}
-                teacher={classSettings.teacher}
-                classMates={classSettings.classMates}
-                isStudent={false}
-                onKickUser={handleKickUser}
-                onLeaveClass={handleCloseClass} 
-                className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3"
-              />
-            )}
-          </div>
+          <ContentArea>
+            <div className="flex flex-wrap justify-center items-center w-full h-full p-4 min-h-[calc(100vh-64px)]">
+            <div className="w-full max-w-5xl flex flex-wrap justify-center space-x-6 gap-8 px-4">
+                <Settings
+                  id={userSettings.id}
+                  name={userSettings.name}
+                  gmail={userSettings.gmail}
+                  className="w-full md:w-5/12 lg:w-5/12"
+                />
+                {classSettings && (
+                  <ClassSettings
+                    name={classSettings.className}
+                    teacher={classSettings.teacher}
+                    classMates={classSettings.classMates}
+                    onLeaveClass={() => setIsDialogOpen(true)}
+                    isStudent={true}
+                    className="w-full md:w-5/12 lg:w-5/12"
+                  />
+                )}
+                </div>
+              </div>
+          </ContentArea>
         </div>
   
         {isDialogOpen && (

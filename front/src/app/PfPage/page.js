@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useRef } from "react";
-import { getClassMain, getRestrictions, getUserRole } from "services/communicationManager";
+import { getClassMain, getRestrictions } from "services/communicationManager";
 import StatsContent from "../components/organisms/StatsContent";
 import EditRestrictions from "app/components/organisms/EditRestrictions";
 
@@ -21,14 +21,16 @@ const Page = () => {
   const [restrictions, setRestrictions] = useState(null);
   const [loading, setLoading] = useState(true);
   const classInfo = useAuthStore((state) => state.class_info);
+  const user_info = useAuthStore.getState().user_info;
   const childRef = useRef(null);
   const router = useRouter();
   
-  useEffect(() => {
-        const checkUserRole = async () => {
+  const checkUserRole = async () => {
           try {
-            const response = await getUserRole();
-            if (response === 0) {
+            if (!user_info) {
+              return;
+            }
+            if (user_info.role === 0) {
               router.push("/Login");
             }
           } catch (error) {
@@ -36,8 +38,10 @@ const Page = () => {
             router.push("/Login");  
           }
         };
+    
+      useEffect(() => {
         checkUserRole();
-      }, []);
+         }, [user_info]);
 
   useEffect(() => {
     getClassMain();

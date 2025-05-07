@@ -25,6 +25,25 @@ const StSettings = () => {
   const [highlightedLanguageIndex, setHighlightedLanguageIndex] = useState(0);
   const router = useRouter();
   const classInfo = useAuthStore((state) => state.class_info);
+  const user_info = useAuthStore.getState().user_info;
+
+  const checkUserRole = async () => {
+        try {
+          if (!user_info) {
+            return;
+          }
+          if (user_info.role === 1) {
+            router.push("/Login");
+          }
+        } catch (error) {
+          console.error("Error checking user role:", error);
+          router.push("/Login");  
+        }
+      };
+  
+    useEffect(() => {
+      checkUserRole();
+       }, [user_info]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -104,38 +123,40 @@ const StSettings = () => {
       <div className="flex flex-col w-full">
         <Navbar />
         <ContentArea>
-        <div className="flex flex-grow flex-wrap items-center justify-center gap-4 p-4">
-          <Settings
-            id={userSettings.id}
-            name={userSettings.name}
-            gmail={userSettings.gmail}
-          />
-          {classSettings && (
-            <ClassSettings
-              name={classSettings.className}
-              teacher={classSettings.teacher}
-              classMates={classSettings.classMates}
-              onLeaveClass={() => setIsDialogOpen(true)}
-              isStudent={true}
+        <div className="flex flex-wrap justify-center items-center w-full h-full p-4 min-h-[calc(100vh-64px)]">
+        <div className="w-full max-w-5xl flex flex-wrap justify-center space-x-6 gap-8 px-4">
+            <Settings
+              id={userSettings.id}
+              name={userSettings.name}
+              gmail={userSettings.gmail}
+              className="w-full md:w-5/12 lg:w-5/12"
             />
-          )}
-        </div>
+            {classSettings && (
+              <ClassSettings
+                name={classSettings.className}
+                teacher={classSettings.teacher}
+                classMates={classSettings.classMates}
+                onLeaveClass={() => setIsDialogOpen(true)}
+                isStudent={true}
+                className="w-full md:w-5/12 lg:w-5/12"
+              />
+            )}
+            </div>
+          </div>
         </ContentArea>
       </div>
-
       {isDialogOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
           <Dialog
             title="Confirmació"
             message="Estàs segur que vols sortir de la classe?"
             onConfirm={handleLeaveClass}
             onCancel={() => setIsDialogOpen(false)}
-            className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3"
+            className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3 bg-white dark:bg-gray-800 rounded-lg shadow-2xl"
           />
         </div>
       )}
     </div>
   );
-};
-
+} 
 export default StSettings;
