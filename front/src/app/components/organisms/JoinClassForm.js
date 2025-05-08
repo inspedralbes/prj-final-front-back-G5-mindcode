@@ -38,7 +38,7 @@ const JoinClassForm = ({setLoading}) => {
 
   return (
     <Panel>
-      <PanelBox>
+      <PanelBox className=" ml-200">
       <div>
       <Title>Uneix-te a una classe existent</Title>
       </div>
