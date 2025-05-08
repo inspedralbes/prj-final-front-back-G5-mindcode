@@ -18,6 +18,8 @@ const Signup = () => {
   const [userInfo, setUserInfo] = useState(null);
   const router = useRouter();
 
+  const user = useAuthStore((state) => state.user_info);
+
   useEffect(() => {
     setHydrated(true);
   }, []);
@@ -32,6 +34,7 @@ const Signup = () => {
 
       setUserInfo({
         ...userData,
+        photoURL
       });
 
       useAuthStore.setState((state) => ({
@@ -40,6 +43,8 @@ const Signup = () => {
           photoURL,          
         },
       }));
+
+      console.log("USER BEING LOGGED IN", user);
 
 
       const userDataParsed = userData.userData;
