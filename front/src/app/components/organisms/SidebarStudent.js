@@ -85,7 +85,7 @@ const SidebarStudent = ({ handleSetCurrentLanguage }) => {
 
       <nav className="space-y-4">
         <LanguageList 
-          languages={languages} 
+          languages={languages.filter(lang => lang.isActive)} 
           onLanguageClick={handleSetCurrentLanguage} 
           isOpen={isLlenguatgesOpen} 
           toggleOpen={() => setIsLlenguatgesOpen(!isLlenguatgesOpen)}
