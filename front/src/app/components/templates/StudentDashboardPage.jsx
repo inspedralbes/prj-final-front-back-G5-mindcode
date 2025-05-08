@@ -13,6 +13,16 @@ const StudentDashboardPage = () => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [highlightedLanguageIndex, setHighlightedLanguageIndex] = useState(0);
+  const [showLanguageSelector, setShowLanguageSelector] = useState(false);
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    if (searchParams.get('showLanguages') === 'true') {
+      setShowLanguageSelector(true);
+      setHighlightedLanguage(null);
+      setHighlightedLanguageIndex(-1);
+    }
+  }, []);
 
   const classInfo = useAuthStore((state) => state.class_info);
 

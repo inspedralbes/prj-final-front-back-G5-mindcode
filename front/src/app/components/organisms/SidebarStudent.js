@@ -102,7 +102,14 @@ const SidebarStudent = ({ handleSetCurrentLanguage,onOpenLanguageList }) => {
           languages={languages} 
           onLanguageClick={handleSetCurrentLanguage} 
           isOpen={isLlenguatgesOpen} 
-          toggleOpen={() => setIsLlenguatgesOpen(!isLlenguatgesOpen)}
+          toggleOpen={() => {
+            if (pathname !== '/StPage') {
+              setLoading(true);
+              router.push('/StPage');
+            } else {
+              setIsLlenguatgesOpen(!isLlenguatgesOpen);
+            }
+          }}
         />
 
         <Button 
