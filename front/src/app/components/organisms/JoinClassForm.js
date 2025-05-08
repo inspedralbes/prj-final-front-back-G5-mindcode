@@ -10,13 +10,14 @@ import Button from "app/components/atoms/Button";
 import PanelBox from "app/components/atoms/PanelBox";
 import Panel from "app/components/atoms/Panel";
 
-const JoinClassForm = () => {
+const JoinClassForm = ({setLoading}) => {
   const router = useRouter();
   const [classCode, setClassCode] = useState("");
   const userInfo = useAuthStore((state) => state.user_info);
 
   const handleJoin = async () => {
     if (classCode) {
+      setLoading(true);
       try {
         const response = await joinClass(classCode);
         if (response.class_info) {
@@ -27,6 +28,8 @@ const JoinClassForm = () => {
       } catch (error) {
         console.error("Error joining class:", error);
         alert("An error occurred while joining the class.");
+      } finally {
+        setLoading(false);
       }
     } else {
       alert("Please enter the class code.");

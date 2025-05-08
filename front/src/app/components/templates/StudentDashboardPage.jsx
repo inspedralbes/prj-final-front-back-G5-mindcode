@@ -56,6 +56,11 @@ const StudentDashboardPage = () => {
     );
   };
 
+  const handleOpenLanguageList = () => {
+    setHighlightedLanguage(null); 
+    setHighlightedLanguageIndex(-1); 
+  };
+
   useEffect(() => {
     if (classInfo?.length > 0) {
       setIsClient(true);
@@ -71,7 +76,10 @@ const StudentDashboardPage = () => {
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50">
-      <SidebarStudent handleSetCurrentLanguage={handleSetCurrentLanguage} />
+      <SidebarStudent
+        handleSetCurrentLanguage={handleSetCurrentLanguage}
+        onOpenLanguageList={handleOpenLanguageList} 
+      />
       <div className="flex flex-col w-full">
         <Navbar />
         <div className="flex-1 overflow-y-auto p-4">

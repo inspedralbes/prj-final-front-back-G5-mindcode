@@ -10,12 +10,14 @@ import dynamic from "next/dynamic";
 import Tilt from "react-parallax-tilt";
 
 import LoginPanel from "../components/organisms/LoginPanel";
+import LoadingScreen from "../components/LoadingScreen";
 
 const RobotModel = dynamic(() => import("../components/RobotModel"), { ssr: false });
 
 const Signup = () => {
   const [hydrated, setHydrated] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -24,6 +26,7 @@ const Signup = () => {
 
   const handleGoogleLogin = async () => {
     try {
+      setLoading(true);
       const { userData, photoURL } = await googleLogin();
       console.log('User data:', userData);
       if (!userData) return;
@@ -50,6 +53,8 @@ const Signup = () => {
       }
     } catch (error) {
       console.error("Login error:", error);
+    }finally{
+      setLoading(false);
     }
   };
 
@@ -61,6 +66,8 @@ const Signup = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center overflow-visible relative p-4">
+      {loading && <LoadingScreen />} 
+
       <Tilt
         tiltMaxAngleX={6}
         tiltMaxAngleY={6}
