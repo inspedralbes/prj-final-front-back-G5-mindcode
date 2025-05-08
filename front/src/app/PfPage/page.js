@@ -29,7 +29,6 @@ const Page = () => {
     getClassMain();
     getRestrictions().then((res) => {
       setRestrictions(res);
-      console.log(res);
     });
     if (classInfo) {
       

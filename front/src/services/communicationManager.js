@@ -402,7 +402,7 @@ export async function fetchAiMessagesClassData(classId) {
 
   const data = await response.json();
 
-  console.log("Data from fetchAiMessagesClassData:", data);
+  // console.log("Data from fetchAiMessagesClassData:", data);
   return data;
 }
 
@@ -424,7 +424,7 @@ export async function fetchAiMessagesStudentData(studentId) {
 
   const data = await response.json();
 
-  console.log("Data from fetchAiMessagesClassData:", data);
+  // console.log("Data from fetchAiMessagesClassData:", data);
   return data;
 }
 
@@ -446,7 +446,7 @@ export async function fetchQuizzesClassData(classId) {
 
   const data = await response.json();
 
-  console.log("Data from fetchQuizzesClassData:", data);
+  // console.log("Data from fetchQuizzesClassData:", data);
   return data;
 }
 
@@ -468,7 +468,7 @@ export async function fetchQuizzesStudentData(studentId) {
 
   const data = await response.json();
 
-  console.log("Data from fetchQuizzesStudentData:", data);
+  // console.log("Data from fetchQuizzesStudentData:", data);
   return data;
 }
 
@@ -488,7 +488,7 @@ export async function getClassMain() {
   }
   const data = await response.json();
 
-  console.log("Data recieved: ", data);
+  // console.log("Data recieved: ", data);
 
   if (data && data.class_info) {
     useAuthStore.getState().setClass(data.class_info);
