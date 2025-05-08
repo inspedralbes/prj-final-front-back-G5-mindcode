@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, use } from "react";
 import Button from "../../components/atoms/Button";
 
 const PYTHONPage = () => {
@@ -17,6 +17,9 @@ const PYTHONPage = () => {
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [questionsCompleted, setQuestionsCompleted] = useState(0);
   const [questionsLoaded, setQuestionsLoaded] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(60);
+
+  const timerRef = useRef(null);
 
   const gridSize = 18;
   const gameRef = useRef({
@@ -119,7 +122,13 @@ const PYTHONPage = () => {
   
     setUsedQuestions(prev => [...prev, questionIndex]);
     setCurrentQuestion(selectedQuestion);
-    setQuestionsCompleted(prev => prev + 1);
+    setQuestionsCompleted(prev => { prev + 1
+      const newCount = prev + 1;
+        if (newCount === quizQuestions.length) {
+          endGame();
+        }
+        return newCount;
+    });
   
     const maxX = Math.floor(game.canvasWidth / gridSize) - 1;
     const maxY = Math.floor(game.canvasHeight / gridSize) - 1;
@@ -169,12 +178,19 @@ const PYTHONPage = () => {
 
     clearInterval(game.gameLoop);
     game.gameLoop = setInterval(gameUpdate, game.speed);
-
- 
-
     setGameStarted(true);
-    setGameOver(false);
-    setMessage("Pick the correct answer!");
+  };
+
+  useEffect(() => {
+    if (gameStarted && !gameOver) {
+      setMessage(`⏱ ${timeLeft}`);
+    }
+  }, [gameStarted, gameOver, timeLeft]);
+
+  const resetSnake = () => {
+    const game = gameRef.current;
+    game.snake = [{ x: Math.floor(game.canvasWidth / gridSize / 2), y: Math.floor(game.canvasHeight / gridSize / 2) }];
+    game.direction = 'right';
   };
 
   const gameUpdate = () => {
@@ -192,10 +208,9 @@ const PYTHONPage = () => {
     if (
       head.x < 0 || head.y < 0 ||
       head.x >= Math.floor(game.canvasWidth / gridSize) ||
-      head.y >= Math.floor(game.canvasHeight / gridSize) ||
-      game.snake.some(segment => segment.x === head.x && segment.y === head.y)
+      head.y >= Math.floor(game.canvasHeight / gridSize)
     ) {
-      endGame();
+      resetSnake();
       return;
     }
 
@@ -207,10 +222,8 @@ const PYTHONPage = () => {
       if (head.x === food.x && head.y === food.y) {
         if (food.isCorrect) {
           setScore(prev => prev + 10);
-          setMessage(`✅ +10 points`);
         } else {
           setScore(prev => Math.max(0, prev - 10));
-          setMessage(`❌ -10 points`);
         }
         placeFood();
         ate = true;
@@ -219,6 +232,11 @@ const PYTHONPage = () => {
     }
 
     if (!ate) game.snake.pop();
+
+    if (questionsCompleted === quizQuestions.length) {
+      endGame();
+      return;
+    }
     drawGame();
   };
 
@@ -324,6 +342,7 @@ const PYTHONPage = () => {
   const endGame = () => {
     const game = gameRef.current;
     clearInterval(game.gameLoop);
+    clearInterval(timerRef.current);
     game.gameActive = false;
     setGameOver(true);
     
@@ -334,12 +353,19 @@ const PYTHONPage = () => {
       : `🏁 Final Score: ${score}`);
   };
 
+  useEffect(() => {
+    return () => {
+      clearInterval(timerRef.current);
+    };
+  }, []);
+
   const startGame = async () => {
     setScore(0);
     setUsedQuestions([]); 
     setQuestionsCompleted(0);
     setGameOver(false);
-    setGameStarted(true);
+    setGameStarted(false);
+    setTimeLeft(60);
     
     if (!questionsLoaded) {
       await fetchQuestions();
@@ -347,6 +373,19 @@ const PYTHONPage = () => {
   
     if (quizQuestions.length > 0) {
       initializeGame();
+
+      if (timerRef.current) clearInterval(timerRef.current);
+      timerRef.current = setInterval(() => {
+        setTimeLeft(prev => {
+          if (prev <= 1) {
+            clearInterval(timerRef.current);
+            endGame();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
     } else {
       setMessage("\u26A0\uFE0F No questions available");
       setGameStarted(false);
@@ -416,7 +455,7 @@ const PYTHONPage = () => {
           </div>
 
             <div className="px-3 py-2 bg-green-600 text-white text-sm font-bold rounded-md shadow border border-green-400">
-            ❓ {questionsCompleted}
+            ❓ {questionsCompleted} / {quizQuestions.length}
           </div>
         </div>
             <div className="mb-3 text-center text-sm font-medium bg-gray-700/70 p-2 rounded-md border border-gray-600 text-white">

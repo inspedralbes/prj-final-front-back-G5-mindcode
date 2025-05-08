@@ -870,18 +870,32 @@ export async function getUserImage(userId) {
   }
 }
 
-export async function uploadUserImage(userId, imageFile) {
-  const formData = new FormData();
-  formData.append('image', imageFile);
-
+export async function uploadUserImage(userId, imageFileOrUrl) {
+  const userToken = useAuthStore.getState().user_info.token;
   try {
-    const response = await fetch(`${URL}/api/user/uploadimg/${userId}`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${useAuthStore.getState().user_info.token}`,
-      },
-      body: formData,
-    });
+    let response;
+
+    if (typeof imageFileOrUrl === "string") {
+      response = await fetch(`${URL}/api/user/uploadimg/${userId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userToken}`,
+        },
+        body: JSON.stringify({ photoURL: imageFileOrUrl }),
+      });
+    } else {
+      const formData = new FormData();
+      formData.append("image", imageFileOrUrl);
+
+      response = await fetch(`${URL}/api/user/uploadimg/${userId}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+        body: formData,
+      });
+    }
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -889,9 +903,9 @@ export async function uploadUserImage(userId, imageFile) {
     }
 
     const data = await response.json();
-    return `${URL}/uploads/${data.fileName}`;
+    return `${URL}/uploads/${data.img}`;
   } catch (error) {
-    console.error('Error uploading image:', error);
+    console.error("Error uploading image:", error);
     throw error;
   }
 }

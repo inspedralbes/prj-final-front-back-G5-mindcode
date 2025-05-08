@@ -8,6 +8,7 @@ import { OrbitControls } from "@react-three/drei";
 import { useAuthStore } from '../../stores/authStore';
 import dynamic from "next/dynamic";
 import Tilt from "react-parallax-tilt";
+import { uploadUserImage } from "services/communicationManager";
 
 import LoginPanel from "../components/organisms/LoginPanel";
 
@@ -25,22 +26,28 @@ const Signup = () => {
   const handleGoogleLogin = async () => {
     try {
       const { userData, photoURL } = await googleLogin();
-      console.log('User data:', userData);
       if (!userData) return;
-
-
-
-      setUserInfo({
-        ...userData,
-      });
+      const userId = userData.userData.id;
+      let uploadedPhotoURL = photoURL;
+      if (photoURL) {
+        try {
+          uploadedPhotoURL = await uploadUserImage(userId, photoURL);
+        } catch (error) {
+          console.error("Error uploading user image:", error);
+        }
+      }
 
       useAuthStore.setState((state) => ({
         user_info: {
           ...state.user_info, 
-          photoURL,          
+          photoURL: uploadedPhotoURL,          
         },
       }));
 
+      setUserInfo({
+        ...userData,
+        photoURL: uploadedPhotoURL,
+      });
 
       const userDataParsed = userData.userData;
       if (userDataParsed.teacher == 1) {

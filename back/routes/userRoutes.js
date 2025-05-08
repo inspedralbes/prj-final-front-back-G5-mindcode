@@ -6,6 +6,7 @@ import path from 'path';
 import crypto from 'crypto';
 import fs from 'fs';
 import dotenv from 'dotenv';
+import axios from 'axios';
 
 dotenv.config();
 
@@ -77,66 +78,92 @@ router.put('/', verifyTokenMiddleware, async (req, res) => {
     }
 });
 
-router.post('/uploadimg/:id', verifyTokenMiddleware, upload.single('image'), async (req, res) => {
+
+router.post('/uploadimg/:id', verifyTokenMiddleware, async (req, res) => {
+  const userId = req.params.id;
+  const { photoURL } = req.body;
+
+  if (!photoURL) {
+    return res.status(400).json({ error: 'No photoURL provided' });
+  }
+
   try {
-    const userId = req.params.id;
+    const connection = await createConnection();
+    const [rows] = await connection.execute(
+      'SELECT img FROM USER WHERE id = ?',
+      [userId]
+    );
 
-    if (!req.file) {
-      return res.status(400).json({ error: 'No image file provided' });
+    if (rows.length === 0) {
+      await connection.end();
+      return res.status(404).json({ error: 'User not found' });
     }
 
-    const fileExtension = path.extname(req.file.originalname);
-    const allowedExtensions = ['.jpg', '.jpeg', '.png', '.svg'];
+    const currentImg = rows[0].img;
 
-    if (!allowedExtensions.includes(fileExtension.toLowerCase())) {
-      return res.status(400).json({ error: 'Invalid file type' });
+    if (currentImg) {
+      await connection.end();
+      return res.status(200).json({ message: 'Image already exists', img: currentImg });
     }
 
+    const response = await axios({
+      url: photoURL,
+      method: "GET",
+      responseType: "stream",
+    });
+
+    const fileExtension = path.extname(photoURL) || '.jpg';
     const uniqueFileName = crypto.randomBytes(16).toString('hex') + fileExtension;
     const newPath = path.join(uploadDir, uniqueFileName);
 
-    fs.renameSync(req.file.path, newPath);
+    const writer = fs.createWriteStream(newPath);
+    response.data.pipe(writer);
 
-    const connection = await createConnection();
+    await new Promise((resolve, reject) => {
+      writer.on("finish", resolve);
+      writer.on("error", reject);
+    });
+
     await connection.execute(
       'UPDATE USER SET img = ? WHERE id = ?',
       [uniqueFileName, userId]
     );
     await connection.end();
 
-    res.status(200).json({ fileName: uniqueFileName });
+    res.status(200).json({ message: 'Image uploaded successfully', img: uniqueFileName });
   } catch (error) {
-    console.error('Error uploading image:', error);
+    console.error('Error uploading image from URL:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-  router.get('/getimg/:id', verifyTokenMiddleware, async (req, res) => {
-    const userId = req.params.id;
-  
-    try {
-      const connection = await createConnection();
-      const [rows] = await connection.execute(
-        'SELECT img FROM USER WHERE id = ?',
-        [userId]
-      );
-      await connection.end();
-  
-      if (rows.length === 0) {
-        return res.status(404).json({ error: 'User not found' });
-      }
-  
-      const img = rows[0].img;
-  
-      if (!img) {
-        return res.status(200).json({ img: null }); 
-      }
-  
-      const imgPath = `http://localhost:3000/uploads/${img}`;
-      res.status(200).json({ img: imgPath }); 
-    } catch (error) {
-      console.error('Error fetching image:', error);
-      res.status(500).json({ error: 'Internal server error' });
+router.get('/getimg/:id', verifyTokenMiddleware, async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const connection = await createConnection();
+    const [rows] = await connection.execute(
+      'SELECT img FROM USER WHERE id = ?',
+      [userId]
+    );
+    await connection.end();
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
     }
-  });
+
+    const img = rows[0].img;
+
+    if (!img) {
+      return res.status(200).json({ img: null }); 
+    }
+
+    const imgPath = `http://localhost:3000/uploads/${img}`;
+    res.status(200).json({ img: imgPath }); 
+  } catch (error) {
+    console.error('Error fetching image:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+  
 export default router;
