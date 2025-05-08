@@ -15,7 +15,6 @@ const PYTHONPage = () => {
   const [quizQuestions, setQuizQuestions] = useState([]);
   const [usedQuestions, setUsedQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(null);
-  const [timeLeft, setTimeLeft] = useState(60);
   const [questionsCompleted, setQuestionsCompleted] = useState(0);
   const [questionsLoaded, setQuestionsLoaded] = useState(false);
 
@@ -26,7 +25,6 @@ const PYTHONPage = () => {
     foods: [],
     speed: 150,
     gameLoop: null,
-    timerInterval: null,
     bgAnimationId: null,
     canvasContext: null,
     canvasWidth: 0,
@@ -172,17 +170,7 @@ const PYTHONPage = () => {
     clearInterval(game.gameLoop);
     game.gameLoop = setInterval(gameUpdate, game.speed);
 
-    setTimeLeft(60);
-    clearInterval(game.timerInterval);
-    game.timerInterval = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev <= 1) {
-          endGame();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+ 
 
     setGameStarted(true);
     setGameOver(false);
@@ -336,7 +324,6 @@ const PYTHONPage = () => {
   const endGame = () => {
     const game = gameRef.current;
     clearInterval(game.gameLoop);
-    clearInterval(game.timerInterval);
     game.gameActive = false;
     setGameOver(true);
     
@@ -390,7 +377,6 @@ const PYTHONPage = () => {
       window.removeEventListener('keydown', handleKeyDown);
       const game = gameRef.current;
       clearInterval(game.gameLoop);
-      clearInterval(game.timerInterval);
       cancelAnimationFrame(game.bgAnimationId);
     };
   }, []);
@@ -428,24 +414,21 @@ const PYTHONPage = () => {
           <div className="px-3 py-2 bg-blue-600 text-white text-sm font-bold rounded-md shadow border border-blue-400">
           🏆 {score}
           </div>
-          <div className="px-3 py-2 bg-red-500 text-white text-sm font-bold rounded-md shadow border border-amber-400">
-  ⏱️ {timeLeft}s
-</div>
-          <div className="px-3 py-2 bg-green-600 text-white text-sm font-bold rounded-md shadow border border-green-400">
-    ❓ {questionsCompleted}
-  </div>
-</div>
-            {currentQuestion && (
+
+            <div className="px-3 py-2 bg-green-600 text-white text-sm font-bold rounded-md shadow border border-green-400">
+            ❓ {questionsCompleted}
+          </div>
+        </div>
+            <div className="mb-3 text-center text-sm font-medium bg-gray-700/70 p-2 rounded-md border border-gray-600 text-white">
+              {message}
+              </div>
+             {currentQuestion && (
               <div className="mb-3 p-3 bg-gray-700/70 rounded-md border border-gray-600">
                 <div className="font-semibold text-blue-300 mb-1 text-sm">
                   {currentQuestion.question_text}
                 </div>
               </div>
             )}
-
-            <div className="mb-3 text-center text-sm font-medium bg-gray-700/70 p-2 rounded-md border border-gray-600 text-white">
-              {message}
-            </div>
 
             <div className="relative rounded-lg overflow-hidden border border-gray-600 shadow-lg">
               {!gameStarted && !gameOver && (
