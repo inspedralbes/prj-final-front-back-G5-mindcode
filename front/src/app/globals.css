@@ -13,6 +13,17 @@
     --foreground: #ededed;
   }
 }
+.transition-transform {
+  transition-property: transform;
+}
+
+.ease-\[cubic-bezier\(0\.87\,\ 0\,\ 0\.13\,\ 1\)\] {
+  transition-timing-function: cubic-bezier(0.87, 0, 0.13, 1);
+}
+
+.transition-all {
+  transition-property: all;
+}
 
 body {
   color: var(--foreground);
@@ -20,17 +31,25 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-@layer utilities {
-  .animate-fade {
-    @apply opacity-0;
-    animation: fadeIn 1s ease-out forwards;
+/* Page transition animation */
+@keyframes slideIn {
+  0% {
+    transform: scaleX(0);
+    transform-origin: right;
   }
+  100% {
+    transform: scaleX(1);
+    transform-origin: right;
+  }
+}
 
-  @keyframes fadeIn {
-    to {
-      opacity: 1;
-    }
-  }
+.page-transition-enter {
+  animation: slideIn 0.8s cubic-bezier(0.87, 0, 0.13, 1) forwards;
+}
+
+/* For the link in the message */
+.whitespace-pre-wrap a {
+  display: inline;
 }
 
 .sticky-sidebar {
