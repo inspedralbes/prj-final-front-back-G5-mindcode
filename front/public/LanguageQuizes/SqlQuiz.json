@@ -1,0 +1,150 @@
+{
+    "_id": { "$oid": "680b40e8fbdcf9cf00b6c900" },
+    "correctAnswers": 0,
+    "userId": 6,
+    "classId": 1,
+    "questions": [
+      {
+        "isAnswered": false,
+        "question_id": 1,
+        "question_text": "Which SQL statement is used to retrieve data from a database?",
+        "question_type": "MCQ",
+        "options": [
+          "GET",
+          "SELECT",
+          "QUERY"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c901" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 2,
+        "question_text": "Which SQL clause is used to filter records?",
+        "question_type": "MCQ",
+        "options": [
+          "FILTER BY",
+          "WHERE",
+          "HAVING"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c902" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 3,
+        "question_text": "Which SQL keyword is used to sort the result set?",
+        "question_type": "MCQ",
+        "options": [
+          "ORDER BY",
+          "SORT BY",
+          "GROUP BY"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c903" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 4,
+        "question_text": "Which operator is used to select values within a range in SQL?",
+        "question_type": "MCQ",
+        "options": [
+          "WITHIN",
+          "BETWEEN",
+          "RANGE"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c904" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 5,
+        "question_text": "Which SQL statement is used to insert new data into a database?",
+        "question_type": "MCQ",
+        "options": [
+          "INSERT INTO",
+          "ADD RECORD",
+          "CREATE ROW"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c905" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 6,
+        "question_text": "Which SQL function is used to count the number of rows?",
+        "question_type": "MCQ",
+        "options": [
+          "COUNT()",
+          "SUM()",
+          "TOTAL()"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c906" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 7,
+        "question_text": "Which SQL keyword is used to eliminate duplicate rows from the result set?",
+        "question_type": "MCQ",
+        "options": [
+          "UNIQUE",
+          "DISTINCT",
+          "DIFFERENT"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c907" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 8,
+        "question_text": "Which SQL statement is used to update existing records in a table?",
+        "question_type": "MCQ",
+        "options": [
+          "MODIFY",
+          "UPDATE",
+          "CHANGE"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c908" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 9,
+        "question_text": "Which SQL statement is used to delete records from a table?",
+        "question_type": "MCQ",
+        "options": [
+          "REMOVE",
+          "DELETE",
+          "ERASE"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c909" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 10,
+        "question_text": "Which SQL keyword is used to combine rows from two or more tables?",
+        "question_type": "MCQ",
+        "options": [
+          "JOIN",
+          "COMBINE",
+          "MERGE"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c910" }
+      }
+    ],
+    "userAnswers": [],
+    "__v": 0
+}

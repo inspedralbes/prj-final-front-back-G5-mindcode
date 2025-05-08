@@ -70,7 +70,7 @@ const FormFields = ({ questions, answers, onAnswerChange, showResults }) => {
           <FormField
             question={{
               text: question.question_text,
-              type: 'MCQ',
+              type: question.question_type,
               options: question.options || []
             }}
             value={answers[question.question_id]}

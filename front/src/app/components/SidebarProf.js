@@ -4,12 +4,13 @@ import {
   addLanguageToClass,
   createLanguage,
   updateLanguages,
-  deleteLanguageFromClass
+  deleteLanguageFromClass,
+  getUserImage
 } from "services/communicationManager.js";
-import DialogComponent from "./molecules/DialogComponent";
-import BigButtonCollection from "./molecules/BigButtonCollection";
+import MediumButton from "./atoms/MediumButton";
 import { useAuthStore } from "../../stores/authStore";
 import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation'
 
 const SidebarProf = forwardRef((props, ref) => {
   const [openClassId, setOpenClassId] = useState(null);
@@ -21,12 +22,13 @@ const SidebarProf = forwardRef((props, ref) => {
   const [editingLanguage, setEditingLanguage] = useState({ classId: null, index: null });
   const [isStudent, setIsStudent] = useState(false);
   const [open, setOpen] = useState(false);
-
+  const [userImage, setUserImage] = useState(null);
   const handleOpen = () => setOpen(!open);
 
   const user_info = useAuthStore((state) => state.user_info);
   const class_info = useAuthStore((state) => state.class_info);
   const router = useRouter();
+  const pathname = usePathname();
 
   // Expose this function to parent via ref
   useImperativeHandle(ref, () => ({
@@ -78,6 +80,19 @@ const SidebarProf = forwardRef((props, ref) => {
   };
 
   useEffect(() => {
+    const fetchUserImage = async () => {
+      try {
+        const img = await getUserImage(user_info.userId);
+        setUserImage(img);
+      } catch (error) {
+        console.error("Error fetching user image:", error);
+      }
+    };
+
+    fetchUserImage();
+  }, [user_info]);
+
+  useEffect(() => {
     const initialLanguages = {};
     class_info.forEach((classItem) => {
       console.log(classItem.language_info);
@@ -95,11 +110,16 @@ const SidebarProf = forwardRef((props, ref) => {
     setLanguagesByClass(initialLanguages);
   }, [class_info]);
 
-  const handleClassClick = (class_id) => {
-    setOpenClassId(openClassId === class_id ? null : class_id);
-    props.changeSelectedField("stats");
-    setIsLlenguatgesOpen(false);
-    setIsAlumnesOpen(false);
+  const handleClassClick = (class_id, index) => {
+    if (pathname !== "/PfPage") {
+      router.push("/PfPage");
+    } else {
+      setOpenClassId(openClassId === class_id ? null : class_id);
+      props.changeSelectedClassPosition(index);
+      props.changeSelectedField("stats");
+      setIsLlenguatgesOpen(false);
+      setIsAlumnesOpen(false);
+    }
   };
 
   useEffect(() => {
@@ -233,13 +253,21 @@ const SidebarProf = forwardRef((props, ref) => {
   };
 
   const handleStudentClick = (studentId) => () => {
-    props.changeSelectedField("alumne");
-    props.changeSelectedClass(studentId);
+    if (pathname !== "/PfPage") {
+      router.push("/PfPage");
+    } else {
+      props.changeSelectedField("alumne");
+      props.changeSelectedClass(studentId);
+    }
   }
 
   const handleStatsClick = () => {
-    props.changeSelectedField("stats");
-    props.changeSelectedClass(openClassId);
+    if (pathname !== "/PfPage") {
+      router.push("/PfPage");
+    } else {
+      props.changeSelectedField("stats");
+      props.changeSelectedClass(openClassId);
+    }
   }
 
   const handleRedirect = async () => {
@@ -247,35 +275,65 @@ const SidebarProf = forwardRef((props, ref) => {
   }
 
   const handleSaveEdit0 = () => {
-    handleSaveEdit(0);
-    setOpen(false);
+    if (pathname !== "/PfPage") {
+      router.push("/PfPage");
+    } else {
+      handleSaveEdit(0);
+      setOpen(false);
+    }
   }
 
   const handleSaveEdit1 = () => {
-    handleSaveEdit(1);
-    setOpen(false);
+    if (pathname !== "/PfPage") {
+      router.push("/PfPage");
+    } else {
+      handleSaveEdit(1);
+      setOpen(false);
+    }
   }
 
   const handleSaveEdit2 = () => {
-    handleSaveEdit(2);
-    setOpen(false);
+    if (pathname !== "/PfPage") {
+      router.push("/PfPage");
+    } else {
+      handleSaveEdit(2);
+      setOpen(false);
+    }
+  }
+
+  const handleGoToNewClass = () => {
+    router.push('/CreateClass')
   }
 
   return (
     <div className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white h-full p-4 border-r border-gray-300 dark:border-gray-700">
       <div className="text-center mb-6">
-        <button className="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 mx-auto mb-2" onClick={handleRedirect}></button>
+        <button className="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 mx-auto mb-2 overflow-hidden" onClick={handleRedirect}>
+          {userImage ? (
+            <img
+              src={userImage}
+              alt="avatar"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <img
+              src={user_info.photoURL}
+              alt="avatar"
+              className="w-full h-full object-cover"
+            />
+          )}
+        </button>
         <h2 className="text-lg font-semibold">PROFESSOR</h2>
         <p className="text-sm text-gray-600 dark:text-gray-400">Admin</p>
       </div>
 
-      <nav className="space-y-2">
+      <nav className="space-y-2 flex-1 overflow-y-auto items-center justify-center">
         {class_info && class_info.length > 0 ? (
-          class_info.map(({ class_id, name, classmate_info }) => (
+          class_info.map(({ class_id, name, classmate_info }, index) => (
             <div key={class_id}>
               <button
                 className="w-full px-4 py-2 bg-gray-700 hover:bg-blue-500 text-white rounded-md flex justify-between items-center"
-                onClick={() => handleClassClick(class_id)}
+                onClick={() => handleClassClick(class_id, index)}
               >
                 {name} <span>▼</span>
               </button>
@@ -295,7 +353,7 @@ const SidebarProf = forwardRef((props, ref) => {
                         languagesByClass[class_id].map((lang, index) => (
                           <div key={index} className="flex items-center gap-2">
 
-                            <button className={`w-3/4 px-3 py-2 ${lang.restrictionId==2?"bg-green-500 hover:bg-green-700":lang.restrictionId==1?"bg-yellow-500 hover:bg-yellow-700":"bg-red-500 hover:bg-red-700"} rounded-md text-white`}>{lang.name}</button>
+                            <button className={`w-3/4 px-3 py-2 ${lang.restrictionId == 2 ? "bg-green-500 hover:bg-green-700" : lang.restrictionId == 1 ? "bg-yellow-500 hover:bg-yellow-700" : "bg-red-500 hover:bg-red-700"} rounded-md text-white`}>{lang.name}</button>
                             <button onClick={() => handleEditLanguage(class_id, index, false)} className="px-2 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600">✏️</button>
                             <button onClick={() => handleDeleteLanguage(class_id, index)} className="px-1 py-1 bg-red-500 text-white rounded-md hover:bg-red-600">🗑️</button>
 
@@ -374,8 +432,10 @@ const SidebarProf = forwardRef((props, ref) => {
         ) : (
           <p className="text-sm text-gray-500 dark:text-gray-400">No tienes clases asignadas</p>
         )}
+
+        <MediumButton onClick={handleGoToNewClass} label={"➕ Nova classe"} />
       </nav>
-      
+
     </div>
   );
 });

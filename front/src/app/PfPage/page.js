@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import Navbar from "../components/Navbar";
+import Navbar from "../components/organisms/Navbar";
 import ContentArea from "../components/ContentArea";
 import SidebarProf from "app/components/SidebarProf";
 import { useAuthStore } from '../../stores/authStore';
@@ -18,6 +18,7 @@ const Page = () => {
   const [selectedClass, setSelectedClass] = useState(null);
   const [selectedLanguage, setSelectedLanguage] = useState(null);
   const [restrictions, setRestrictions] = useState(null);
+  const [selectedClassPosition, setSelectedClassPosition] = useState(0);
   const [loading, setLoading] = useState(true); // Loading state
 
   const classInfo = useAuthStore((state) => state.class_info);
@@ -30,8 +31,7 @@ const Page = () => {
         await getClassMain();
         const res = await getRestrictions();
         setRestrictions(res);
-        console.log(res);
-
+  
         if (classInfo) {
           setSelectedClass(classInfo[0].class_id);
         }
@@ -57,21 +57,25 @@ const Page = () => {
     setSelectedLanguage(value);
   };
 
+  const changeSelectedClassPosition = (value) => {
+    setSelectedClassPosition(value);
+  };
+
   const handleEdit0 = () => {
     if (childRef.current) {
-      const result = childRef.current.handleSaveEdit0();
+      childRef.current.handleSaveEdit0();
       setSelectedField("stats");
     }
   };
   const handleEdit1 = () => {
     if (childRef.current) {
-      const result = childRef.current.handleSaveEdit1();
+      childRef.current.handleSaveEdit1();
       setSelectedField("stats");
     }
   };
   const handleEdit2 = () => {
     if (childRef.current) {
-      const result = childRef.current.handleSaveEdit2();
+      childRef.current.handleSaveEdit2();
       setSelectedField("stats");
     }
   };
@@ -91,32 +95,32 @@ const Page = () => {
   return (
     <div className="flex h-screen relative bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50">
       <div className="w-[25vw]">
-        <SidebarProf ref={childRef} changeSelectedField={changeSelectedField} changeSelectedClass={changeSelectedClass} changeSelectedLanguage={changeSelectedLanguage} />
+        <SidebarProf ref={childRef} changeSelectedField={changeSelectedField} changeSelectedClass={changeSelectedClass} changeSelectedLanguage={changeSelectedLanguage} changeSelectedClassPosition={changeSelectedClassPosition} />
       </div>
       <div className="flex flex-col w-full h-full">
         <Navbar />
         <ContentArea>
           {selectedField === "stats" ? (
-            <StatsContent classId={selectedClass ? selectedClass : classInfo[0].class_id} mode={"professor"} />
+            <StatsContent classId={selectedClass ? selectedClass : classInfo[selectedClassPosition].class_id} mode={"professor"} index={selectedClassPosition} />
           ) : selectedField === "alumne" ? (
-            <StatsContent classId={selectedClass ? selectedClass : classInfo[0].class_id} mode={"alumne"} />
+            <StatsContent classId={selectedClass ? selectedClass : classInfo[selectedClassPosition].class_id} mode={"alumne"} index={selectedClassPosition} />
           ) : selectedField === "llenguatges" ? (
             <EditRestrictions
               buttons={[
                 {
-                  text: restrictions[2].content,
+                  text: "Respon la pregunta amb explicació i codi que apliqui a la pregunta",
                   onClick: handleEdit2,
                   bgColorClass: "bg-green-600",
                   borderColorClass: "border-green-700",
                 },
                 {
-                  text: restrictions[1].content,
+                  text: "Respon la pregunta amb explicació i codi d'exemple, no codi de la resposta directa",
                   onClick: handleEdit1,
                   bgColorClass: "bg-yellow-600",
                   borderColorClass: "border-yellow-700",
                 },
                 {
-                  text: restrictions[0].content,
+                  text: "Respon només amb explicació, no utilitzis codi",
                   onClick: handleEdit0,
                   bgColorClass: "bg-red-600",
                   borderColorClass: "border-red-700",

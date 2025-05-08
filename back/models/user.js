@@ -13,13 +13,18 @@ const User = sequelize.define('User', {
   teacher: DataTypes.BOOLEAN,
   language: DataTypes.TEXT,
   googleId: DataTypes.TEXT,
+  img: DataTypes.TEXT,
   class: {
     type: DataTypes.INTEGER,
     references: {
       model: Class,
       key: 'idclass',
     },
-  }
+  },
+  message_count: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
 }, {
   tableName: 'USER',
   timestamps: false,

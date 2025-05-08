@@ -1,0 +1,150 @@
+{
+    "_id": { "$oid": "680b40e8fbdcf9cf00b6c400" },
+    "correctAnswers": 0,
+    "userId": 6,
+    "classId": 1,
+    "questions": [
+      {
+        "isAnswered": false,
+        "question_id": 1,
+        "question_text": "What is the correct way to declare a main method in Java?",
+        "question_type": "MCQ",
+        "options": [
+          "public static int main(String[] args)",
+          "public static void main(String[] args)",
+          "public void main(String[] args)"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c401" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 2,
+        "question_text": "Which keyword is used to create an object in Java?",
+        "question_type": "MCQ",
+        "options": [
+          "create",
+          "new",
+          "object"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c402" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 3,
+        "question_text": "What is the superclass of all classes in Java?",
+        "question_type": "MCQ",
+        "options": [
+          "Object",
+          "Super",
+          "Parent"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c403" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 4,
+        "question_text": "Which data type is used to store true/false values in Java?",
+        "question_type": "MCQ",
+        "options": [
+          "boolean",
+          "int",
+          "flag"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c404" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 5,
+        "question_text": "What is the size of the 'int' data type in Java?",
+        "question_type": "MCQ",
+        "options": [
+          "16 bits",
+          "32 bits",
+          "64 bits"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c405" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 6,
+        "question_text": "Which keyword is used to prevent a class from being inherited?",
+        "question_type": "MCQ",
+        "options": [
+          "static",
+          "final",
+          "private"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c406" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 7,
+        "question_text": "What is the default value of a boolean variable in Java?",
+        "question_type": "MCQ",
+        "options": [
+          "true",
+          "false",
+          "null"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c407" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 8,
+        "question_text": "Which collection class implements a FIFO (first-in-first-out) behavior?",
+        "question_type": "MCQ",
+        "options": [
+          "ArrayList",
+          "LinkedList",
+          "PriorityQueue"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c408" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 9,
+        "question_text": "Which keyword is used to refer to the current object in Java?",
+        "question_type": "MCQ",
+        "options": [
+          "this",
+          "super",
+          "self"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c409" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 10,
+        "question_text": "What is the correct syntax to create an ArrayList of Strings?",
+        "question_type": "MCQ",
+        "options": [
+          "ArrayList<String> list = new ArrayList<String>();",
+          "ArrayList list = new ArrayList<String>();",
+          "List<String> list = new List<String>();"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c410" }
+      }
+    ],
+    "userAnswers": [],
+    "__v": 0
+}

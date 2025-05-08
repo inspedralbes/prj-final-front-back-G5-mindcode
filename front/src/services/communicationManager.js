@@ -402,7 +402,7 @@ export async function fetchAiMessagesClassData(classId) {
 
   const data = await response.json();
 
-  console.log("Data from fetchAiMessagesClassData:", data);
+  // console.log("Data from fetchAiMessagesClassData:", data);
   return data;
 }
 
@@ -424,7 +424,51 @@ export async function fetchAiMessagesStudentData(studentId) {
 
   const data = await response.json();
 
-  console.log("Data from fetchAiMessagesClassData:", data);
+  // console.log("Data from fetchAiMessagesClassData:", data);
+  return data;
+}
+
+export async function fetchQuizzesClassData(classId) {
+
+  const user_info = useAuthStore.getState().user_info;
+
+  const response = await fetch(`${URL}/api/stats/quizz/${classId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      "Authorization": `Bearer ${user_info.token}`,
+    }
+  })
+
+  if (!response.ok) {
+    throw new Error('Error al cargar los mensajes');
+  }
+
+  const data = await response.json();
+
+  // console.log("Data from fetchQuizzesClassData:", data);
+  return data;
+}
+
+export async function fetchQuizzesStudentData(studentId) {
+
+  const user_info = useAuthStore.getState().user_info;
+
+  const response = await fetch(`${URL}/api/stats/quizz/student/${studentId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      "Authorization": `Bearer ${user_info.token}`,
+    }
+  })
+
+  if (!response.ok) {
+    throw new Error('Error al cargar los mensajes');
+  }
+
+  const data = await response.json();
+
+  // console.log("Data from fetchQuizzesStudentData:", data);
   return data;
 }
 
@@ -444,7 +488,7 @@ export async function getClassMain() {
   }
   const data = await response.json();
 
-  console.log("Data recieved: ", data);
+  // console.log("Data recieved: ", data);
 
   if (data && data.class_info) {
     useAuthStore.getState().setClass(data.class_info);
@@ -474,7 +518,6 @@ export async function getRestrictions() {
     throw error;
   }
 };
-//export userSettings function
 export async function getUserInfo() {
   try {
     const user_info = useAuthStore.getState().user_info;
@@ -675,17 +718,25 @@ export async function getClassDetails() {
 export async function leaveClass() {
   try {
     const user_info = useAuthStore.getState().user_info;
+    const class_info = useAuthStore.getState().class_info;
 
     if (!user_info || !user_info.token) {
       throw new Error("No token provided");
     }
+
+    if (!class_info || class_info.length === 0) {
+      throw new Error("No class information available");
+    }
+
+    const class_id = class_info[0]?.class_id;
+
     const response = await fetch(`${URL}/api/class/leave`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${user_info.token}`,
       },
-      body: JSON.stringify({ id: user_info.userId }),
+      body: JSON.stringify({ id: user_info.userId, class_id }),
     });
 
     if (!response.ok) {
@@ -762,4 +813,85 @@ export async function kickClass(targetUserId) {
     throw error;
   }
 }
+export async function checkQuizAvailability() {
+  try {
+    const user_info = useAuthStore.getState().user_info;
 
+    if (!user_info || !user_info.token) {
+      throw new Error("No token provided");
+    }
+
+    const response = await fetch(`${URL}/message/check-quiz`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user_info.token}`,
+      },
+    });
+    
+    if (!response.ok) {
+      throw new Error('Error checking quiz availability');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error checking quiz availability:', error);
+    throw error;
+  }
+}
+
+
+export async function getUserImage(userId) {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+
+    if (!user_info || !user_info.token) {
+      throw new Error("No token provided");
+    }
+
+    const response = await fetch(`${URL}/api/user/getimg/${userId}`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${user_info.token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error fetching user image: ${errorText}`);
+    }
+
+    const data = await response.json();
+    return data.img || null;
+  } catch (error) {
+    console.error("Error fetching user image:", error);
+    throw error;
+  }
+}
+
+export async function uploadUserImage(userId, imageFile) {
+  const formData = new FormData();
+  formData.append('image', imageFile);
+
+  try {
+    const response = await fetch(`${URL}/api/user/uploadimg/${userId}`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${useAuthStore.getState().user_info.token}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error uploading image: ${response.status} - ${response.statusText} - ${errorText}`);
+    }
+
+    const data = await response.json();
+    return `${URL}/uploads/${data.fileName}`;
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    throw error;
+  }
+}

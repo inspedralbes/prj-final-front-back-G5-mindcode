@@ -1,4 +1,4 @@
-import GoogleIcon from './GoogleIcon';
+  import GoogleIcon from './GoogleIcon';
 
 const AuthButton = ({ onClick }) => (
   <button

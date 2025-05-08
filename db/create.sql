@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS USER (
     language TEXT,
     googleId TEXT,
     class INT,
+    img TEXT,
     FOREIGN KEY (class) REFERENCES CLASS (idclass)
 );
 

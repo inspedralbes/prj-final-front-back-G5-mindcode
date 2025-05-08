@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import FormFields from './organisms/FormFields';
 import FormButton from './atoms/FormButton';
-import { generateQuiz, submitQuizResults } from '../../services/communicationManager';
 import { useAuthStore } from '../../stores/authStore';
+import { useRouter } from 'next/navigation';
+import { checkQuizAvailability, submitQuizResults } from '../../services/communicationManager';
 
 const UserForm = () => {
   const [questions, setQuestions] = useState([]); 
@@ -15,44 +16,47 @@ const UserForm = () => {
   const [showResults, setShowResults] = useState(false);
   const [quizId, setQuizId] = useState(null);
   const classInfo = useAuthStore((state) => state.class_info);
+  const router = useRouter();
 
-  const loadQuestions = async () => {
+  const loadQuiz = async () => {
     setLoading(true);
     setError(null);
+    setShowResults(false);
+    
     try {
-      const classId = classInfo[0]?.class_id;
-      const quizData = await generateQuiz(classId);
-      console.log('Quiz data:', quizData);
-      
-      if (!quizData.quiz || !quizData.quizId) {
-        throw new Error('Invalid quiz data received');
+      const data = await checkQuizAvailability();
+      console.log('Quiz data:', data);
+      if (data.quizAvailable && data.quiz && data.quizId) {
+        setQuestions(data.quiz);
+        setQuizId(data.quizId);
+        setLoading(false);
+      } else {
+        setError('No hi ha questionari disponible');
+        setLoading(false);
+        setTimeout(() => router.push('/'), 2000);
       }
-
-      console.log('Quiz questions:', quizData.quiz);
-      setQuestions(quizData.quiz);
-      setQuizId(quizData.quizId);
-      setAnswers({}); 
-      setShowResults(false); 
-    } catch (err) {
-      setError('Error fetching questions: ' + err.message);
-      console.error('Error:', err);
-    } finally {
+    } catch (error) {
+      console.error('Error fetching questions:', error);
+      setError('Error fetching questions: ');
       setLoading(false);
     }
   };
 
-  const handleAnswerChange = (question_id, answer) => {
-    console.log(`Answer updated for question ${question_id}:`, answer);
-    setAnswers(prevAnswers => ({
-      ...prevAnswers,
-      [question_id]: answer
+  useEffect(() => {
+    loadQuiz();
+  }, []);
+
+  const handleAnswerChange = (questionId, answer) => {
+    setAnswers(prev => ({
+      ...prev,
+      [questionId]: answer
     }));
   };
 
-
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setLoading(true);
-    setError(null);
+
     try {
       if (!quizId) {
         setError('No quiz ID available');
@@ -65,41 +69,40 @@ const UserForm = () => {
 
         return {
           question_id: question.question_id,
-          question_text: question.question_text,
-          selected_option: answer.selected_option,
-          value: answer.answer
+          selected_option: answer.selected_option
         };
       }).filter(Boolean);
 
       if (answersArray.length !== questions.length) {
         setError('Respon totes les preguntes');
+        setLoading(false);
         return;
       }
 
       const results = await submitQuizResults(quizId, answersArray);
       console.log('Quiz results:', results);
-      setResults(results);
-      setShowResults(true);
-
-      const updatedAnswers = {};
-      results.results.forEach(result => {
-        updatedAnswers[result.question_id] = {
-          selected_option: result.selected_option,
-          isCorrect: result.isCorrect
-        };
-      });
-      setAnswers(updatedAnswers);
+      
+      if (results && results.results) {
+        const updatedAnswers = {};
+        results.results.forEach(result => {
+          updatedAnswers[result.question_id] = {
+            selected_option: result.selected_option,
+            isCorrect: result.isCorrect
+          };
+        });
+        setAnswers(updatedAnswers);
+        setResults(results);
+        setShowResults(true);
+      } else {
+        throw new Error('Formato de resultados inválido');
+      }
     } catch (err) {
-      setError('Error submitting answers: ' + err.message);
-      console.error('Submit error:', err);
+      console.error('Error al enviar respuestas:', err);
+      setError('Error al enviar las respuestas: ' + err.message);
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    loadQuestions();
-  }, []);
 
   return (
     <div className="flex-grow overflow-y-auto p-4 space-y-4 rounded-md">
@@ -107,12 +110,12 @@ const UserForm = () => {
         {loading ? (
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-            <p className="mt-4 text-gray-600 dark:text-gray-300">Loading questions...</p>
+            <p className="mt-4 text-gray-600 dark:text-gray-300">Carregant preguntes...</p>
           </div>
         ) : error ? (
           <div className="text-center text-gray-600 dark:text-gray-300">
             <p>{error}</p>
-            <FormButton text="Retry" onClick={loadQuestions} className="mt-4" />
+            <FormButton text="Tornar a provar" onClick={loadQuiz} className="mt-4" />
           </div>
         ) : showResults ? (
           <div className="space-y-6">
@@ -123,7 +126,7 @@ const UserForm = () => {
               showResults={true}
             />
             <div className="text-center">
-              <FormButton text="Try Again" onClick={loadQuestions} className="mt-4" />
+              <FormButton text="Tornar a provar" onClick={loadQuiz} className="mt-4" />
             </div>
           </div>
         ) : (
@@ -135,7 +138,7 @@ const UserForm = () => {
             />
             <div className="sticky bottom-0 bg-white dark:bg-gray-900 py-4">
               <FormButton
-                text="Submit"
+                text="Enviar"
                 onClick={handleSubmit}
                 disabled={Object.keys(answers).length !== questions.length}
                 className="w-full sm:w-auto"
