@@ -74,7 +74,7 @@ const SidebarStudent = ({ handleSetCurrentLanguage }) => {
             <img src={userImage} alt="avatar" className="w-full h-full object-cover" />
           ) : (
             <img
-              src={user_info.photoURL}
+              src={user_info?.photoURL? user_info.photoURL : '/default-avatar.png'}
               alt="avatar"
               className="w-full h-full object-cover"
             />
