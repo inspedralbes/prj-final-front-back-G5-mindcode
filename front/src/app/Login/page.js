@@ -49,7 +49,7 @@ const Signup = () => {
         router.push(userData.hasClass ? '/StPage' : '/JoinClass');
       }
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("Error per fer Login:", error);
     }
   };
 
