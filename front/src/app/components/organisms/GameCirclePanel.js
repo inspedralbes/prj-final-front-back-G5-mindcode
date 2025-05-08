@@ -88,3 +88,8 @@ const GameCirclePanel = ({ languages }) => {
 };
 
 export default GameCirclePanel;
+
+
+// ocultar respuestas
+// quitar el cronometro
+// si se golpea el el pared , el serpiente pierde cola y empieza desde el principio 
