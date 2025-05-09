@@ -144,4 +144,4 @@ const StSettings = () => {
   );
 };
 
-export default StSettings;
+export default StSettings

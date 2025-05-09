@@ -8,8 +8,10 @@ import { OrbitControls } from "@react-three/drei";
 import { useAuthStore } from '../../stores/authStore';
 import dynamic from "next/dynamic";
 import Tilt from "react-parallax-tilt";
-
 import LoginPanel from "../components/organisms/LoginPanel";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const RobotModel = dynamic(() => import("../components/RobotModel"), { ssr: false });
 
@@ -25,22 +27,21 @@ const Signup = () => {
   const handleGoogleLogin = async () => {
     try {
       const { userData, photoURL } = await googleLogin();
-      console.log('User data:', userData);
-      if (!userData) return;
+      if (!userData) {
+        toast.error("No s'ha pogut iniciar sessió amb Google");
+        return;
+      }
 
+      toast.success("Login correcte");
 
-
-      setUserInfo({
-        ...userData,
-      });
+      setUserInfo({ ...userData });
 
       useAuthStore.setState((state) => ({
         user_info: {
-          ...state.user_info, 
-          photoURL,          
+          ...state.user_info,
+          photoURL,
         },
       }));
-
 
       const userDataParsed = userData.userData;
       if (userDataParsed.teacher == 1) {
@@ -50,6 +51,7 @@ const Signup = () => {
       }
     } catch (error) {
       console.error("Error per fer Login:", error);
+      toast.error("Error inesperat durant el login");
     }
   };
 
@@ -87,6 +89,8 @@ const Signup = () => {
           </div>
         </div>
       </Tilt>
+
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 };
