@@ -941,3 +941,31 @@ export async function submitGameResults(quizId, answers) {
     throw error;
   }
 }
+
+export async function getQuiz(quizId) {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+    if (!user_info || !user_info.token) {
+      throw new Error('No token provided. User not authenticated.');
+    }
+    const response = await fetch(`${URL}/message/getQuiz/${quizId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user_info.token}`
+      }
+    });
+
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      throw new Error(`Error ${response.status}: ${errorResponse.description || 'Invalid request'}`);
+    }
+
+    const data = await response.json();
+    console.log('Quiz received:', data);
+    return data;
+  } catch (error) {
+    console.error('Error fetching quiz:', error);
+    throw error;
+  }
+}

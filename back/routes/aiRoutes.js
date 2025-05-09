@@ -446,4 +446,19 @@ router.get('/check-quiz', verifyTokenMiddleware, async (req, res) => {
   }
 });
 
+router.get('/getQuiz/:quizId', verifyTokenMiddleware, async (req, res) => {
+  try {
+    const { quizId } = req.params;
+    const quiz = await Quiz.findById(quizId);
+    if (!quiz) {
+      return res.status(404).json({ error: 'Quiz not found' });
+    }
+    res.status(200).json(quiz);
+  } catch (error) {
+    console.error('Error fetching quiz:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+);
+
 export default router;

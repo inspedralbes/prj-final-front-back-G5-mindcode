@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import Button from "../../components/atoms/Button";
-import { submitGameResults } from "services/communicationManager";
+import { submitGameResults, getQuiz } from "services/communicationManager";
 
 const PYTHONPage = () => {
   const router = useRouter();
@@ -90,8 +90,8 @@ const PYTHONPage = () => {
 
   const fetchQuestions = async () => {
     try {
-      const res = await fetch("/LanguageQuizes/PythonQuiz.json");
-      const data = await res.json();
+      const quizId = "681dc2d105f68437331012fe"; 
+      const data = await getQuiz(quizId);
       setQuizQuestions(data.questions);
       setQuestionsLoaded(true);
       return data.questions;
@@ -417,7 +417,7 @@ const PYTHONPage = () => {
     }));
     
     try { 
-      const result = await submitGameResults("680b40e8fbdcf9cf00b6c800", transformedAnswers); 
+      const result = await submitGameResults("681dc2d105f68437331012fe", transformedAnswers); 
       console.log("Resultados enviados con éxito:", result);
     } catch (err) {
       console.error("Error al enviar resultados:", err);
@@ -435,7 +435,6 @@ const PYTHONPage = () => {
     clearInterval(game.gameLoop);
     clearInterval(timerRef.current);
     cancelAnimationFrame(game.bgAnimationId);
-
     setScore(0);
     setUsedQuestions([]); 
     setQuestionsCompleted(0);
@@ -443,6 +442,7 @@ const PYTHONPage = () => {
     setGameStarted(false);
     setTimeLeft(60);
     questionIdCounter.current = 1;
+    
     
     if (!questionsLoaded) {
       await fetchQuestions();
