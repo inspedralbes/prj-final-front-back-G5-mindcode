@@ -12,12 +12,8 @@ export default function RobotModel(props) {
   
   const [message, setMessage] = useState("");
   const [showCursor, setShowCursor] = useState(true);
-  const fullMessage = "Welcome to Mindcode! I'm Mindbot! Curious about us? Tap the link and explore ✨";
-
-  const handleLinkClick = (e) => {
-    e.preventDefault();
-    props.onLinkClick(); 
-  };
+  const [isHovered, setIsHovered] = useState(false);
+  const fullMessage = "Hi, I'm Mindbot! Click me !";
 
   useEffect(() => {
     let i = 0;
@@ -25,32 +21,31 @@ export default function RobotModel(props) {
     let loop;
     let cursorInterval;
 
-    cursorInterval = setInterval(() => {
-      setShowCursor(prev => !prev);
-    }, 500);
-
     const startTyping = () => {
-      setMessage(""); 
+      setMessage("");
       i = 0;
 
       interval = setInterval(() => {
         setMessage(fullMessage.slice(0, i++));
         if (i > fullMessage.length) {
           clearInterval(interval);
-          clearInterval(cursorInterval);
           setShowCursor(false);
         }
       }, 45);
     };
 
-    startTyping(); 
+    startTyping();
 
     loop = setInterval(() => {
-      cursorInterval = setInterval(() => {
-        setShowCursor(prev => !prev);
-      }, 500);
+      setShowCursor(true);
       startTyping();
-    }, 8000);
+    }, 10000);
+
+    cursorInterval = setInterval(() => {
+      if (i > fullMessage.length) {
+        setShowCursor(prev => !prev);
+      }
+    }, 500);
 
     return () => {
       clearInterval(interval);
@@ -83,40 +78,18 @@ export default function RobotModel(props) {
     mixer?.update(delta);
   });
 
-  const renderMessage = () => {
-    const parts = fullMessage.split("link");
-    if (parts.length === 1) return (
-      <>
-        {message}
-        {showCursor && <span className="cursor">|</span>}
-      </>
-    );
-    
-    const typedParts = message.split("link");
-    
-    return (
-      <>
-        {typedParts[0]}
-        {message.includes("link") && (
-          <a 
-            href="/info" 
-            onClick={handleLinkClick}
-            className="text-purple-300 underline cursor-pointer hover:text-purple-100 transition-colors"
-          >
-            link
-          </a>
-        )}
-        {typedParts[1]}
-        {showCursor && message.length < fullMessage.length && (
-          <span className="cursor">|</span>
-        )}
-      </>
-    );
+  const handleRobotClick = () => {
+    props.onRobotClick();
   };
 
-  
   return (
-    <group ref={group} {...props}>
+    <group 
+      ref={group} 
+      {...props} 
+      onClick={handleRobotClick}
+      onPointerOver={() => setIsHovered(true)}
+      onPointerOut={() => setIsHovered(false)}
+    >
       <primitive
         object={scene}
         scale={1.5}
@@ -124,11 +97,20 @@ export default function RobotModel(props) {
         castShadow
         receiveShadow
       />
-      <Html position={[ 2.3, 0.9, 0]} center distanceFactor={10}>
-        <div className="relative w-[150px] min-h-[100px] px-5 py-4 rounded-2xl border border-purple-400 bg-gradient-to-br from-[#2d1f4d] to-[#3b0f78] text-white text-base font-medium shadow-xl animate-fade transition-all duration-500">
-          <div className="absolute -left-3 top-6 w-0 h-0 border-t-[10px] border-t-transparent border-b-[10px] border-b-transparent border-r-[12px] border-r-[#3b0f78]"></div>
-          <p className="text-[8px] whitespace-pre-wrap leading-relaxed">
-            {renderMessage()}
+      <Html 
+        position={[0.9, 1.5, 0]} 
+        center 
+        distanceFactor={10}
+        style={{
+          transition: 'transform 0.3s ease',
+          transform: isHovered ? 'scale(1.05)' : 'scale(1)'
+        }}
+      >
+        <div className="relative w-[150px] min-h-[60px] px-4 py-3 rounded-2xl border border-purple-400 bg-gradient-to-br from-[#2d1f4d] to-[#3b0f78] text-white text-xs font-medium shadow-xl">
+          <div className="absolute -left-3 top-4 w-0 h-0 border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent border-r-[10px] border-r-[#3b0f78]"></div>
+          <p className="whitespace-pre-wrap leading-tight">
+            {message}
+            {showCursor && <span className="ml-1 inline-block w-1 h-4 bg-purple-300 animate-pulse"></span>}
           </p>
         </div>
       </Html>
@@ -137,5 +119,5 @@ export default function RobotModel(props) {
 }
 
 RobotModel.propTypes = {
-  onLinkClick: PropTypes.func.isRequired
+  onRobotClick: PropTypes.func.isRequired
 };
