@@ -51,7 +51,7 @@ INSERT INTO `class` (`idclass`,`code`, `name`, `teacher_id`, `language`) VALUES
 --
 
 CREATE TABLE `languages` (
-  `idlanguage` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `system_prompt` longtext DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

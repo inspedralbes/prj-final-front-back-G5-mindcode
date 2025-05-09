@@ -325,6 +325,8 @@ export async function addLanguageToClass(classId, language) {
 
 export async function updateLanguages(classId, languages) {
   try {
+    const user_info = useAuthStore.getState().user_info;
+
     if (!classId || !Array.isArray(languages)) {
       throw new Error('classId and languages array are required');
     }
