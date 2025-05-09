@@ -1,13 +1,13 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useState, useEffect, useRef, use } from "react";
+import { useState, useEffect, useRef } from "react";
 import Button from "../../components/atoms/Button";
+import { submitGameResults } from "services/communicationManager";
 
 const PYTHONPage = () => {
   const router = useRouter();
   const canvasRef = useRef(null);
   const bgCanvasRef = useRef(null);
-
   const [score, setScore] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameOver, setGameOver] = useState(false);
@@ -18,10 +18,16 @@ const PYTHONPage = () => {
   const [questionsCompleted, setQuestionsCompleted] = useState(0);
   const [questionsLoaded, setQuestionsLoaded] = useState(false);
   const [timeLeft, setTimeLeft] = useState(60);
+  const [userAnswers, setUserAnswers] = useState([]);
 
+  const userAnswersRef = useRef([]);
+  const questionIdCounter = useRef(1);
   const timerRef = useRef(null);
 
   const gridSize = 18;
+  // Add padding to create safe borders inside the game area
+  const borderPadding = 2; // This adds a 2-cell padding around the edges
+  
   const gameRef = useRef({
     snake: [{ x: 5, y: 5 }],
     direction: 'right',
@@ -32,7 +38,10 @@ const PYTHONPage = () => {
     canvasContext: null,
     canvasWidth: 0,
     canvasHeight: 0,
-    gameActive: false
+    gameActive: false,
+    // Add playable area boundaries to respect the padding
+    playableWidth: 0,
+    playableHeight: 0
   });
 
   const particles = useRef([]);
@@ -130,15 +139,17 @@ const PYTHONPage = () => {
         return newCount;
     });
   
-    const maxX = Math.floor(game.canvasWidth / gridSize) - 1;
-    const maxY = Math.floor(game.canvasHeight / gridSize) - 1;
+    // Use the playable area dimensions instead of full canvas size
+    const maxX = game.playableWidth - 1;
+    const maxY = game.playableHeight - 1;
   
     const foodColors = ['#3b82f6', '#6366f1', '#8b5cf6'];
     const foods = selectedQuestion.options.map((option, index) => {
       let x, y;
       do {
-        x = Math.floor(Math.random() * maxX);
-        y = Math.floor(Math.random() * maxY);
+        // Add borderPadding to keep foods within the safe zone
+        x = Math.floor(Math.random() * (maxX - 2 * borderPadding)) + borderPadding;
+        y = Math.floor(Math.random() * (maxY - 2 * borderPadding)) + borderPadding;
       } while (
         isPositionOccupied(x, y) ||
         game.foods.some(f => f.x === x && f.y === y)
@@ -169,7 +180,17 @@ const PYTHONPage = () => {
     game.canvasContext = context;
     game.canvasWidth = canvas.width;
     game.canvasHeight = canvas.height;
-    game.snake = [{ x: 5, y: 5 }];
+    
+    // Calculate playable area dimensions
+    game.playableWidth = Math.floor(game.canvasWidth / gridSize);
+    game.playableHeight = Math.floor(game.canvasHeight / gridSize);
+    
+    // Initialize snake in a safe position, away from borders
+    game.snake = [{ 
+      x: Math.floor(game.playableWidth / 2), 
+      y: Math.floor(game.playableHeight / 2) 
+    }];
+    
     game.direction = 'right';
     game.speed = 150;
     game.gameActive = true;
@@ -189,7 +210,11 @@ const PYTHONPage = () => {
 
   const resetSnake = () => {
     const game = gameRef.current;
-    game.snake = [{ x: Math.floor(game.canvasWidth / gridSize / 2), y: Math.floor(game.canvasHeight / gridSize / 2) }];
+    // Reset snake to the middle of the playable area
+    game.snake = [{ 
+      x: Math.floor(game.playableWidth / 2), 
+      y: Math.floor(game.playableHeight / 2) 
+    }];
     game.direction = 'right';
   };
 
@@ -205,10 +230,12 @@ const PYTHONPage = () => {
       case 'right': head.x++; break;
     }
 
+    // Check collision with walls, using border padding for safety
     if (
-      head.x < 0 || head.y < 0 ||
-      head.x >= Math.floor(game.canvasWidth / gridSize) ||
-      head.y >= Math.floor(game.canvasHeight / gridSize)
+      head.x < borderPadding || 
+      head.y < borderPadding ||
+      head.x >= game.playableWidth - borderPadding ||
+      head.y >= game.playableHeight - borderPadding
     ) {
       resetSnake();
       return;
@@ -227,6 +254,20 @@ const PYTHONPage = () => {
         }
         placeFood();
         ate = true;
+
+        setUserAnswers(prev => {
+          const answers = [
+            ...prev,
+            {
+              question_id: questionIdCounter.current,
+              selected_option: food.value,
+            }
+          ];
+          userAnswersRef.current = answers;
+          questionIdCounter.current += 1;
+          return answers;
+        });
+    
         break;
       }
     }
@@ -248,6 +289,7 @@ const PYTHONPage = () => {
     ctx.fillStyle = '#1e293b';
     ctx.fillRect(0, 0, game.canvasWidth, game.canvasHeight);
 
+    // Draw grid
     ctx.strokeStyle = 'rgba(100, 130, 200, 0.1)';
     ctx.lineWidth = 0.5;
     for (let i = 0; i < game.canvasWidth; i += gridSize) {
@@ -263,7 +305,19 @@ const PYTHONPage = () => {
       ctx.stroke();
     }
 
-  
+    // Draw border for playable area
+    ctx.strokeStyle = 'rgba(100, 130, 200, 0.3)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.rect(
+      borderPadding * gridSize, 
+      borderPadding * gridSize, 
+      (game.playableWidth - 2 * borderPadding) * gridSize, 
+      (game.playableHeight - 2 * borderPadding) * gridSize
+    );
+    ctx.stroke();
+
+    // Draw snake
     game.snake.forEach((segment, index) => {
       const x = segment.x * gridSize;
       const y = segment.y * gridSize;
@@ -281,6 +335,7 @@ const PYTHONPage = () => {
       ctx.fill();
     });
 
+    // Draw food items
     game.foods.forEach(food => {
       const x = food.x * gridSize;
       const y = food.y * gridSize;
@@ -301,11 +356,12 @@ const PYTHONPage = () => {
       );
       ctx.fill();
       
+      // Draw food text - modified to better fit within borders
       ctx.fillStyle = 'white';
-      ctx.font = 'bold 15px Arial';  
+      ctx.font = 'bold 13px Arial';  // Slightly reduced font size
       ctx.textAlign = 'center';
       
-      const maxCharsPerLine = 10;  
+      const maxCharsPerLine = 8;  // Reduced max chars for better wrapping
       
       if (food.value.length > maxCharsPerLine) {
         const words = food.value.split(' ');
@@ -326,21 +382,22 @@ const PYTHONPage = () => {
           ctx.fillText(
             line, 
             x + gridSize/2, 
-            y + gridSize/2 - (lines.length - 1) * 6 + i * 12  
+            y + gridSize/2 - (lines.length - 1) * 5 + i * 11  // Adjusted spacing
           );
         });
       } else {
         ctx.fillText(
           food.value, 
           x + gridSize/2, 
-          y + gridSize/2 + 5  
+          y + gridSize/2 + 4  
         );
       }
     });
   };
 
-  const endGame = () => {
+  const endGame = async () => {
     const game = gameRef.current;
+    if (gameOver || !game.gameActive) return;
     clearInterval(game.gameLoop);
     clearInterval(timerRef.current);
     game.gameActive = false;
@@ -351,6 +408,20 @@ const PYTHONPage = () => {
     setMessage(allQuestionsUsed 
       ? `🏁 Completed all questions! Final Score: ${score}`
       : `🏁 Final Score: ${score}`);
+    console.log("respuestas",  userAnswersRef.current);
+
+    const transformedAnswers = userAnswersRef.current.map(item => ({
+      question_id: item.question_id,
+      selected_option: item.selected_option, 
+      value: item.selected_option
+    }));
+    
+    try { 
+      const result = await submitGameResults("680b40e8fbdcf9cf00b6c800", transformedAnswers); 
+      console.log("Resultados enviados con éxito:", result);
+    } catch (err) {
+      console.error("Error al enviar resultados:", err);
+    }
   };
 
   useEffect(() => {
@@ -360,12 +431,18 @@ const PYTHONPage = () => {
   }, []);
 
   const startGame = async () => {
+    const game = gameRef.current;
+    clearInterval(game.gameLoop);
+    clearInterval(timerRef.current);
+    cancelAnimationFrame(game.bgAnimationId);
+
     setScore(0);
     setUsedQuestions([]); 
     setQuestionsCompleted(0);
     setGameOver(false);
     setGameStarted(false);
     setTimeLeft(60);
+    questionIdCounter.current = 1;
     
     if (!questionsLoaded) {
       await fetchQuestions();
