@@ -92,7 +92,6 @@ const Signup = () => {
           className="w-full max-w-5xl mx-auto flex justify-center"
         >
           <div className="w-[1000px] h-[600px] relative flex flex-row bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl transition-all duration-300 hover:shadow-[0_0_40px_0_rgba(255,255,255,0.2)] hover:scale-[1.01] overflow-visible">
-            {/* Panel de Login modificado */}
             <div className="w-[500px] flex flex-col justify-center p-12">
               <h2 className="text-[23px] font-bold mb-2 text-purple-300">Autentiqueu-vos en Mindcode <span className="text-white">utilitzant el vostre compte a:</span></h2>
               
