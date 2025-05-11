@@ -97,23 +97,23 @@ export default function RobotModel(props) {
         castShadow
         receiveShadow
       />
-      <Html 
-        position={[0.9, 1.5, 0]} 
-        center 
-        distanceFactor={10}
-        style={{
-          transition: 'transform 0.3s ease',
-          transform: isHovered ? 'scale(1.05)' : 'scale(1)'
-        }}
-      >
-        <div className="relative w-[150px] min-h-[60px] px-4 py-3 rounded-2xl border border-purple-400 bg-gradient-to-br from-[#2d1f4d] to-[#3b0f78] text-white text-xs font-medium shadow-xl">
-          <div className="absolute -left-3 top-4 w-0 h-0 border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent border-r-[10px] border-r-[#3b0f78]"></div>
-          <p className="whitespace-pre-wrap leading-tight">
-            {message}
-            {showCursor && <span className="ml-1 inline-block w-1 h-4 bg-purple-300 animate-pulse"></span>}
-          </p>
-        </div>
-      </Html>
+ <Html 
+  position={[0.9, 1.5, 0]} 
+  center 
+  distanceFactor={10}
+  style={{
+    transition: 'transform 0.3s ease',
+    transform: isHovered ? 'scale(1.05)' : 'scale(1)'
+  }}
+>
+  <div className="relative w-[120px] min-h-[50px] px-3 py-2 rounded-2xl border border-purple-400 bg-gradient-to-br from-[#2d1f4d] to-[#3b0f78] text-white text-xs font-medium shadow-xl">
+    <div className="absolute -left-2 top-3 w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-r-[8px] border-r-[#3b0f78]"></div>
+    <p className="whitespace-pre-wrap leading-tight text-[11px]">
+      {message}
+      {showCursor && <span className="ml-1 inline-block w-1 h-3 bg-purple-300 animate-pulse"></span>}
+    </p>
+  </div>
+</Html>
     </group>
   );
 }

@@ -123,8 +123,8 @@ const Signup = () => {
       }}
       className="relative w-[320px] min-h-[220px] px-6 py-5 rounded-2xl border-2 border-purple-300/30 bg-gradient-to-br from-[#1e103c] via-[#3b1a75] to-[#2d1f4d] text-white shadow-2xl"
     >
-      <div className="absolute inset-0 rounded-xl border-t border-purple-200/20 border-l border-purple-200/10 border-b-0 border-r-0 pointer-events-none"></div>
-      <div className="absolute inset-0 rounded-xl border-b border-purple-500/30 border-r border-purple-500/20 border-t-0 border-l-0 pointer-events-none"></div>
+      <div className="absolute inset-0 rounded-xl border-t  border-l border-purple-200/10 border-b-0 border-r-0 pointer-events-none"></div>
+      <div className="absolute inset-0 rounded-xl border-b border-r border-purple-500/20 border-t-0 border-l-0 pointer-events-none"></div>
       
       <div className="absolute inset-0 rounded-xl pointer-events-none" style={{
         boxShadow: 'inset 0 0 30px rgba(139, 92, 246, 0.3)',
