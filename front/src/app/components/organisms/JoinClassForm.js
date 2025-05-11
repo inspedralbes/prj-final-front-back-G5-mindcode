@@ -20,7 +20,7 @@ const JoinClassForm = () => {
       try {
         const response = await joinClass(classCode);
         if (response.class_info) {
-          router.push(userInfo.role == 1 ? '/PfPage' : '/StPage');
+          router.push(response.isTeacher? '/PfPage' : '/StPage');
         } else {
           alert("Failed to join class. Please check your details.");
         }

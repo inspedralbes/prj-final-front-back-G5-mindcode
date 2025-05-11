@@ -1,22 +1,21 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Pie } from 'react-chartjs-2';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip, Legend);
 
-const BarGraph = ({ labels, dataValues, title, legend, barColor, borderColor }) => {
-
+const PieGraph = ({ labels, dataValues, title, legend, barColor, borderColor }) => {
     const chartRef = useRef(null);
-    
+
     const [textColor, setTextColor] = useState('white');
 
     useEffect(() => {
         if (chartRef.current) {
-          chartRef.current.update();
+            chartRef.current.update();
         }
-      }, [labels, dataValues, textColor]);
+    }, [labels, dataValues, textColor]);
 
-    
+
 
     useEffect(() => {
         const observer = new MutationObserver((mutations) => {
@@ -34,9 +33,6 @@ const BarGraph = ({ labels, dataValues, title, legend, barColor, borderColor }) 
 
         return () => observer.disconnect();
     }, []);
-
-    
-
 
     const data = {
         labels,
@@ -73,31 +69,12 @@ const BarGraph = ({ labels, dataValues, title, legend, barColor, borderColor }) 
                 titleColor: textColor,
             },
         },
-        scales: {
-            x: {
-                ticks: {
-                    color: textColor,
-                },
-                grid: {
-                    color: textColor === 'white' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-                },
-            },
-            y: {
-                ticks: {
-                    color: textColor,
-                    stepSize: 1
-                },
-                grid: {
-                    color: textColor === 'white' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-                },
-                beginAtZero: true,
-            },
-        },
     };
 
     return (
-        <Bar ref={chartRef} data={data} options={options} />
+        <Pie data={data} options={options} />
     );
+
 };
 
-export default BarGraph;
+export default PieGraph;

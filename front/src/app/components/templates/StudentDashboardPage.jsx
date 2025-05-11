@@ -5,7 +5,7 @@ import SidebarStudent from "../../components/organisms/SidebarStudent";
 import UserChat from "../../components/organisms/UserChat";
 import Navbar from "../../components/organisms/Navbar";
 import { useAuthStore } from "stores/authStore";
-import { sendMessage, getUserInfo } from "services/communicationManager";
+import { sendMessage, getClassMain } from "services/communicationManager";
 
 const StudentDashboardPage = () => {
   const [isClient, setIsClient] = useState(false);
@@ -56,15 +56,56 @@ const StudentDashboardPage = () => {
     );
   };
 
+  const parseReceivedMessages = (language_info) => {
+
+
+    console.log("language_info: ", language_info);
+    language_info.forEach(language => {
+
+      let parsedMessages = [];
+
+      let parsedLanguage = [];
+      console.log("Language: ", language);
+
+      language.messages.forEach(message => {
+        console.log("Message: ", message);
+        console.log("Language ID: ", language.id);
+        if (message.languageId !== language.id) return; // Filter messages by languageId
+        const parsedMessage = {
+          sender: "user",
+          text: message.userContent,
+        };
+        parsedLanguage.push(parsedMessage);
+        if (message.aiContent) {
+          const aiMessage = {
+            sender: "ai",
+            text: message.aiContent,
+          };
+          parsedLanguage.push(aiMessage);
+        }
+      });
+      parsedMessages.push(...parsedLanguage);
+
+      console.log("Parsed messages: ", parsedMessages);
+
+      language.messages = parsedMessages;
+
+    })
+
+
+    return null;
+  };
+
   useEffect(() => {
     if (classInfo?.length > 0) {
       setIsClient(true);
-      setMessages(classInfo[0].language_info.map(() => ({ messages: [] })));
+      parseReceivedMessages(classInfo[0].language_info);
+      setMessages(classInfo[0].language_info.map((lang) => ({ messages: lang.messages })));
     }
   }, [classInfo]);
 
   useEffect(() => {
-    getUserInfo();
+    getClassMain();
   }, []);
 
   if (!isClient) return null;

@@ -20,6 +20,8 @@ const Signup = () => {
   const [showRobotDialog, setShowRobotDialog] = useState(false);
   const router = useRouter();
 
+  const user = useAuthStore((state) => state.user_info);
+
   useEffect(() => {
     setHydrated(true);
   }, []);
@@ -43,7 +45,12 @@ const Signup = () => {
       console.log('User data:', userData);
       if (!userData) return;
 
-      setUserInfo({ ...userData });
+
+
+      setUserInfo({
+        ...userData,
+        photoURL
+      });
 
       useAuthStore.setState((state) => ({
         user_info: {
@@ -51,6 +58,9 @@ const Signup = () => {
           photoURL,
         },
       }));
+
+      console.log("USER BEING LOGGED IN", user);
+
 
       const userDataParsed = userData.userData;
       if (userDataParsed.teacher === 1) {

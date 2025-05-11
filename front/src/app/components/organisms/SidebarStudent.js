@@ -74,7 +74,7 @@ const SidebarStudent = ({ handleSetCurrentLanguage }) => {
             <img src={userImage} alt="avatar" className="w-full h-full object-cover" />
           ) : (
             <img
-              src={user_info.photoURL}
+              src={user_info?.photoURL? user_info.photoURL : '/default-avatar.png'}
               alt="avatar"
               className="w-full h-full object-cover"
             />
@@ -85,7 +85,7 @@ const SidebarStudent = ({ handleSetCurrentLanguage }) => {
 
       <nav className="space-y-4">
         <LanguageList 
-          languages={languages} 
+          languages={languages.filter(lang => lang.isActive)} 
           onLanguageClick={handleSetCurrentLanguage} 
           isOpen={isLlenguatgesOpen} 
           toggleOpen={() => setIsLlenguatgesOpen(!isLlenguatgesOpen)}
