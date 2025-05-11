@@ -81,7 +81,7 @@ const Signup = () => {
     );
   }
 
-  return (
+ return (
     <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center overflow-visible relative p-4">
       <div className={`relative w-[full] h-full transition-all duration-1000 ease-[cubic-bezier(0.4,0,0.2,1)] ${isFlipping ? 'opacity-0 scale-x-0' : 'opacity-100 scale-x-100'}`}
            style={{ transformOrigin: 'right center' }}>
@@ -91,8 +91,32 @@ const Signup = () => {
           glareEnable={false}
           className="w-full max-w-5xl mx-auto flex justify-center"
         >
-          <div className="w-[1000px] relative flex flex-row bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl transition-all duration-300 hover:shadow-[0_0_40px_0_rgba(255,255,255,0.2)] hover:scale-[1.01] overflow-visible">
-            <LoginPanel onLogin={handleGoogleLogin} />
+          <div className="w-[1000px] h-[600px] relative flex flex-row bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl transition-all duration-300 hover:shadow-[0_0_40px_0_rgba(255,255,255,0.2)] hover:scale-[1.01] overflow-visible">
+            {/* Panel de Login modificado */}
+            <div className="w-[500px] flex flex-col justify-center p-12">
+              <h2 className="text-[23px] font-bold mb-2 text-purple-300">Autentiqueu-vos en Mindcode <span className="text-white">utilitzant el vostre compte a:</span></h2>
+              
+              <motion.button
+                onClick={handleGoogleLogin}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
+                className="flex items-center justify-center gap-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white py-3 px-6 rounded-lg font-medium shadow-lg transition-all duration-300 relative overflow-hidden group border border-purple-400/30"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12.545 10.239v3.821h5.445c-0.712 2.315-2.647 3.972-5.445 3.972-3.332 0-6.033-2.701-6.033-6.032s2.701-6.032 6.033-6.032c1.498 0 2.866 0.549 3.921 1.453l2.814-2.814c-1.786-1.667-4.166-2.698-6.735-2.698-5.522 0-10 4.477-10 10s4.478 10 10 10c8.396 0 10-7.496 10-10 0-0.67-0.065-1.285-0.182-1.891h-9.818z"/>
+                </svg>
+                Continuar con Google
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </motion.button>
+
+              <motion.div 
+                className="mt-6 text-center"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
+              >
+              </motion.div>
+            </div>
 
             <div className="w-[500px] lg:w-/2 flex justify-center p-8">
               <div className="absolute top-1/2 right-[-100px] -translate-y-1/2 w-[700px] h-[500px] overflow-visible">
@@ -131,7 +155,7 @@ const Signup = () => {
         damping: 20,
         stiffness: 200
       }}
-      className="relative w-[320px] min-h-[220px] px-6 py-5 rounded-2xl border-2 border-purple-300/30 bg-gradient-to-br from-[#1e103c] via-[#3b1a75] to-[#2d1f4d] text-white shadow-2xl"
+      className="relative w-[320px] min-h-[150px] px-6 py-5 rounded-2xl border-2 border-purple-300/30 bg-gradient-to-br from-[#1e103c] via-[#3b1a75] to-[#2d1f4d] text-white shadow-2xl"
     >
       <div className="absolute inset-0 rounded-xl border-t  border-l border-purple-200/10 border-b-0 border-r-0 pointer-events-none"></div>
       <div className="absolute inset-0 rounded-xl border-b border-r border-purple-500/20 border-t-0 border-l-0 pointer-events-none"></div>
@@ -183,7 +207,7 @@ const Signup = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="text-sm leading-relaxed tracking-wide font-medium" style={{
+          className="text-sm leading-relaxed tracking-wide  font-medium" style={{
             textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)'
           }}
         >
