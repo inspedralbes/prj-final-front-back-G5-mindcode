@@ -10,12 +10,14 @@ import { useAuthStore } from '../../stores/authStore';
 import dynamic from "next/dynamic";
 import Tilt from "react-parallax-tilt";
 import LoginPanel from "../components/organisms/LoginPanel";
+import LoadingScreen from "../components/LoadingScreen";
 
 const RobotModel = dynamic(() => import("../components/RobotModel"), { ssr: false });
 
 const Signup = () => {
   const [hydrated, setHydrated] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [isFlipping, setIsFlipping] = useState(false);
   const [showRobotDialog, setShowRobotDialog] = useState(false);
   const router = useRouter();
@@ -41,6 +43,7 @@ const Signup = () => {
 
   const handleGoogleLogin = async () => {
     try {
+      setLoading(true);
       const { userData, photoURL } = await googleLogin();
       console.log('User data:', userData);
       if (!userData) return;
@@ -70,6 +73,8 @@ const Signup = () => {
       }
     } catch (error) {
       console.error("Login error:", error);
+    }finally{
+      setLoading(false);
     }
   };
 
@@ -83,6 +88,8 @@ const Signup = () => {
 
  return (
     <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center overflow-visible relative p-4">
+      {loading && <LoadingScreen />} 
+
       <div className={`relative w-[full] h-full transition-all duration-1000 ease-[cubic-bezier(0.4,0,0.2,1)] ${isFlipping ? 'opacity-0 scale-x-0' : 'opacity-100 scale-x-100'}`}
            style={{ transformOrigin: 'right center' }}>
         <Tilt

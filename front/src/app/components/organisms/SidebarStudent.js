@@ -4,14 +4,16 @@ import React, { useState, useEffect } from "react";
 import { useRouter, usePathname } from 'next/navigation';
 import LanguageList from "../molecules/LanguageList";
 import Button from "../atoms/Button";
+import LoadingScreen from "../LoadingScreen";
 import { useAuthStore } from "stores/authStore";
 import { getUserImage, checkQuizAvailability } from '../../../services/communicationManager';
 
-const SidebarStudent = ({ handleSetCurrentLanguage }) => {
+const SidebarStudent = ({ handleSetCurrentLanguage,onOpenLanguageList }) => {
   const [isLlenguatgesOpen, setIsLlenguatgesOpen] = useState(false);
   const [languages, setLanguages] = useState([]);
   const [userImage, setUserImage] = useState(null);
   const [isQuizAvailable, setIsQuizAvailable] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const user_info = useAuthStore.getState().user_info;
   const router = useRouter();
@@ -24,9 +26,19 @@ const SidebarStudent = ({ handleSetCurrentLanguage }) => {
     }
   }, [classInfo]);
 
-  const handleRedirect = () => router.push('/StSettings');
-  const handleFormClick = () => router.push('/UserForm');
-  const handleGoToGames = () => router.push('/Jocs');
+  const handleRedirect = () =>{
+    setLoading(true);
+    router.push('/StSettings');
+
+  };
+  const handleFormClick = () => {
+    setLoading(true); 
+    router.push('/UserForm'); 
+  };
+  const handleGoToGames = () =>{
+    setLoading(true); 
+    router.push('/Jocs');
+  } 
 
 
   useEffect(() => {
@@ -66,6 +78,8 @@ const SidebarStudent = ({ handleSetCurrentLanguage }) => {
 
   return (
     <div className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white w-1/4 relative h-full p-4 border-r border-gray-300 dark:border-gray-700">
+      {loading && <LoadingScreen />} 
+
       <div className="text-center mb-6">
         <button  
           onClick={handleRedirect} 
@@ -89,7 +103,14 @@ const SidebarStudent = ({ handleSetCurrentLanguage }) => {
           languages={languages.filter(lang => lang.isActive)} 
           onLanguageClick={handleSetCurrentLanguage} 
           isOpen={isLlenguatgesOpen} 
-          toggleOpen={() => setIsLlenguatgesOpen(!isLlenguatgesOpen)}
+          toggleOpen={() => {
+            if (pathname !== '/StPage') {
+              setLoading(true);
+              router.push('/StPage');
+            } else {
+              setIsLlenguatgesOpen(!isLlenguatgesOpen);
+            }
+          }}
         />
 
         <Button 

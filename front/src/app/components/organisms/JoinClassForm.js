@@ -5,13 +5,14 @@ import { joinClass } from "../../../services/communicationManager";
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '../../../stores/authStore';
 
-const JoinClassForm = () => {
+const JoinClassForm = ({setLoading}) => {
   const router = useRouter();
   const [classCode, setClassCode] = useState("");
   const userInfo = useAuthStore((state) => state.user_info);
 
   const handleJoin = async () => {
     if (classCode) {
+      setLoading(true);
       try {
         const response = await joinClass(classCode);
         if (response.class_info) {
@@ -22,6 +23,8 @@ const JoinClassForm = () => {
       } catch (error) {
         console.error("Error joining class:", error);
         alert("An error occurred while joining the class.");
+      } finally {
+        setLoading(false);
       }
     } else {
       alert("Please enter the class code.");
