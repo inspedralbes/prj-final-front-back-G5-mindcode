@@ -9,13 +9,13 @@
 
 Totes les rutes estan documentades al seu fitxer respectiu
 
-[API IA](../back/routes/aiRoutes.js)
-[API classes](../back/routes/classRoutes.js)
-[API google](../back/routes/googleRoutes.js)
-[API llenguatges](../back/routes/languageRoutes.js)
-[API restriccions](../back/routes/restrictionRoutes.js)
-[API estadístiques](../back/routes/statsRoutes.js)
-[API usuari](../back/routes/userRoutes.js)
+- [API IA](../back/routes/aiRoutes.js)
+- [API classes](../back/routes/classRoutes.js)
+- [API google](../back/routes/googleRoutes.js)
+- [API llenguatges](../back/routes/languageRoutes.js)
+- [API restriccions](../back/routes/restrictionRoutes.js)
+- [API estadístiques](../back/routes/statsRoutes.js)
+- [API usuari](../back/routes/userRoutes.js)
 
 > Tots els endpoints utilitzants, sumant els que parlen amb la IA es troben [aquí](./endpoints/)
 
