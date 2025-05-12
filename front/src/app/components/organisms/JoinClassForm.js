@@ -29,7 +29,7 @@ const JoinClassForm = () => {
   };
 
   return (
-    <div className="min-h-[100px] bg-gray-900  ml-[230px] flex items-center justify-center p-10 relative overflow-hidden">
+    <div className="min-h-[100px] bg-gray-900  ml-[240px] flex items-center justify-center p-10 relative overflow-hidden">
             <div className=" absolute inset-0 overflow-hidden">
         {[...Array(15)].map((_, i) => (
           <motion.div
@@ -61,7 +61,7 @@ const JoinClassForm = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="w-full bg-gray-800/50  backdrop-blur-sm rounded-xl p-8 border border-purple-500/20 shadow-xl relative"
+        className="w-[full] max-w-md bg-gray-800/50  backdrop-blur-sm rounded-xl p-8 border border-purple-500/20 shadow-xl relative"
       >
         <div className="absolute inset-0 rounded-xl border-t border-l border-purple-400/10 pointer-events-none"></div>
         <div className="absolute inset-0 rounded-xl border-b border-r border-purple-500/20 pointer-events-none"></div>
@@ -114,12 +114,6 @@ const JoinClassForm = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
         >
-          <button 
-            onClick={() => router.back()}
-            className="text-purple-300 hover:text-purple-200 text-sm font-medium transition-colors"
-          >
-            ← Tornar enrere
-          </button>
         </motion.div>
       </motion.div>
     </div>

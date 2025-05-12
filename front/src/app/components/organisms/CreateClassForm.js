@@ -27,7 +27,7 @@ const CreateClassForm = () => {
   };
 
   return (
-<div className="min-h-[150px] w-[590px] bg-gray-900 flex items-center justify-center p-10 relative overflow-hidden">
+<div className="min-h-[150px] w-[550px] bg-gray-900 flex items-center justify-center p-10 relative overflow-hidden">
       <div className="absolute inset-0 overflow-hidden">
         {[...Array(15)].map((_, i) => (
           <motion.div
@@ -109,12 +109,6 @@ const CreateClassForm = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
         >
-          <button 
-            onClick={() => router.back()}
-            className="text-purple-300 hover:text-purple-200 text-sm font-medium transition-colors"
-          >
-            ← Tornar enrere
-          </button>
         </motion.div>
       </motion.div>
     </div>
