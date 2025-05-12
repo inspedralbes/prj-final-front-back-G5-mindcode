@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import Button from "../../components/atoms/Button";
+import LoadingScreen from "../../components/LoadingScreen";
 
 const HTMLPage = () => {
   const router = useRouter();
@@ -17,6 +18,12 @@ const HTMLPage = () => {
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [questionsCompleted, setQuestionsCompleted] = useState(0);
   const [questionsLoaded, setQuestionsLoaded] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const handleBackToMenu = () => {
+    setLoading(true);
+    router.push("/StPage");
+  };
 
   const gridSize = 18;
   const gameRef = useRef({
@@ -394,6 +401,7 @@ const HTMLPage = () => {
 
   return (
     <div className="min-h-screen text-white relative overflow-hidden">
+      {loading && <LoadingScreen />}
       <canvas 
         ref={bgCanvasRef} 
         className="fixed top-0 left-0 w-full h-full -z-10 bg-gradient-to-br from-gray-900 to-blue-900"
@@ -471,7 +479,7 @@ const HTMLPage = () => {
 
           <div className="text-center mt-4 max-w-xs mx-auto"> 
         <Button
-          onClick={() => router.push("/Jocs")}
+          onClick={handleBackToMenu}
           className="bg-gradient-to-r from-red-500 to-purple-500 text-white px-6 py-2 rounded-lg text-sm font-bold shadow hover:from-blue-600 hover:to-red  -600 transition-colors"
           >
           ⬅️ Back to Menu

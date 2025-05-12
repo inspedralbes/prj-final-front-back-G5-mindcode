@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import styles from "../organisms/GameCirclePanel.module.css";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import LoadingScreen from "../LoadingScreen";
 
 const languageRoutes = {
   css: { src: "/images/css.png", route: "/Lenguajes/css" },
@@ -19,6 +20,7 @@ const languageRoutes = {
 const GameCirclePanel = ({ languages }) => {
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const icons = languages
     .map((lang) => {
@@ -36,11 +38,16 @@ const GameCirclePanel = ({ languages }) => {
 
   const handleClick = (index) => {
     setActiveIndex(index);
+    setLoading(true);
     router.push(icons[index].route); 
   };
 
   const rotation = `rotate(${-activeIndex * (360 / icons.length)}deg)`;
-
+  
+  if (loading) {
+    return <LoadingScreen />; 
+  }
+ 
   if (icons.length === 0) {
     return (
       <div className="text-gray-500 text-xl text-center">
