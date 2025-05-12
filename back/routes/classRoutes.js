@@ -49,8 +49,9 @@ router.get('/', async (req, res) => {
 router.post('/', verifyTokenMiddleware, async (req, res) => {
     const { name } = req.body;
     const verified_user_id = req.verified_user_id;
+    console.log(verified_user_id);
 
-    const language = "[]"; /* TODO: Add language array to class creation */
+    const language = "[]";
 
     if (!name || !verified_user_id) {
         return res.status(400).json({ error: 'Class name and teacher ID are required' });
@@ -60,14 +61,20 @@ router.post('/', verifyTokenMiddleware, async (req, res) => {
     try {
         const connection = await createConnection();
         const [rows] = await connection.execute(
-            'SELECT id FROM USER WHERE id = ? AND teacher = "1"',
+            'SELECT id, teacher FROM USER WHERE id = ?',
             [verified_user_id]
         );
         await connection.end();
 
+        console.log(rows);
+
 
         if (rows.length === 0) {
             return res.status(401).json({ error: 'You are not authorized to take that action' });
+        }
+
+        if (rows[0].teacher !== 1) {
+            return res.status(401).json({ error: 'You are not a teacher' });
         }
     } catch (error) {
         console.error('Error verifying teacher ID:', error);
@@ -76,9 +83,6 @@ router.post('/', verifyTokenMiddleware, async (req, res) => {
 
 
     const class_code = uid.rnd();
-
-
-    console.log(class_code);
 
 
     try {
@@ -182,7 +186,7 @@ router.post('/enroll', verifyTokenMiddleware, async (req, res) => {
                     class_info.push(await getClassInfo(class_id, verified_user_id));
                 }
 
-                res.json({ message: 'Successfully enrolled in the class', class_info });
+                res.json({ message: 'Successfully enrolled in the class', class_info, isTeacher: isTeacher });
 
             } catch (error) {
                 console.error('Error adding student to class:', error);
@@ -274,9 +278,7 @@ router.post('/enroll', verifyTokenMiddleware, async (req, res) => {
 });
 
 router.get("/user/info", verifyTokenMiddleware, async (req, res) => {
-    console.log("userId: ", req.verified_user_id);
     getClassesInfoWithTeacher(req.verified_user_id).then((class_info) => {
-        console.log("Class info found: ", class_info);
         res.status(200).json({ class_info: class_info });
     }).catch((error) => {
         console.error("Error fetching classes:", error);
