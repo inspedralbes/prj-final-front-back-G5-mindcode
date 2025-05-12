@@ -109,14 +109,13 @@ const StudentDashboardPage = () => {
   }, []);
 
   if (!isClient) return null;
-
-  return (
+ return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50">
       <SidebarStudent handleSetCurrentLanguage={handleSetCurrentLanguage} />
       <div className="flex flex-col w-full">
         <Navbar />
         <div className="flex-1 overflow-y-auto p-4">
-        {highlightedLanguage ? (
+          {highlightedLanguage ? (
             <UserChat
               language={highlightedLanguage}
               message={message}
@@ -125,7 +124,7 @@ const StudentDashboardPage = () => {
               handleChangeMessage={setMessage}
             />
           ) : (
-            <div className="text-gray-500 text-lg text-center">
+            <div className="text-purple-500 dark:text-purple-300 text-lg text-center font-medium">
               ✨ Selecciona un llenguatge per començar ✨
             </div>
           )}
@@ -134,5 +133,4 @@ const StudentDashboardPage = () => {
     </div>
   );
 };
-
 export default StudentDashboardPage;

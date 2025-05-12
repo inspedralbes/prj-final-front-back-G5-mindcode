@@ -24,14 +24,16 @@ const Navbar = () => {
 
   const isActive = (path) => pathname === path;
 
-  return (
-    <nav className="bg-gray-800 text-white dark:bg-gray-900 dark:text-gray-200">
+return (
+    <nav className="bg-gradient-to-r from-emerald-900 to-purple-900 text-white">
       <div className="container mx-auto flex justify-between items-center px-4 py-3">
         <span className="text-xl font-bold">Mindcode</span>
         <div className="flex items-center space-x-6">
           <button
             onClick={() => router.push("/StPage")}
-            className={`hover:underline ${isActive("/StPage") ? "text-yellow-300 font-semibold" : ""}`}
+            className={`hover:text-purple-200 transition-colors ${
+              isActive("/StPage") ? "text-yellow-300 font-semibold" : ""
+            }`}
           >
             Statistics
           </button>
@@ -40,13 +42,13 @@ const Navbar = () => {
               sessionStorage.removeItem("auth-storage");
               router.push("/Login");
             }}
-            className="hover:underline"
+            className="hover:text-purple-200 transition-colors"
           >
             Logout
           </button>
           <button
             onClick={toggleDarkMode}
-            className="h-10 w-10 flex items-center justify-center rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+            className="h-10 w-10 flex items-center justify-center rounded-lg p-2 hover:bg-purple-700 transition-colors"
           >
             {darkMode ? (
               <svg className="fill-yellow-400" viewBox="0 0 20 20" fill="currentColor">

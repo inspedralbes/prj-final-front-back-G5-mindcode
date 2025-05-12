@@ -10,24 +10,26 @@ const UserChat = ({ language, message, messages, handleSendMessage, handleChange
     handleChangeMessage(event.target.value);
   };
 
-  return (
-    <div className="w-full h-full flex flex-col pl-[10%] pr-[10%] bg-gray-100 dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 mx-auto">
+ return (
+    <div className="w-full h-full flex flex-col pl-[10%] pr-[10%] bg-gray-100 dark:bg-gray-800 rounded-xl border border-purple-300 dark:border-purple-500/30 mx-auto">
       <div className="flex-grow overflow-y-auto p-4 space-y-4 rounded-md">
         {messages?.map((msg, index) => (
           <div key={index} className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
             {msg.sender === "ai" && (
-              <RiRobot3Line className="w-10 h-10 mr-2" />
+              <RiRobot3Line className="w-10 h-10 mr-2 text-purple-500" />
             )}
             <div
               className={`px-4 py-2 rounded-lg max-w-[80%] ${
-                msg.sender === "user" ? "bg-blue-700 text-white" : "bg-gray-700 text-white"
-              }`}
+                msg.sender === "user" 
+                  ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white" 
+                  : "bg-gradient-to-r from-gray-700 to-gray-800 text-white"
+              } shadow-md`}
               style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}
             >
               <MarkdownView markdown={msg.text} options={{ tables: true, emoji: true }} />
             </div>
             {msg.sender === "user" && (
-              <FaUserCircle className="w-10 h-10 ml-2" />
+              <FaUserCircle className="w-10 h-10 ml-2 text-purple-500" />
             )}
           </div>
         ))}
@@ -37,11 +39,11 @@ const UserChat = ({ language, message, messages, handleSendMessage, handleChange
           placeholder="Escriu un missatge..."
           value={message}
           onChange={handleChange}
-          className="flex-grow px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none overflow-hidden"
+          className="flex-grow px-4 py-3 rounded-lg border border-purple-300 dark:border-purple-500/30 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none overflow-hidden"
         />
         <button
           onClick={handleSendMessage}
-          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="px-4 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all shadow-lg"
         >
           <FaPaperPlane className="w-5 h-5" />
         </button>
