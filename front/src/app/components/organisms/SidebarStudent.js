@@ -83,7 +83,7 @@ const SidebarStudent = ({ handleSetCurrentLanguage,onOpenLanguageList }) => {
       <div className="text-center mb-6">
         <button  
           onClick={handleRedirect} 
-          className="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-purple-500 dark:hover:bg-purple-600 mx-auto mb-2 overflow-hidden transition-colors duration-300 border-2 border-purple-400 dark:border-purple-500"
+          className="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-1  00 hover:bg-purple-500 dark:hover:bg-purple-600 mx-auto mb-2 overflow-hidden transition-colors duration-300 border-2 border-purple-400 dark:border-purple-500"
         >
           {userImage ? (
             <img src={userImage} alt="avatar" className="w-full h-full object-cover" />
@@ -117,8 +117,8 @@ const SidebarStudent = ({ handleSetCurrentLanguage,onOpenLanguageList }) => {
           onClick={handleGoToGames}
           className={`text-left p-4 w-full rounded-lg font-medium transition-all ${
             pathname === '/Jocs'
-            ? 'bg-gradient-to-r from-purple-600 to-indigo-600  hover:from-purple-500/40 hover:to-purple-600/40 text-white shadow-lg'
-            : 'bg-gradient-to-r from-purple-500 to-indigo-500  hover:from-purple-500/40 hover:to-purple-600/40 text-white'
+            ? 'bg-gradient-to-r from-cyan-900 to-fuchsia-900 hover:from-cyan-700 hover:to-fuchsia-700 text-white shadow-lg'
+            : 'bg-gradient-to-r from-cyan-900 to-fuchsia-900 hover:from-cyan-700 hover:to-fuchsia-700 text-white'
           }`}
         >
           🎮 Jocs

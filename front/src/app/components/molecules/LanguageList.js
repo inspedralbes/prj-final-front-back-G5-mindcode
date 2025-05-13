@@ -11,8 +11,8 @@ const LanguageList = ({ languages, onLanguageClick, isOpen, toggleOpen }) => {
         onClick={toggleOpen}
         className={`p-4 w-full text-left flex items-center gap-2 rounded-lg font-medium transition-all ${
           isOpen 
-            ? 'bg-gradient-to-r from-purple-600 to-indigo-600  hover:from-purple-500/40 hover:to-purple-600/40 text-white shadow-lg'
-            : 'bg-gradient-to-r from-purple-500 to-indigo-500  hover:from-purple-500/40 hover:to-purple-600/40 text-white'
+            ? 'bg-gradient-to-r from-cyan-900 to-fuchsia-900 hover:from-cyan-700 hover:to-fuchsia-700 text-white shadow-lg'
+            : 'bg-gradient-to-r from-cyan-900 to-fuchsia-900 hover:from-cyan-700 hover:to-fuchsia-700 text-white'
         }`}
       >
         📄 Llenguatges
@@ -45,7 +45,7 @@ const LanguageList = ({ languages, onLanguageClick, isOpen, toggleOpen }) => {
                     onClick={() => onLanguageClick(language)}
                     className="w-full text-left px-4 py-2 rounded-lg font-medium transition-all
                       bg-gradient-to-r from-purple-500/20 to-purple-600/20 dark:from-purple-500/30 dark:to-purple-600/30
-                      hover:from-purple-500/40 hover:to-purple-600/40 dark:hover:from-purple-500/50 dark:hover:to-purple-600/50
+                      hover:from-blue-500/40 hover:to-purple-600/40 dark:hover:from-purple-500/50 dark:hover:to-blue-600/50
                       text-purple-800 dark:text-purple-200 border border-purple-300/50 dark:border-purple-500/30
                       hover:shadow-md hover:shadow-purple-500/20"
                   >

@@ -30,12 +30,10 @@ const SidebarProf = forwardRef((props, ref) => {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Expose this function to parent via ref
   useImperativeHandle(ref, () => ({
     handleSaveEdit0,
     handleSaveEdit1,
     handleSaveEdit2,
-    // Add other functions here if needed
   }));
 
   const handleEditLanguage = (classId, index, isStudent) => {
@@ -97,7 +95,6 @@ const SidebarProf = forwardRef((props, ref) => {
     class_info.forEach((classItem) => {
       console.log(classItem.language_info);
       initialLanguages[classItem.class_id] = classItem.language_info
-        // .filter((lang) => {console.log(lang); return typeof lang === "object" && lang.id})
         .map((lang) => ({
           id: lang.id,
           name: lang.name,
@@ -147,7 +144,6 @@ const SidebarProf = forwardRef((props, ref) => {
       );
 
       if (!existingLanguage) {
-        // console.log(`Language "${newLanguage}" not found in database, creating it...`);
         const newLangResponse = await createLanguage(newLanguage);
 
         existingLanguage = {
@@ -202,7 +198,6 @@ const SidebarProf = forwardRef((props, ref) => {
     }
 
     try {
-      // console.log(`Eliminando lenguaje "${languageToDelete.name}" (ID: ${languageToDelete.id}) de la clase ${classId}`);
 
       await deleteLanguageFromClass(classId, languageToDelete.id);
 
@@ -214,7 +209,6 @@ const SidebarProf = forwardRef((props, ref) => {
         [classId]: updatedLanguages,
       }));
 
-      // console.log(`Lenguaje eliminado correctamente de la clase ${classId}`);
     } catch (error) {
       console.error(" Error deleting language:", error.message);
     }
@@ -246,7 +240,6 @@ const SidebarProf = forwardRef((props, ref) => {
         [classId]: updatedLanguages,
       }));
 
-      // console.log(`Idioma "${updatedLang.name}" ahora está ${updatedLang.isActive ? "activo" : "inactivo"}`);
     } catch (error) {
       console.error("Error al cambiar el estado del lenguaje:", error.message);
     }
@@ -309,7 +302,7 @@ const SidebarProf = forwardRef((props, ref) => {
     <div className="bg-gray-200 dark:bg-gray-800 text-black dark:text-gray-500 h-full p-4 border-r border-gray-300 dark:border-gray-700">
       <div className="text-center mb-6">
         <button 
-          className="w-16 h-16 rounded-full bg-gradient-to-br emerald-900 to-purple-900 hover:from-emerald-800 hover:to-purple-800 mx-auto mb-2 overflow-hidden border-2 border-purple-400 dark:border-purple-500 transition-all shadow-lg"
+          className="w-16 h-16 rounded-full bg-gradient-to-br emerald-900 to-purple-900 hover:from-emerald-800 hover:to-purple-700 mx-auto mb-2 overflow-hidden border-2 border-purple-400 dark:border-purple-500 transition-all shadow-lg"
           onClick={handleRedirect}
         >
           {userImage ? (
@@ -331,7 +324,7 @@ const SidebarProf = forwardRef((props, ref) => {
           class_info.map(({ class_id, name, classmate_info }, index) => (
             <div key={class_id}>
               <button
-                className="w-full px-4 py-3 bg-gradient-to-r from-emerald-900 to-purple-900 hover:from-emerald-800 hover:to-purple-800 text-white rounded-lg flex justify-between items-center transition-all shadow-md"
+                className="w-full px-4 py-3 bg-gradient-to-r from-emerald-900 to-purple-900 hover:from-emerald-800 hover:to-purple-700 text-white rounded-lg flex justify-between items-center transition-all shadow-md"
                 onClick={() => handleClassClick(class_id, index)}
               >
                 {name} <span className="transition-transform duration-300">{openClassId === class_id ? '▼' : '▶'}</span>
@@ -340,7 +333,7 @@ const SidebarProf = forwardRef((props, ref) => {
               {openClassId === class_id && (
                 <div className="mt-2 space-y-2 pl-2">
                   <button
-                    className="w-full px-4 py-2 bg-gradient-to-r from-teal-800 to-purple-800  hover:from-teal-900 hover:to-purple-900 text-white rounded-lg transition-all"
+                    className="w-full px-4 py-2 bg-gradient-to-r from-cyan-900 to-fuchsia-900 hover:from-cyan-700 hover:to-fuchsia-700 text-white rounded-lg transition-all"
                     onClick={() => setIsLlenguatgesOpen(!isLlenguatgesOpen)}
                   >
                     📄 Llenguatges
@@ -393,7 +386,7 @@ const SidebarProf = forwardRef((props, ref) => {
 
                       {!showInput ? (
                         <button
-                          className="w-full px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-400 hover:to-indigo-500 mt-2 transition-all"
+                          className="w-full px-4 py-2  text-white rounded-lg bg-gradient-to-r from-cyan-900 to-fuchsia-900 hover:from-cyan-700 hover:to-fuchsia-700 mt-2 transition-all"
                           onClick={() => setShowInput(true)}
                         >
                           ➕ Nou llenguatge
@@ -425,14 +418,14 @@ const SidebarProf = forwardRef((props, ref) => {
                   )}
 
                   <button 
-                    className="w-full px-4 py-2 bg-gradient-to-r from-teal-800 to-purple-800  hover:from-teal-900 hover:to-purple-900 text-white rounded-lg transition-all"
+                    className="w-full px-4 py-2 text-white bg-gradient-to-r from-cyan-900 to-fuchsia-900 hover:from-cyan-700 hover:to-fuchsia-700text-white rounded-lg transition-all"
                     onClick={handleStatsClick}
                   >
                     📊 Estadístiques
                   </button>
 
                   <button
-                    className="w-full px-4 py-2 bg-gradient-to-r from-teal-800 to-purple-800  hover:from-teal-900 hover:to-purple-900 text-white rounded-lg transition-all"
+                    className="w-full px-4 py-2 bg-gradient-to-r from-cyan-900 to-fuchsia-900 hover:from-cyan-700 hover:to-fuchsia-700 text-white rounded-lg transition-all"
                     onClick={() => setIsAlumnesOpen(!isAlumnesOpen)}
                   >
                     🎓 Alumnes
@@ -444,9 +437,10 @@ const SidebarProf = forwardRef((props, ref) => {
                         classmate_info.map((student) => (
                           <div 
                             key={student.id} 
-                            className="px-3 py-2 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 hover:from-purple-500/30 hover:to-indigo-500/30 text-white rounded-lg border border-purple-400/30 cursor-pointer transition-all"
+                            className="px-3 py-2 bg-gradient-to-r from-purple-500/20 to-purple-600/20 hover:from-blue-500/40 hover:to-purple-600/40 text-purple-700 rounded-lg border border-purple-400/30 cursor-pointer transition-all"
                             onClick={handleStudentClick(student.id)}
                           >
+
                             {student.name}
                           </div>
                         ))
@@ -465,7 +459,7 @@ const SidebarProf = forwardRef((props, ref) => {
 
         <button 
           onClick={handleGoToNewClass}
-          className="w-full px-4 py-3 bg-gradient-to-r from-emerald-900 to-purple-900 hover:from-emerald-800 hover:to-purple-800 text-white rounded-lg font-medium mt-4 transition-all shadow-lg"
+          className="w-full px-4 py-3 bg-gradient-to-r from-emerald-900 to-purple-900 hover:from-emerald-800 hover:to-purple-700 text-white rounded-lg font-medium mt-4 transition-all shadow-lg"
         >
           ➕ Nova classe
         </button>
