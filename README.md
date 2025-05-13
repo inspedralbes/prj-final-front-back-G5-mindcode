@@ -52,6 +52,44 @@ Carpeta [/doc](./doc)
 
 ## Pitch
 
+# Manual d'Ús
+
+## 1. Introducció
+
+**MINDCODE** és una eina educativa d'assistència per a programació que:
+
+- ✅ Ajuda els estudiants amb preguntes de programació en diversos llenguatges
+- 🎯 Permet als professors gestionar classes i establir restriccions de llenguatge
+- 🤖 Utilitza intel·ligència artificial per oferir assistència contextualitzada
+- 🔍 Filtra la informació segons la configuració de classe i llenguatge
+
+## 2. Començant
+
+### 2.1 Inici de sessió
+
+1. Obre l'aplicació MINDCODE
+2. A la pàgina d'inici:
+   - Fes clic a `GOOGLE / inspedralbes.cat`
+   - Autentica't amb el teu compte Google (`@inspedralbes.cat`)
+3. El sistema detectarà automàticament el teu rol (professor/estudiant)
+
+### 2.2 Configuració inicial
+
+#### Per a Professors:
+- **Primer accés**: Redirecció a *Crear Classe*
+- **Accés recurrent**: Redirecció a *Pàgina del Professor*
+
+#### Per a Estudiants:
+- **Primer accés**: Redirecció a *Unir-se a Classe*
+- **Accés recurrent**: Redirecció a *Pàgina de l'Estudiant*
+
+### 3.1 Crear Classe
+```mermaid
+graph LR
+A[Nom Classe] --> B[Generar Codi]
+B --> C[Compartir]
+```
+
 # Arquitectura de Desplegament
 
 ## Docker
