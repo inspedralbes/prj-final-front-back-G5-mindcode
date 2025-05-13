@@ -176,6 +176,5 @@ AI_HOST: IP de la ia
 BACK_PORT: 3000
 PRODUCTION_API_URI: Adreça de crides al back
 JWT_KEY: Clau per al JSON web token
-
 ```
 Un cop els tinguis afegits només falta fer push a una branca que activi el workflow
