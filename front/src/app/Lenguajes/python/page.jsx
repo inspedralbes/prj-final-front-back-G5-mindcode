@@ -90,7 +90,7 @@ const PYTHONPage = () => {
 
   const fetchQuestions = async () => {
     try {
-      const quizId = "6822ee28c227fcdfd620f97e"; 
+      const quizId = "68239e0402701ff75b8cbc98"; 
       const data = await getQuiz(quizId);
       setQuizQuestions(data.questions);
       setQuestionsLoaded(true);
@@ -151,8 +151,10 @@ const PYTHONPage = () => {
         x,
         y,
         value: option,
+        optionIndex: index,
         color: foodColors[index % foodColors.length],
-        isCorrect: index === selectedQuestion.correct_option 
+        isCorrect: index === selectedQuestion.correct_option,
+        question_id: selectedQuestion.question_id
       };
     });
   
@@ -264,7 +266,7 @@ const PYTHONPage = () => {
             ...prev,
             {
               question_id: questionIdCounter.current,
-              selected_option: food.value,
+              selected_option: food.optionIndex,
             }
           ];
           userAnswersRef.current = answers;
@@ -415,25 +417,24 @@ const PYTHONPage = () => {
 
     const transformedAnswers = userAnswersRef.current.map(item => {
     const question = quizQuestions.find(q => q.question_id === item.question_id);
-      
-      if (!question) return item; 
-  
-  
-      const selectedOptionText = question.options[item.selected_option];
-      const selectedOptionIndex = question.options.findIndex(option => option === item.selected_option);
-      const isCorrect = selectedOptionIndex === question.correct_option;
-  
-      return {
-        question_id: item.question_id,
-        selected_option: selectedOptionIndex, 
-        value: selectedOptionText,
-        isCorrect: isCorrect,
-      };
-    });
+
+    if (!question) return item;
+
+    const selectedOptionText = question.options[item.selected_option];
+    const selectedOptionIndex = item.selected_option + 1;
+    const isCorrect = item.selected_option === question.correct_option;
+
+    return {
+      question_id: item.question_id,
+      selected_option: selectedOptionIndex, 
+      value: selectedOptionText,
+      isCorrect: isCorrect,
+    };
+  });
     console.log("respuestas transformadas", transformedAnswers);
     
     try { 
-      const result = await submitGameResults("6822ee28c227fcdfd620f97e", transformedAnswers); 
+      const result = await submitGameResults("68239e0402701ff75b8cbc98", transformedAnswers); 
       console.log("Resultados enviados con éxito:", result);
     } catch (err) {
       console.error("Error al enviar resultados:", err);
