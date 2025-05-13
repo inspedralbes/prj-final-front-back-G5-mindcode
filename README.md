@@ -90,6 +90,26 @@ A[Nom Classe] --> B[Generar Codi]
 B --> C[Compartir]
 ```
 
+## 3.2 Gestió de Llenguatges
+
+### Configuració de Llenguatges Disponibles
+1. Accedeix al **Panell de Control del Professor**
+2. Selecciona **Llenguatges de Programació**
+3. Activa/desactiva els llenguatges requerits:
+   - ✅ Python
+   - ✅ JavaScript
+   - ✅ Java
+   - ✅ C++
+   - ✅ HTML/CSS
+
+### Establiment de Restriccions
+```mermaid
+graph TD
+    A[Selecciona Llenguatge] --> B[Estableix Nivell]
+    B --> C{Bàsic<br>Intermedi<br>Avançat}
+    C --> D[Guarda Configuració]
+```
+
 # Arquitectura de Desplegament
 
 ## Docker
