@@ -51,3 +51,131 @@ Carpeta [/doc](./doc)
 ## Manual Usuari
 
 ## Pitch
+
+# Arquitectura de Desplegament
+
+## Docker
+
+Mindcode utilitza conterització per al desplegament, amb configuració diferents per a desenvolupament i producció. El sistema consisteix en múltiple serveis interconectats, incloent frontend, backend, bases de dades i eines d'administració.
+
+Aquesta és l'arquitectura del docker:
+
+![Arquitectura del docker](./doc/images/arquitectura_docker.png)
+
+El codi del docker de desenvolupament és [aquest](./compose.yaml)
+I el codi del docker de producció és [aquest](./compose.production.yaml)
+
+## Desplegament
+
+A Mindcode tenim eines d'integració continua, concretament Github Actions, el qual puja a producció el projecte automàticament quan es llença el workflow. 
+
+Els passos que fa són aquests:
+
+![Github Actions](./doc/images/actions-base.png)
+
+O, vist de manera més concreta:
+
+![Github Actions més a fons](./doc/images/actions-extended.png)
+
+Aquesta manera de treballar ens aporta diferents millores de seguretat respecte no tenirles, com per exemple: 
+
+1. Variables d'entorn es guarden com a Github secrets
+
+2. Credencials de bases de dades es controlen des de variables d'entorn
+
+3. La xarxa està aïllada amb l'us de la network de Docker
+
+4. La conexió SSH està estrictament controlada per verificació per clau
+
+## Com utilitzar
+
+Requisits:
+
+1. Docker instal·lat
+
+2. Docker compose instal·lat
+
+### Instal·lació
+
+1. Clona el repositori
+
+```sh
+   git clone https://github.com/inspedralbes/prj-final-front-back-G5-mindcode.git
+   ```
+2. Aixeca el Stack
+
+```sh
+   docker compose up
+   ```
+
+### Desplegar
+
+Requisits:
+
+Els requisits mínims son un domini propi, docker instal·lat amb el plugin de docker compose, portainer instal·lat per a administració i un nginx amb un proxy invers amb aquesta configuració:
+
+```
+server {
+    listen 80;
+    listen [::]:80;
+
+    server_name your_domain.com;
+
+    location / {
+        proxy_pass http://localhost:5173/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /back/ {
+        proxy_pass http://localhost:3000/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /portainer/ {
+        proxy_pass https://localhost:9443/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+Un cop tens el nginx funcionant has de copiar el projecte a un altre repositori, ja que el deploy es fa mitjançant github actions, per a més informació sobre com fer-ho mira la [documentació oficial](https://docs.github.com/en/issues/planning-and-tracking-with-projects/creating-projects/copying-an-existing-project).
+
+Un cop el tinguis copiathas d'afegir els secrets del repositori.
+
+Per això:
+
+1. Navega als settings
+
+2. Baixa fins a secrets and variables
+
+3. Clica-hi a actions i afegeix els secrets de repositori
+
+Aquests són els secrets que s'han d'omplir
+
+```
+PROD_SECRET_KEY: Clau secreta del servidor host
+PROD_USER: Nom de l'usuari del servidor
+PROD_HOST: IP del servidor
+MYSQL_USER: Nom d'usuari de la base de dades MySQL
+MYSQL_PASSWORD: Contrasenya de la base de dades MySQL
+MYSQL_ROOT_PASSWORD: Contrasenya root de la base de dades MySQL
+MYSQL_HOST: ip de la base de dades MySQL
+MYSQL_DATABASE: nom de la base de dades
+MONGO_ROOT_USER: Nom de l'usuari root de la base de dades MongoDB
+MONGO_ROOT_PASSWORD: Contrasenya de l'usuari root de la base de dades MongoDB
+AI_HOST: IP de la ia 
+BACK_PORT: 3000
+PRODUCTION_API_URI: Adreça de crides al back
+JWT_KEY: Clau per al JSON web token
+
+```
+Un cop els tinguis afegits només falta fer push a una branca que activi el workflow
