@@ -969,3 +969,4 @@ export async function getQuiz(quizId) {
     throw error;
   }
 }
+

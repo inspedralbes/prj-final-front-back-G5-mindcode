@@ -90,7 +90,7 @@ const PYTHONPage = () => {
 
   const fetchQuestions = async () => {
     try {
-      const quizId = "681dc2d105f68437331012fe"; 
+      const quizId = "6822ee28c227fcdfd620f97e"; 
       const data = await getQuiz(quizId);
       setQuizQuestions(data.questions);
       setQuestionsLoaded(true);
@@ -115,6 +115,7 @@ const PYTHONPage = () => {
     }
   
     if (usedQuestions.length >= quizQuestions.length) {
+      console.log("Resetting used questions"); 
       setUsedQuestions([]);
     }
   
@@ -131,15 +132,7 @@ const PYTHONPage = () => {
   
     setUsedQuestions(prev => [...prev, questionIndex]);
     setCurrentQuestion(selectedQuestion);
-    setQuestionsCompleted(prev => { prev + 1
-      const newCount = prev + 1;
-        if (newCount === quizQuestions.length) {
-          endGame();
-        }
-        return newCount;
-    });
   
-    // Use the playable area dimensions instead of full canvas size
     const maxX = game.playableWidth - 1;
     const maxY = game.playableHeight - 1;
   
@@ -147,7 +140,6 @@ const PYTHONPage = () => {
     const foods = selectedQuestion.options.map((option, index) => {
       let x, y;
       do {
-        // Add borderPadding to keep foods within the safe zone
         x = Math.floor(Math.random() * (maxX - 2 * borderPadding)) + borderPadding;
         y = Math.floor(Math.random() * (maxY - 2 * borderPadding)) + borderPadding;
       } while (
@@ -160,7 +152,7 @@ const PYTHONPage = () => {
         y,
         value: option,
         color: foodColors[index % foodColors.length],
-        isCorrect: index === selectedQuestion.correct_option - 1
+        isCorrect: index === selectedQuestion.correct_option 
       };
     });
   
@@ -254,6 +246,18 @@ const PYTHONPage = () => {
         }
         placeFood();
         ate = true;
+
+        setQuestionsCompleted(prev => {
+          const newCount = prev + 1;
+          console.log(`Completed ${newCount} out of ${quizQuestions.length} questions`);
+          
+          // End game if all questions are answered
+          if (newCount >= quizQuestions.length) {
+            setTimeout(() => endGame(), 300);
+          }
+          
+          return newCount;
+        });
 
         setUserAnswers(prev => {
           const answers = [
@@ -403,21 +407,33 @@ const PYTHONPage = () => {
     game.gameActive = false;
     setGameOver(true);
     
-    const allQuestionsUsed = usedQuestions.length >= quizQuestions.length && quizQuestions.length > 0;
-    
+    const allQuestionsUsed = questionsCompleted >= quizQuestions.length;
     setMessage(allQuestionsUsed 
       ? `🏁 Completed all questions! Final Score: ${score}`
       : `🏁 Final Score: ${score}`);
     console.log("respuestas",  userAnswersRef.current);
 
-    const transformedAnswers = userAnswersRef.current.map(item => ({
-      question_id: item.question_id,
-      selected_option: item.selected_option, 
-      value: item.selected_option
-    }));
+    const transformedAnswers = userAnswersRef.current.map(item => {
+    const question = quizQuestions.find(q => q.question_id === item.question_id);
+      
+      if (!question) return item; 
+  
+  
+      const selectedOptionText = question.options[item.selected_option];
+      const selectedOptionIndex = question.options.findIndex(option => option === item.selected_option);
+      const isCorrect = selectedOptionIndex === question.correct_option;
+  
+      return {
+        question_id: item.question_id,
+        selected_option: selectedOptionIndex, 
+        value: selectedOptionText,
+        isCorrect: isCorrect,
+      };
+    });
+    console.log("respuestas transformadas", transformedAnswers);
     
     try { 
-      const result = await submitGameResults("681dc2d105f68437331012fe", transformedAnswers); 
+      const result = await submitGameResults("6822ee28c227fcdfd620f97e", transformedAnswers); 
       console.log("Resultados enviados con éxito:", result);
     } catch (err) {
       console.error("Error al enviar resultados:", err);
