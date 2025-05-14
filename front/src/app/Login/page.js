@@ -10,6 +10,9 @@ import { useAuthStore } from '../../stores/authStore';
 import dynamic from "next/dynamic";
 import Tilt from "react-parallax-tilt";
 import LoginPanel from "../components/organisms/LoginPanel";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import LoadingScreen from "../components/LoadingScreen";
 
 const RobotModel = dynamic(() => import("../components/RobotModel"), { ssr: false });
@@ -49,7 +52,7 @@ const Signup = () => {
       if (!userData) return;
 
 
-
+      toast.success("Login correcte");
       setUserInfo({
         ...userData,
         photoURL
@@ -62,9 +65,6 @@ const Signup = () => {
         },
       }));
 
-      console.log("USER BEING LOGGED IN", user);
-
-
       const userDataParsed = userData.userData;
       if (userDataParsed.teacher === 1) {
         router.push(userData.hasClass ? '/PfPage' : '/CreateClass');
@@ -72,7 +72,7 @@ const Signup = () => {
         router.push(userData.hasClass ? '/StPage' : '/JoinClass');
       }
     } catch (error) {
-      console.error("Login error:", error);
+      toast.error("Error inesperat durant el login");
     }finally{
       setLoading(false);
     }
@@ -278,6 +278,8 @@ const Signup = () => {
 
       <div className={`absolute inset-0 transition-all duration-1000 ease-[cubic-bezier(0.4,0,0.2,1)] ${isFlipping ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0'}`}
            style={{ transformOrigin: 'left center' }}></div>
+
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 };
