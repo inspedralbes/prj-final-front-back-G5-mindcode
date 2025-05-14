@@ -35,7 +35,7 @@ const JoinClassForm = ({setLoad}) => {
   };
 
   return (
-    <div className="min-h-[100px] bg-gray-900  ml-[240px] flex items-center justify-center p-10 relative overflow-hidden">
+    <div className="min-h-[100px] bg-gray-900  ml-[219px] flex items-center justify-center p-10 relative overflow-hidden">
             {loading && <LoadingScreen />} 
             <div className=" absolute inset-0 overflow-hidden">
         {[...Array(15)].map((_, i) => (
