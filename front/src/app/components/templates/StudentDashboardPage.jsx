@@ -103,7 +103,7 @@ const StudentDashboardPage = () => {
       language.messages.forEach(message => {
         console.log("Message: ", message);
         console.log("Language ID: ", language.id);
-        if (message.languageId !== language.id) return; // Filter messages by languageId
+        if (message.languageId !== language.id) return; 
         const parsedMessage = {
           sender: "user",
           text: message.userContent,

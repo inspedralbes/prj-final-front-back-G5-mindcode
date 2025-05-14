@@ -58,7 +58,7 @@ const Signup = () => {
     try {
       setLoading(true);
       const { userData, photoURL } = await googleLogin();
-      console.log('User data:', userData);
+      // console.log('User data:', userData);
       if (!userData) return;
 
 
@@ -67,6 +67,8 @@ const Signup = () => {
         ...userData,
         photoURL
       });
+
+      console.log("checking ONLY quizzes:", userData.userData.class_info[0]?.quizz_info);
 
       useAuthStore.setState((state) => ({
         user_info: {

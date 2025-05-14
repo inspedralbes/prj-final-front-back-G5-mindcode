@@ -2,6 +2,7 @@ import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import Message from "./schemes/mongoScheme.js"
+import Quiz from "./schemes/quizScheme.js"
 
 dotenv.config();
 
@@ -169,11 +170,20 @@ export function getClassInfo(class_id, user_id) {
                     
                 });
 
-                resolve({ class_id, name, language_info: messagesByLanguage, teacher_info, classmate_info,  });
+                 const quizz_info = await getUserQuizInfo(user_id, class_id);
+
+                resolve({ class_id, name, language_info: messagesByLanguage, teacher_info, classmate_info, quizz_info });
 
             }
         } catch (error) {
             reject(error);
         }
     });
+}
+export async function getUserQuizInfo(user_id, class_id) {
+    const quizzes = await Quiz.find({
+        userId: user_id,
+        classId: class_id
+    });
+    return quizzes;
 }

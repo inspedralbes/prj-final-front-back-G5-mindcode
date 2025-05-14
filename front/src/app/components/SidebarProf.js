@@ -324,7 +324,7 @@ const SidebarProf = forwardRef((props, ref) => {
           class_info.map(({ class_id, name, classmate_info }, index) => (
             <div key={class_id}>
               <button
-                className="w-full px-4 py-3 bg-gradient-to-r from-emerald-900 to-purple-900 hover:from-emerald-800 hover:to-purple-700 text-white rounded-lg flex justify-between items-center transition-all shadow-md"
+                className="w-full px-4 py-3 bg-gradient-to-r from-emerald-900 to-purple-900 hover:from-emerald-700 hover:to-purple-700 text-white rounded-lg flex justify-between items-center transition-all shadow-md"
                 onClick={() => handleClassClick(class_id, index)}
               >
                 {name} <span className="transition-transform duration-300">{openClassId === class_id ? '▼' : '▶'}</span>
@@ -333,7 +333,7 @@ const SidebarProf = forwardRef((props, ref) => {
               {openClassId === class_id && (
                 <div className="mt-2 space-y-2 pl-2">
                   <button
-                    className="w-full px-4 py-2 bg-gradient-to-r from-cyan-900 to-fuchsia-900 hover:from-cyan-700 hover:to-fuchsia-700 text-white rounded-lg transition-all"
+                    className="w-full px-4 py-2 bg-gradient-to-r from-cyan-900 to-fuchsia-900 hover:from-cyan-600 hover:to-fuchsia-600 text-white rounded-lg transition-all"
                     onClick={() => setIsLlenguatgesOpen(!isLlenguatgesOpen)}
                   >
                     📄 Llenguatges
@@ -418,14 +418,14 @@ const SidebarProf = forwardRef((props, ref) => {
                   )}
 
                   <button 
-                    className="w-full px-4 py-2 text-white bg-gradient-to-r from-cyan-900 to-fuchsia-900 hover:from-cyan-700 hover:to-fuchsia-700text-white rounded-lg transition-all"
+                    className="w-full px-4 py-2 bg-gradient-to-r from-cyan-900 to-fuchsia-900 hover:from-cyan-600 hover:to-fuchsia-600 text-white rounded-lg transition-all"
                     onClick={handleStatsClick}
                   >
                     📊 Estadístiques
                   </button>
 
                   <button
-                    className="w-full px-4 py-2 bg-gradient-to-r from-cyan-900 to-fuchsia-900 hover:from-cyan-700 hover:to-fuchsia-700 text-white rounded-lg transition-all"
+                    className="w-full px-4 py-2 bg-gradient-to-r from-cyan-900 to-fuchsia-900 hover:from-cyan-600 hover:to-fuchsia-600 text-white rounded-lg transition-all"
                     onClick={() => setIsAlumnesOpen(!isAlumnesOpen)}
                   >
                     🎓 Alumnes
@@ -459,7 +459,7 @@ const SidebarProf = forwardRef((props, ref) => {
 
         <button 
           onClick={handleGoToNewClass}
-          className="w-full px-4 py-3 bg-gradient-to-r from-emerald-900 to-purple-900 hover:from-emerald-800 hover:to-purple-700 text-white rounded-lg font-medium mt-4 transition-all shadow-lg"
+          className="w-full px-4 py-3 bg-gradient-to-r from-emerald-900 to-purple-900 hover:from-emerald-700 hover:to-purple-700 text-white rounded-lg font-medium mt-4 transition-all shadow-lg"
         >
           ➕ Nova classe
         </button>
