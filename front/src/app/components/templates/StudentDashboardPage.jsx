@@ -13,6 +13,16 @@ const StudentDashboardPage = () => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [highlightedLanguageIndex, setHighlightedLanguageIndex] = useState(0);
+  const [showLanguageSelector, setShowLanguageSelector] = useState(false);
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    if (searchParams.get('showLanguages') === 'true') {
+      setShowLanguageSelector(true);
+      setHighlightedLanguage(null);
+      setHighlightedLanguageIndex(-1);
+    }
+  }, []);
 
   const classInfo = useAuthStore((state) => state.class_info);
 
@@ -96,6 +106,11 @@ const StudentDashboardPage = () => {
     return null;
   };
 
+  const handleOpenLanguageList = () => {
+    setHighlightedLanguage(null); 
+    setHighlightedLanguageIndex(-1); 
+  };
+
   useEffect(() => {
     if (classInfo?.length > 0) {
       setIsClient(true);
@@ -109,14 +124,16 @@ const StudentDashboardPage = () => {
   }, []);
 
   if (!isClient) return null;
-
-  return (
+ return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50">
-      <SidebarStudent handleSetCurrentLanguage={handleSetCurrentLanguage} />
+      <SidebarStudent
+        handleSetCurrentLanguage={handleSetCurrentLanguage}
+        onOpenLanguageList={handleOpenLanguageList} 
+      />
       <div className="flex flex-col w-full">
         <Navbar />
         <div className="flex-1 overflow-y-auto p-4">
-        {highlightedLanguage ? (
+          {highlightedLanguage ? (
             <UserChat
               language={highlightedLanguage}
               message={message}
@@ -125,7 +142,7 @@ const StudentDashboardPage = () => {
               handleChangeMessage={setMessage}
             />
           ) : (
-            <div className="text-gray-500 text-lg text-center">
+            <div className="text-purple-500 dark:text-purple-300 text-lg text-center font-medium">
               ✨ Selecciona un llenguatge per començar ✨
             </div>
           )}
@@ -134,5 +151,4 @@ const StudentDashboardPage = () => {
     </div>
   );
 };
-
 export default StudentDashboardPage;
