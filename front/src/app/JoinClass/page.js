@@ -19,7 +19,7 @@ const JoinClass = () => {
         className="w-[90%] max-w-5xl overflow-visible"
       >
         <div className="relative flex flex-row bg-gray-800 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl transition-all duration-300 hover:shadow-[0_0_40px_0_rgba(255,255,255,0.2)] hover:scale-[1.01] overflow-visible">
-          <JoinClassForm setLoading={setLoading}/>
+          <JoinClassForm setLoad={setLoading}/>
         </div>
       </Tilt>
     </div>
