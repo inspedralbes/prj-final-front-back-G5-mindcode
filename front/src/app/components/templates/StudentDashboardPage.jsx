@@ -1,30 +1,20 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import Navbar from "../components/organisms/Navbar";
-import SidebarStudent from "../components/organisms/SidebarStudent";
-import Settings from "../components/Settings";
-import ClassSettings from "../components/ClassSettings";
-import Dialog from "../components/atoms/Dialog";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from "react";
+import SidebarStudent from "../../components/organisms/SidebarStudent";
+import UserChat from "../../components/organisms/UserChat";
+import Navbar from "../../components/organisms/Navbar";
 import { useAuthStore } from "stores/authStore";
-import {
-  getUserInfo,
-  getClassInfo,
-  getClassDetails,
-  leaveClass,
-  getUserById,
-} from "services/communicationManager";
+import { sendMessage, getClassMain } from "services/communicationManager";
 import { useRouter } from "next/navigation";
-
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const StSettings = () => {
-  const [userSettings, setUserSettings] = useState(null);
-  const [classSettings, setClassSettings] = useState(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+const StudentDashboardPage = () => {
+  const [isClient, setIsClient] = useState(false);
   const [highlightedLanguage, setHighlightedLanguage] = useState(null);
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
   const [highlightedLanguageIndex, setHighlightedLanguageIndex] = useState(0);
   const [showLanguageSelector, setShowLanguageSelector] = useState(false);
 
@@ -68,8 +58,7 @@ const StSettings = () => {
         });
       }
     } catch (error) {
-      console.error("Error leaving class:", error);
-      toast.error("No se pudo salir de la clase");
+      console.error("Error sending message:", error);
     }
   };
 
@@ -79,7 +68,9 @@ const StSettings = () => {
           return;
         }
         if (user_info.role === 1) {
+          sessionStorage.setItem("fromStudentDashboard", "true");
           router.push("/Login");
+
         }
       } catch (error) {
         console.error("Error checking user role:", error);
@@ -180,19 +171,6 @@ const StSettings = () => {
           )}
         </div>
       </div>
-
-      {isDialogOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <Dialog
-            title="Confirmació"
-            message="Estàs segur que vols sortir de la classe?"
-            onConfirm={handleLeaveClass}
-            onCancel={() => setIsDialogOpen(false)}
-            className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3"
-          />
-        </div>
-      )}
-
       {/* Toast container */}
       <ToastContainer position="top-right" autoClose={3000} />
     </div>

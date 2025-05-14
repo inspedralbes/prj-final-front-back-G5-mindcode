@@ -44,6 +44,16 @@ const Signup = () => {
     setShowRobotDialog(false);
   };
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const cameFromDashboard = sessionStorage.getItem("fromStudentDashboard");
+      if (cameFromDashboard) {
+        toast.error("No tens permisos per accedir a aquesta pàgina");
+        sessionStorage.removeItem("fromStudentDashboard");
+      }
+    }
+  }, []);
+
   const handleGoogleLogin = async () => {
     try {
       setLoading(true);

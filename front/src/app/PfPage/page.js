@@ -32,6 +32,7 @@ const Page = () => {
               return;
             }
             if (user_info.role === 0) {
+              sessionStorage.setItem("fromStudentDashboard", "true");
               router.push("/Login");
             }
           } catch (error) {

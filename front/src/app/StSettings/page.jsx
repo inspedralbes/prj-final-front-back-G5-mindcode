@@ -35,6 +35,7 @@ const StSettings = () => {
             return;
           }
           if (user_info.role === 1) {
+            sessionStorage.setItem("fromStudentDashboard", "true");
             router.push("/Login");
           }
         } catch (error) {
