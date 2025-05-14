@@ -1,3 +1,13 @@
+/**
+ * Class Routes for managing class-related operations such as creating classes,
+ * enrolling users, fetching class information, and managing users in classes.
+ * 
+ * This module defines various endpoints for handling class operations and integrates
+ * with a database for storing and retrieving class and user data.
+ * 
+ * @module classRoutes
+ */
+
 import express from "express";
 import { createConnection } from "../utils.js";
 import { verifyTokenMiddleware } from "../tokens.js";
@@ -9,6 +19,15 @@ const router = express.Router();
 // Unique ID generator used in class code generation
 const uid = new ShortUniqueId({ length: 10 });
 
+/**
+ * GET /
+ * 
+ * Fetches information about classes. If a `class_id` is provided, it fetches
+ * information for a specific class; otherwise, it fetches all classes.
+ * 
+ * @param {number} [class_id] - The ID of the class to fetch.
+ * @returns {Object} Class information or error message.
+ */
 router.get('/', async (req, res) => {
     const { class_id } = req.query;
 
@@ -45,12 +64,20 @@ router.get('/', async (req, res) => {
     }
 });
 
-// create a class
+/**
+ * POST /
+ * 
+ * Creates a new class. Only teachers are authorized to create classes.
+ * 
+ * @param {string} name - The name of the class.
+ * @returns {Object} Created class information or error message.
+ */
 router.post('/', verifyTokenMiddleware, async (req, res) => {
     const { name } = req.body;
     const verified_user_id = req.verified_user_id;
+    console.log(verified_user_id);
 
-    const language = "[]"; /* TODO: Add language array to class creation */
+    const language = "[]";
 
     if (!name || !verified_user_id) {
         return res.status(400).json({ error: 'Class name and teacher ID are required' });
@@ -60,14 +87,20 @@ router.post('/', verifyTokenMiddleware, async (req, res) => {
     try {
         const connection = await createConnection();
         const [rows] = await connection.execute(
-            'SELECT id FROM USER WHERE id = ? AND teacher = "1"',
+            'SELECT id, teacher FROM USER WHERE id = ?',
             [verified_user_id]
         );
         await connection.end();
 
+        console.log(rows);
+
 
         if (rows.length === 0) {
             return res.status(401).json({ error: 'You are not authorized to take that action' });
+        }
+
+        if (rows[0].teacher !== 1) {
+            return res.status(401).json({ error: 'You are not a teacher' });
         }
     } catch (error) {
         console.error('Error verifying teacher ID:', error);
@@ -76,9 +109,6 @@ router.post('/', verifyTokenMiddleware, async (req, res) => {
 
 
     const class_code = uid.rnd();
-
-
-    console.log(class_code);
 
 
     try {
@@ -97,7 +127,15 @@ router.post('/', verifyTokenMiddleware, async (req, res) => {
     }
 });
 
-// enroll into a class
+/**
+ * POST /enroll
+ * 
+ * Enrolls a user into a class using a class code. Teachers can also enroll themselves
+ * as additional teachers for a class.
+ * 
+ * @param {string} class_code - The code of the class to enroll in.
+ * @returns {Object} Enrollment status, class information, and user role (teacher or student).
+ */
 router.post('/enroll', verifyTokenMiddleware, async (req, res) => {
     const { class_code } = req.body;
     const verified_user_id = req.verified_user_id
@@ -182,7 +220,7 @@ router.post('/enroll', verifyTokenMiddleware, async (req, res) => {
                     class_info.push(await getClassInfo(class_id, verified_user_id));
                 }
 
-                res.json({ message: 'Successfully enrolled in the class', class_info });
+                res.json({ message: 'Successfully enrolled in the class', class_info, isTeacher: isTeacher });
 
             } catch (error) {
                 console.error('Error adding student to class:', error);
@@ -195,31 +233,47 @@ router.post('/enroll', verifyTokenMiddleware, async (req, res) => {
     }
 });
 
-  // get all users from a class
-  router.get("/user", verifyTokenMiddleware, async (req, res) => {
-      const { class_id } = req.query;
-  
-      if (!class_id) {
-          return res.status(400).json({ error: "Class ID is required" });
-      }
-  
-      try {
-          const connection = await createConnection();
-          const [rows] = await connection.execute(
-              "SELECT id, name, teacher, gmail FROM USER WHERE class = ?",
-              [class_id]
-          );
-          await connection.end();
-  
-          res.status(200).json(rows);
-      } catch (error) {
-          console.error("Error fetching users:", error);
-          res.status(500).json({ error: "Internal server error" });
-      }
-  });
+/**
+ * GET /user
+ * 
+ * Fetches all users in a specific class.
+ * 
+ * @param {number} class_id - The ID of the class.
+ * @returns {Array} List of users in the class or error message.
+ */
+router.get("/user", verifyTokenMiddleware, async (req, res) => {
+    const { class_id } = req.query;
 
+    if (!class_id) {
+        return res.status(400).json({ error: "Class ID is required" });
+    }
 
-  router.put('/leave', verifyTokenMiddleware, async (req, res) => {
+    try {
+        const connection = await createConnection();
+        const [rows] = await connection.execute(
+            "SELECT id, name, teacher, gmail FROM USER WHERE class = ?",
+            [class_id]
+        );
+        await connection.end();
+
+        res.status(200).json(rows);
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+/**
+ * PUT /leave
+ * 
+ * Allows a user to leave a class. If the user is a teacher, their ID is removed
+ * from the `teacher_id` array of the class.
+ * 
+ * @param {number} id - The ID of the user leaving the class.
+ * @param {number} class_id - The ID of the class to leave.
+ * @returns {Object} Success message or error message.
+ */
+router.put('/leave', verifyTokenMiddleware, async (req, res) => {
     const { id, class_id } = req.body;
 
     if (!id || !class_id) {
@@ -273,10 +327,15 @@ router.post('/enroll', verifyTokenMiddleware, async (req, res) => {
     }
 });
 
+/**
+ * GET /user/info
+ * 
+ * Fetches information about all classes associated with the authenticated user.
+ * 
+ * @returns {Object} Class information or error message.
+ */
 router.get("/user/info", verifyTokenMiddleware, async (req, res) => {
-    console.log("userId: ", req.verified_user_id);
     getClassesInfoWithTeacher(req.verified_user_id).then((class_info) => {
-        console.log("Class info found: ", class_info);
         res.status(200).json({ class_info: class_info });
     }).catch((error) => {
         console.error("Error fetching classes:", error);

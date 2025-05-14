@@ -4,8 +4,6 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Toolti
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-
-
 const BarGraph = ({ labels, dataValues, title, legend, barColor, borderColor }) => {
 
     const chartRef = useRef(null);
@@ -53,7 +51,6 @@ const BarGraph = ({ labels, dataValues, title, legend, barColor, borderColor }) 
         ],
     };
 
-    // Updated options for white text
     const options = {
         responsive: true,
         plugins: {

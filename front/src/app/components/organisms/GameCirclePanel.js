@@ -3,31 +3,58 @@
 import React, { useState } from "react";
 import styles from "../organisms/GameCirclePanel.module.css";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import LoadingScreen from "../LoadingScreen";
 
-const icons = [
-  { src: "/images/css.png", alt: "CSS" },
-  { src: "/images/javascript.png", alt: "JavaScript" },
-  { src: "/images/html.png", alt: "HTML" },
-  { src: "/images/java.png", alt: "Java" },
-  { src: "/images/python.png", alt: "Python" },
-  { src: "/images/php.png", alt: "PHP" },
-  { src: "/images/Sql.png", alt: "SQL" },
+const languageRoutes = {
+  css: { src: "/images/css.png", route: "/Lenguajes/css" },
+  javascript: { src: "/images/javascript.png", route: "/Lenguajes/javascript" },
+  html: { src: "/images/html.png", route: "/Lenguajes/html" },
+  java: { src: "/images/java.png", route: "/Lenguajes/java" },
+  python: { src: "/images/python.png", route: "/Lenguajes/python" },
+  php: { src: "/images/php.png", route: "/Lenguajes/php" },
+  sql: { src: "/images/Sql.png", route: "/Lenguajes/sql" },
+  csharp: { src: "/images/csharp.svg.png", route: "/Lenguajes/csharp" },
+};
 
-
-
-  { src: "/images/csharp.svg.png", alt: "Csharp" },
-
-  { src: "/images/Sql.png", alt: "SQL" },
-];
-
-const GameCirclePanel = () => {
+const GameCirclePanel = ({ languages }) => {
+  const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  const icons = languages
+    .map((lang) => {
+      const key = lang.name.toLowerCase();
+      if (languageRoutes[key]) {
+        return {
+          src: languageRoutes[key].src,
+          alt: lang.name,
+          route: languageRoutes[key].route,
+        };
+      }
+      return null;
+    })
+    .filter(Boolean);
 
   const handleClick = (index) => {
     setActiveIndex(index);
+    setLoading(true);
+    router.push(icons[index].route); 
   };
 
   const rotation = `rotate(${-activeIndex * (360 / icons.length)}deg)`;
+  
+  if (loading) {
+    return <LoadingScreen />; 
+  }
+ 
+  if (icons.length === 0) {
+    return (
+      <div className="text-gray-500 text-xl text-center">
+        No tens cap llenguatge assignat encara. Parla amb el teu professor.
+      </div>
+    );
+  }
 
   return (
     <div className={styles.gameBackground}>
@@ -68,3 +95,8 @@ const GameCirclePanel = () => {
 };
 
 export default GameCirclePanel;
+
+
+// ocultar respuestas
+// quitar el cronometro
+// si se golpea el el pared , el serpiente pierde cola y empieza desde el principio 

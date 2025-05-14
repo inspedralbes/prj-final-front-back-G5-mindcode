@@ -19,6 +19,8 @@ const quizSchema = new mongoose.Schema({
     isCorrect: { type: Boolean, default: false },
     question_type: { type: String, required: true, enum: ['MCQ', 'short_answer'] }
   }],
-});
+},
+  { timestamps: true }
+);
 
 export default mongoose.model('Quiz', quizSchema);

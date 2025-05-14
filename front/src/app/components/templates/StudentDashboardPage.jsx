@@ -5,7 +5,7 @@ import SidebarStudent from "../../components/organisms/SidebarStudent";
 import UserChat from "../../components/organisms/UserChat";
 import Navbar from "../../components/organisms/Navbar";
 import { useAuthStore } from "stores/authStore";
-import { sendMessage, getUserInfo } from "services/communicationManager";
+import { sendMessage, getClassMain } from "services/communicationManager";
 import { useRouter } from "next/navigation";
 
 const StudentDashboardPage = () => {
@@ -14,6 +14,16 @@ const StudentDashboardPage = () => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [highlightedLanguageIndex, setHighlightedLanguageIndex] = useState(0);
+  const [showLanguageSelector, setShowLanguageSelector] = useState(false);
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    if (searchParams.get('showLanguages') === 'true') {
+      setShowLanguageSelector(true);
+      setHighlightedLanguage(null);
+      setHighlightedLanguageIndex(-1);
+    }
+  }, []);
   const router = useRouter();
   const classInfo = useAuthStore((state) => state.class_info);
   const user_info = useAuthStore.getState().user_info;
@@ -75,25 +85,73 @@ const StudentDashboardPage = () => {
     );
   };
 
+  const parseReceivedMessages = (language_info) => {
+
+
+    console.log("language_info: ", language_info);
+    language_info.forEach(language => {
+
+      let parsedMessages = [];
+
+      let parsedLanguage = [];
+      console.log("Language: ", language);
+
+      language.messages.forEach(message => {
+        console.log("Message: ", message);
+        console.log("Language ID: ", language.id);
+        if (message.languageId !== language.id) return; // Filter messages by languageId
+        const parsedMessage = {
+          sender: "user",
+          text: message.userContent,
+        };
+        parsedLanguage.push(parsedMessage);
+        if (message.aiContent) {
+          const aiMessage = {
+            sender: "ai",
+            text: message.aiContent,
+          };
+          parsedLanguage.push(aiMessage);
+        }
+      });
+      parsedMessages.push(...parsedLanguage);
+
+      console.log("Parsed messages: ", parsedMessages);
+
+      language.messages = parsedMessages;
+
+    })
+
+
+    return null;
+  };
+
+  const handleOpenLanguageList = () => {
+    setHighlightedLanguage(null); 
+    setHighlightedLanguageIndex(-1); 
+  };
+
   useEffect(() => {
     if (classInfo?.length > 0) {
       setIsClient(true);
-      setMessages(classInfo[0].language_info.map(() => ({ messages: [] })));
+      parseReceivedMessages(classInfo[0].language_info);
+      setMessages(classInfo[0].language_info.map((lang) => ({ messages: lang.messages })));
     }
   }, [classInfo]);
 
   useEffect(() => {
-    getUserInfo();
+    getClassMain();
   }, []);
 
   if (!isClient) return null;
-
-  return (
+ return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50">
-      <SidebarStudent handleSetCurrentLanguage={handleSetCurrentLanguage} />
+      <SidebarStudent
+        handleSetCurrentLanguage={handleSetCurrentLanguage}
+        onOpenLanguageList={handleOpenLanguageList} 
+      />
       <div className="flex flex-col w-full">
         <Navbar />
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex-1 overflow-y-auto p-4">
           {highlightedLanguage ? (
             <UserChat
               language={highlightedLanguage}
@@ -103,7 +161,7 @@ const StudentDashboardPage = () => {
               handleChangeMessage={setMessage}
             />
           ) : (
-            <div className="text-gray-500 text-lg text-center">
+            <div className="text-purple-500 dark:text-purple-300 text-lg text-center font-medium">
               ✨ Selecciona un llenguatge per començar ✨
             </div>
           )}
@@ -112,5 +170,4 @@ const StudentDashboardPage = () => {
     </div>
   );
 };
-
 export default StudentDashboardPage;
