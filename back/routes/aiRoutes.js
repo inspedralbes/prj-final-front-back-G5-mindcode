@@ -155,6 +155,7 @@ router.post('/create', verifyTokenMiddleware, async (req, res) => {
     objToSaveMongoDB.language = languageToSend.name;
 
     try {
+        console.log("Sending to AI");
         const aiResponse = await sendToAI(message, languageToSend.name, restriction);
 
         const returnMessage = aiResponse.content;
@@ -251,7 +252,7 @@ router.post('/create', verifyTokenMiddleware, async (req, res) => {
  */
 const sendToAI = async (message, language, restriction) => {
     console.log("sending message");
-    const response = await fetch(`http://${AIHOST}:4567`, {
+    const response = await fetch(`${AIHOST}`, {
       method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -464,7 +465,7 @@ const sendForQuiz = async (formattedMessages) => {
 console.log("Sending message to AI:", formattedMessages);
 console.log("AIHOST actual:", AIHOST);
 
-const response = await fetch(`http://${AIHOST}:4567/generateQuiz`, {
+const response = await fetch(`${AIHOST}/generateQuiz`, {
 method: 'POST',
 headers: {
     'Content-Type': 'application/json'
