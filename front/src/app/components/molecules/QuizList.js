@@ -3,8 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useAuthStore } from "stores/authStore";
 import Button from "../atoms/Button";
 
-
-const QuizList = ({ quizzes, handleQuizSelect, userData, isAnswered }) => {
+const QuizList = ({ quizzes, handleQuizSelect, userData, onViewResults }) => {
   const class_info = useAuthStore((state) => state.class_info);
 
   const isQuizAnswered = (quiz_id) => {
@@ -29,8 +28,6 @@ const QuizList = ({ quizzes, handleQuizSelect, userData, isAnswered }) => {
       {quizzes?.length > 0 ? (
         <ul className="space-y-4">
           {quizzes.map((quiz) => {
-              console.log("quiz:", quiz);
-
             const isAnswered = isQuizAnswered(quiz.id);
             const result = getQuizResult(quiz);
 
@@ -45,13 +42,19 @@ const QuizList = ({ quizzes, handleQuizSelect, userData, isAnswered }) => {
                 </p>
                 {isAnswered ? (
                   <div className="mt-2">
-                    <div className="text-sm font-medium text-green-600 dark:text-green-400">
+                    <p className="text-sm font-medium text-green-600 dark:text-green-400">
                       Resultat: {result.correctAnswers} de {result.totalQuestions} correctes
                       ({Math.round((result.correctAnswers / result.totalQuestions) * 100)}%)
                       <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
                         <div className="bg-green-600 h-2.5 rounded-full" style={{ width: `${Math.round((result.correctAnswers / result.totalQuestions) * 100)}%` }}></div>
                       </div>
-                    </div>
+                    </p>
+                    <Button
+                      onClick={() => onViewResults(quiz)}
+                      className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                    >
+                      Veure detalls
+                    </Button>
                   </div>
                 ) : (
                   <Button

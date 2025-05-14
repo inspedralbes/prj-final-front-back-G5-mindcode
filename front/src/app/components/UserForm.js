@@ -33,6 +33,7 @@ const UserForm = () => {
     const formattedQuizzes = quizzes.map(quiz => ({
       id: quiz._id,
       questions: quiz.questions,
+      userAnswers: quiz.userAnswers,
       correctAnswers: quiz.correctAnswers,
       totalQuestions: quiz.questions.length
     }));
@@ -42,19 +43,29 @@ const UserForm = () => {
     setLoading(false);
   };
 
-  const loadSelectedQuiz = (quizId) => {
+  const loadSelectedQuiz = async (quizId) => {
     setLoading(true);
     setError(null);
     try {
-      const quizzes = class_info?.[0]?.quizz_info || [];
-      const selectedQuiz = quizzes.find(quiz => quiz.quizId === quizId);
-      
-      if (selectedQuiz && selectedQuiz.questions) {
-        setQuestions(selectedQuiz.questions);
+      const data = await checkQuizAvailability(quizId);
+      if (data.quiz) {
+        setQuestions(data.quiz);
         setQuizId(quizId);
-        setSelectedQuiz(selectedQuiz);
+        setSelectedQuiz({
+          ...data,
+          quizId: quizId
+        });
       } else {
-        throw new Error('Quiz no trobat');
+        const quizzes = class_info?.[0]?.quizz_info || [];
+        const selectedQuiz = quizzes.find(quiz => quiz.quizId === quizId);
+        
+        if (selectedQuiz && selectedQuiz.questions) {
+          setQuestions(selectedQuiz.questions);
+          setQuizId(quizId);
+          setSelectedQuiz(selectedQuiz);
+        } else {
+          throw new Error('Quiz no trobat');
+        }
       }
     } catch (error) {
       console.error('Error loading quiz:', error);
@@ -126,90 +137,80 @@ const UserForm = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-          <span className="block sm:inline">{error}</span>
-        </div>
-      )}
-
-      {loading ? (
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900 mx-auto"></div>
-          <p className="mt-4">Carregant...</p>
-        </div>
-      ) : selectedQuiz ? (
-        showResults ? (
-          <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <h2 className="text-2xl font-bold mb-4">Resultats</h2>
-            <div className="space-y-4">
-              {questions.map((question, index) => {
-                const answer = answers[question.question_id];
-                return (
-                  <div 
-                    key={question.question_id}
-                    className={`p-4 rounded ${answer?.isCorrect ? 'bg-green-100' : 'bg-red-100'}`}
-                  >
-                    <p className="font-semibold">{question.question_text}</p>
-                    <p className="mt-2">
-                      Resposta seleccionada: {question.options[answer?.selected_option]}
-                    </p>
-                    {!answer?.isCorrect && (
-                      <p className="mt-2 text-red-600">
-                        Resposta correcta: {question.options[question.correct_option]}
-                      </p>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-            <button
-              onClick={() => {
-                setSelectedQuiz(null);
-                setShowResults(false);
-                setAnswers({});
-              }}
-              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-            >
-              Tornar als qüestionaris
-            </button>
+    <div className="flex-grow overflow-y-auto p-4 space-y-4 rounded-md">
+      <div className="max-w-3xl mx-auto p-6 overflow-y-auto">
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span className="block sm:inline">{error}</span>
           </div>
-        ) : (
-          <div>
-            <button
-              onClick={() => {
-                setSelectedQuiz(null);
-                setAnswers({});
-              }}
-              className="mb-4 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
-            >
-              ← Tornar
-            </button>
-            <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-              <FormFields 
+        )}
+
+        {loading ? (
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+            <p className="mt-4 text-gray-600 dark:text-gray-300">Carregant...</p>
+          </div>
+        ) : selectedQuiz ? (
+          showResults ? (
+            <div className="space-y-6">
+              <FormFields
+                questions={questions}
+                answers={answers}
+                onAnswerChange={handleAnswerChange}
+                showResults={true}
+              />
+              <div className="text-center">
+                <FormButton 
+                  text="Tornar als qüestionaris" 
+                  onClick={() => {
+                    setSelectedQuiz(null);
+                    setShowResults(false);
+                    setAnswers({});
+                  }} 
+                  className="mt-4" 
+                />
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-8">
+              <button
+                onClick={() => {
+                  setSelectedQuiz(null);
+                  setAnswers({});
+                }}
+                className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100 mb-4"
+              >
+                ← Tornar als qüestionaris
+              </button>
+              <FormFields
                 questions={questions}
                 answers={answers}
                 onAnswerChange={handleAnswerChange}
               />
-              <div className="flex items-center justify-between mt-6">
-                <FormButton 
-                  type="submit"
+              <div className="sticky bottom-0 bg-white dark:bg-gray-900 py-4">
+                <FormButton
+                  text="Enviar"
+                  onClick={handleSubmit}
                   disabled={Object.keys(answers).length !== questions.length}
-                  className={`${Object.keys(answers).length !== questions.length ? 'opacity-50 cursor-not-allowed' : ''}`}
-                >
-                  Enviar respostes
-                </FormButton>
+                  className="w-full sm:w-auto"
+                />
               </div>
-            </form>
-          </div>
-        )
-      ) : (
-        <QuizList 
-          quizzes={quizList}
-          handleQuizSelect={(quizId) => loadSelectedQuiz(quizId)}
-          userData={userData}
-        />
-      )}
+            </div>
+          )
+        ) : (
+          <QuizList 
+            quizzes={quizList}
+            handleQuizSelect={(quizId) => loadSelectedQuiz(quizId)}
+            userData={userData}
+            onViewResults={(quiz) => {
+              setQuestions(quiz.questions);
+              setQuizId(quiz.id);
+              setSelectedQuiz(quiz);
+              setShowResults(true);
+            }}
+          />
+        )}
+      </div>
     </div>
   );
 };
