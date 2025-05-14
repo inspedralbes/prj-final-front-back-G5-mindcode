@@ -71,8 +71,6 @@ const SidebarStudent = ({ handleSetCurrentLanguage,onOpenLanguageList }) => {
     };
 
     checkForQuiz();
-    const interval = setInterval(checkForQuiz, 10000);
-    return () => clearInterval(interval);
   }, []);
 
 
@@ -126,7 +124,6 @@ const SidebarStudent = ({ handleSetCurrentLanguage,onOpenLanguageList }) => {
 
         <button 
           onClick={handleFormClick}
-          disabled={!isQuizAvailable}
           className={`w-full px-4 py-3 rounded-lg text-left flex items-center justify-between font-medium transition-all ${
             isQuizAvailable
               ? 'bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 text-white shadow-lg'
@@ -134,7 +131,7 @@ const SidebarStudent = ({ handleSetCurrentLanguage,onOpenLanguageList }) => {
           }`}
         >
           <span>📝 Qüestionari</span>
-          {isQuizAvailable && <span className="animate-pulse text-yellow-300">⚡</span>}
+          {/* {isQuizAvailable && <span className="animate-pulse text-yellow-300">⚡</span>} */}
         </button>
       </nav>
     </div>

@@ -75,11 +75,10 @@ const StudentDashboardPage = () => {
       let parsedMessages = [];
 
       let parsedLanguage = [];
-      console.log("Language: ", language);
+
 
       language.messages.forEach(message => {
-        console.log("Message: ", message);
-        console.log("Language ID: ", language.id);
+
         if (message.languageId !== language.id) return; 
         const parsedMessage = {
           sender: "user",
