@@ -18,7 +18,7 @@ const Snackbar = ({ message, onClose }) => {
                 className="text-white ml-4"
                 onClick={onClose}
             >
-                X
+                ✘
             </button>
         </div>
     );

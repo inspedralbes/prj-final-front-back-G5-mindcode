@@ -5,7 +5,7 @@ import FormFields from './organisms/FormFields';
 import FormButton from './atoms/FormButton';
 import { useAuthStore } from '../../stores/authStore';
 import { useRouter } from 'next/navigation';
-import { checkQuizAvailability, submitQuizResults } from '../../services/communicationManager';
+import { checkQuizAvailability, getQuiz, submitQuizResults } from '../../services/communicationManager';
 import QuizList from './molecules/QuizList';
 
 const UserForm = () => {
@@ -32,6 +32,7 @@ const UserForm = () => {
     
     const formattedQuizzes = quizzes.map(quiz => ({
       id: quiz._id,
+      quizId: quiz._id,
       questions: quiz.questions,
       userAnswers: quiz.userAnswers,
       correctAnswers: quiz.correctAnswers,
@@ -46,6 +47,7 @@ const UserForm = () => {
   const loadSelectedQuiz = async (quizId) => {
     setLoading(true);
     setError(null);
+    console.log("Quiz selected:", quizId);
     try {
       const data = await checkQuizAvailability(quizId);
       if (data.quiz) {
@@ -77,6 +79,25 @@ const UserForm = () => {
   useEffect(() => {
     loadQuizzes();
   }, [userData]); 
+
+  const loadSelectedGame = async (quizId) => {
+    setLoading(true);
+    setError(null);
+    try {
+      console.log("📦 Resultado de getQuiz:", quizId);
+      localStorage.setItem('quizId', quizId);
+      router.push(`/Lenguajes/python`);
+
+    } catch (error) {
+      console.error('Error loading game:', error);
+      setError('Error carregant el joc');
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadQuizzes();
+  }, [userData]);
 
   const handleAnswerChange = (questionId, answer) => {
     setAnswers(prev => ({
@@ -209,6 +230,7 @@ const UserForm = () => {
           <QuizList 
             quizzes={quizList}
             handleQuizSelect={(quizId) => loadSelectedQuiz(quizId)}
+            handleGameSelect={(quizId) => loadSelectedGame(quizId)}
             userData={userData}
             onViewResults={(quiz) => {
               setQuestions(quiz.questions);
@@ -230,6 +252,11 @@ const UserForm = () => {
               
               setShowResults(true);
             }}
+            showGameButton={false}
+            showDetailsButton={true}
+            showQuizButton={true}
+            textGame={false}
+            textQuiz={true}
           />
         )}
       </div>

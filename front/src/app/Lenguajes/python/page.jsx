@@ -3,12 +3,12 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import Button from "../../components/atoms/Button";
 import LoadingScreen from "app/components/LoadingScreen";
+import { submitGameResults, getQuiz } from "services/communicationManager";
 
 const PYTHONPage = () => {
   const router = useRouter();
   const canvasRef = useRef(null);
   const bgCanvasRef = useRef(null);
-
   const [score, setScore] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameOver, setGameOver] = useState(false);
@@ -22,10 +22,19 @@ const PYTHONPage = () => {
 
   const handleBackToMenu = () => {
     setLoading(true);
-    router.push("/StPage");
+    router.push("/Jocs");
   };
+  const [timeLeft, setTimeLeft] = useState(60);
+  const [userAnswers, setUserAnswers] = useState([]);
+
+  const userAnswersRef = useRef([]);
+  const questionIdCounter = useRef(1);
+  const timerRef = useRef(null);
 
   const gridSize = 18;
+  // Add padding to create safe borders inside the game area
+  const borderPadding = 2; // This adds a 2-cell padding around the edges
+  
   const gameRef = useRef({
     snake: [{ x: 5, y: 5 }],
     direction: 'right',
@@ -36,7 +45,10 @@ const PYTHONPage = () => {
     canvasContext: null,
     canvasWidth: 0,
     canvasHeight: 0,
-    gameActive: false
+    gameActive: false,
+    // Add playable area boundaries to respect the padding
+    playableWidth: 0,
+    playableHeight: 0
   });
 
   const particles = useRef([]);
@@ -85,8 +97,8 @@ const PYTHONPage = () => {
 
   const fetchQuestions = async () => {
     try {
-      const res = await fetch("/LanguageQuizes/PythonQuiz.json");
-      const data = await res.json();
+      const quizId = localStorage.getItem('quizId');
+      const data = await getQuiz(quizId);
       setQuizQuestions(data.questions);
       setQuestionsLoaded(true);
       return data.questions;
@@ -110,6 +122,7 @@ const PYTHONPage = () => {
     }
   
     if (usedQuestions.length >= quizQuestions.length) {
+      console.log("Resetting used questions"); 
       setUsedQuestions([]);
     }
   
@@ -126,28 +139,55 @@ const PYTHONPage = () => {
   
     setUsedQuestions(prev => [...prev, questionIndex]);
     setCurrentQuestion(selectedQuestion);
-    setQuestionsCompleted(prev => prev + 1);
   
-    const maxX = Math.floor(game.canvasWidth / gridSize) - 1;
-    const maxY = Math.floor(game.canvasHeight / gridSize) - 1;
+    const maxX = game.playableWidth - 1;
+    const maxY = game.playableHeight - 1;
+  
+    // Get the snake's head position and the next position based on current direction
+    const head = game.snake[0];
+    const nextHeadPosition = { ...head };
+    
+    switch (game.direction) {
+      case 'up': nextHeadPosition.y--; break;
+      case 'down': nextHeadPosition.y++; break;
+      case 'left': nextHeadPosition.x--; break;
+      case 'right': nextHeadPosition.x++; break;
+    }
   
     const foodColors = ['#3b82f6', '#6366f1', '#8b5cf6'];
     const foods = selectedQuestion.options.map((option, index) => {
       let x, y;
+      let attempts = 0;
+      const maxAttempts = 50; // Prevent infinite loop
+      
       do {
-        x = Math.floor(Math.random() * maxX);
-        y = Math.floor(Math.random() * maxY);
+        x = Math.floor(Math.random() * (maxX - 2 * borderPadding)) + borderPadding;
+        y = Math.floor(Math.random() * (maxY - 2 * borderPadding)) + borderPadding;
+        attempts++;
+        
+        // Break out of loop if can't find a valid position after many attempts
+        if (attempts > maxAttempts) {
+          // Try a position further away from the snake
+          x = (head.x + 10) % (maxX - 2 * borderPadding) + borderPadding;
+          y = (head.y + 10) % (maxY - 2 * borderPadding) + borderPadding;
+          break;
+        }
       } while (
-        isPositionOccupied(x, y) ||
-        game.foods.some(f => f.x === x && f.y === y)
+        isPositionOccupied(x, y) || 
+        game.foods.some(f => f.x === x && f.y === y) ||
+        // Check if this position is the next head position or too close to snake head
+        (x === nextHeadPosition.x && y === nextHeadPosition.y) ||
+        (Math.abs(x - head.x) < 3 && Math.abs(y - head.y) < 3)
       );
   
       return {
         x,
         y,
         value: option,
+        optionIndex: index,
         color: foodColors[index % foodColors.length],
-        isCorrect: index === selectedQuestion.correct_option - 1
+        isCorrect: index === selectedQuestion.correct_option,
+        question_id: selectedQuestion.question_id
       };
     });
   
@@ -167,7 +207,17 @@ const PYTHONPage = () => {
     game.canvasContext = context;
     game.canvasWidth = canvas.width;
     game.canvasHeight = canvas.height;
-    game.snake = [{ x: 5, y: 5 }];
+    
+    // Calculate playable area dimensions
+    game.playableWidth = Math.floor(game.canvasWidth / gridSize);
+    game.playableHeight = Math.floor(game.canvasHeight / gridSize);
+    
+    // Initialize snake in a safe position, away from borders
+    game.snake = [{ 
+      x: Math.floor(game.playableWidth / 2), 
+      y: Math.floor(game.playableHeight / 2) 
+    }];
+    
     game.direction = 'right';
     game.speed = 150;
     game.gameActive = true;
@@ -176,12 +226,31 @@ const PYTHONPage = () => {
 
     clearInterval(game.gameLoop);
     game.gameLoop = setInterval(gameUpdate, game.speed);
-
- 
-
     setGameStarted(true);
-    setGameOver(false);
-    setMessage("Pick the correct answer!");
+  };
+
+  useEffect(() => {
+    const quizId = localStorage.getItem('quizId');
+    console.log("quizId", quizId)
+    if (quizId) {
+      fetchQuestions(quizId);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (gameStarted && !gameOver) {
+      setMessage(`⏱ ${timeLeft}`);
+    }
+  }, [gameStarted, gameOver, timeLeft]);
+
+  const resetSnake = () => {
+    const game = gameRef.current;
+    // Reset snake to the middle of the playable area
+    game.snake = [{ 
+      x: Math.floor(game.playableWidth / 2), 
+      y: Math.floor(game.playableHeight / 2) 
+    }];
+    game.direction = 'right';
   };
 
   const gameUpdate = () => {
@@ -196,13 +265,14 @@ const PYTHONPage = () => {
       case 'right': head.x++; break;
     }
 
+    // Check collision with walls, using border padding for safety
     if (
-      head.x < 0 || head.y < 0 ||
-      head.x >= Math.floor(game.canvasWidth / gridSize) ||
-      head.y >= Math.floor(game.canvasHeight / gridSize) ||
-      game.snake.some(segment => segment.x === head.x && segment.y === head.y)
+      head.x < borderPadding || 
+      head.y < borderPadding ||
+      head.x >= game.playableWidth - borderPadding ||
+      head.y >= game.playableHeight - borderPadding
     ) {
-      endGame();
+      resetSnake();
       return;
     }
 
@@ -214,18 +284,47 @@ const PYTHONPage = () => {
       if (head.x === food.x && head.y === food.y) {
         if (food.isCorrect) {
           setScore(prev => prev + 10);
-          setMessage(`✅ +10 points`);
         } else {
           setScore(prev => Math.max(0, prev - 10));
-          setMessage(`❌ -10 points`);
         }
         placeFood();
         ate = true;
+
+        setQuestionsCompleted(prev => {
+          const newCount = prev + 1;
+          console.log(`Completed ${newCount} out of ${quizQuestions.length} questions`);
+          
+          // End game if all questions are answered
+          if (newCount >= quizQuestions.length) {
+            setTimeout(() => endGame(), 300);
+          }
+          
+          return newCount;
+        });
+
+        setUserAnswers(prev => {
+          const answers = [
+            ...prev,
+            {
+              question_id: questionIdCounter.current,
+              selected_option: food.optionIndex,
+            }
+          ];
+          userAnswersRef.current = answers;
+          questionIdCounter.current += 1;
+          return answers;
+        });
+    
         break;
       }
     }
 
     if (!ate) game.snake.pop();
+
+    if (questionsCompleted === quizQuestions.length) {
+      endGame();
+      return;
+    }
     drawGame();
   };
 
@@ -237,6 +336,7 @@ const PYTHONPage = () => {
     ctx.fillStyle = '#1e293b';
     ctx.fillRect(0, 0, game.canvasWidth, game.canvasHeight);
 
+    // Draw grid
     ctx.strokeStyle = 'rgba(100, 130, 200, 0.1)';
     ctx.lineWidth = 0.5;
     for (let i = 0; i < game.canvasWidth; i += gridSize) {
@@ -252,7 +352,19 @@ const PYTHONPage = () => {
       ctx.stroke();
     }
 
-  
+    // Draw border for playable area
+    ctx.strokeStyle = 'rgba(100, 130, 200, 0.3)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.rect(
+      borderPadding * gridSize, 
+      borderPadding * gridSize, 
+      (game.playableWidth - 2 * borderPadding) * gridSize, 
+      (game.playableHeight - 2 * borderPadding) * gridSize
+    );
+    ctx.stroke();
+
+    // Draw snake
     game.snake.forEach((segment, index) => {
       const x = segment.x * gridSize;
       const y = segment.y * gridSize;
@@ -270,6 +382,7 @@ const PYTHONPage = () => {
       ctx.fill();
     });
 
+    // Draw food items
     game.foods.forEach(food => {
       const x = food.x * gridSize;
       const y = food.y * gridSize;
@@ -290,11 +403,12 @@ const PYTHONPage = () => {
       );
       ctx.fill();
       
+      // Draw food text - modified to better fit within borders
       ctx.fillStyle = 'white';
-      ctx.font = 'bold 15px Arial';  
+      ctx.font = 'bold 13px Arial';  // Slightly reduced font size
       ctx.textAlign = 'center';
       
-      const maxCharsPerLine = 10;  
+      const maxCharsPerLine = 8;  // Reduced max chars for better wrapping
       
       if (food.value.length > maxCharsPerLine) {
         const words = food.value.split(' ');
@@ -315,38 +429,78 @@ const PYTHONPage = () => {
           ctx.fillText(
             line, 
             x + gridSize/2, 
-            y + gridSize/2 - (lines.length - 1) * 6 + i * 12  
+            y + gridSize/2 - (lines.length - 1) * 5 + i * 11  // Adjusted spacing
           );
         });
       } else {
         ctx.fillText(
           food.value, 
           x + gridSize/2, 
-          y + gridSize/2 + 5  
+          y + gridSize/2 + 4  
         );
       }
     });
   };
 
-  const endGame = () => {
+  const endGame = async () => {
     const game = gameRef.current;
+    if (gameOver || !game.gameActive) return;
     clearInterval(game.gameLoop);
+    clearInterval(timerRef.current);
     game.gameActive = false;
     setGameOver(true);
     
-    const allQuestionsUsed = usedQuestions.length >= quizQuestions.length && quizQuestions.length > 0;
-    
+    const allQuestionsUsed = questionsCompleted >= quizQuestions.length;
     setMessage(allQuestionsUsed 
       ? `🏁 Completed all questions! Final Score: ${score}`
       : `🏁 Final Score: ${score}`);
+    console.log("respuestas",  userAnswersRef.current);
+
+    const transformedAnswers = userAnswersRef.current.map(item => {
+    const question = quizQuestions.find(q => q.question_id === item.question_id);
+
+    if (!question) return item;
+
+    const selectedOptionText = question.options[item.selected_option];
+    const selectedOptionIndex = item.selected_option + 1;
+    const isCorrect = item.selected_option === question.correct_option;
+
+    return {
+      question_id: item.question_id,
+      selected_option: selectedOptionIndex, 
+      value: selectedOptionText,
+      isCorrect: isCorrect,
+    };
+  });
+    
+    try { 
+      const quizId = localStorage.getItem('quizId');
+      const result = await submitGameResults(quizId, transformedAnswers); 
+      console.log("Resultados enviados con éxito:", result);
+    } catch (err) {
+      console.error("Error al enviar resultados:", err);
+    }
   };
 
+  useEffect(() => {
+    return () => {
+      clearInterval(timerRef.current);
+    };
+  }, []);
+
   const startGame = async () => {
+    const game = gameRef.current;
+    clearInterval(game.gameLoop);
+    clearInterval(timerRef.current);
+    cancelAnimationFrame(game.bgAnimationId);
     setScore(0);
     setUsedQuestions([]); 
     setQuestionsCompleted(0);
     setGameOver(false);
-    setGameStarted(true);
+    setGameStarted(false);
+    setTimeLeft(60);
+    questionIdCounter.current = 1;
+    
     
     if (!questionsLoaded) {
       await fetchQuestions();
@@ -354,6 +508,19 @@ const PYTHONPage = () => {
   
     if (quizQuestions.length > 0) {
       initializeGame();
+
+      if (timerRef.current) clearInterval(timerRef.current);
+      timerRef.current = setInterval(() => {
+        setTimeLeft(prev => {
+          if (prev <= 1) {
+            clearInterval(timerRef.current);
+            endGame();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
     } else {
       setMessage("\u26A0\uFE0F No questions available");
       setGameStarted(false);
@@ -413,7 +580,7 @@ const PYTHONPage = () => {
         <div className="w-full max-w-md">
           <div className="text-center mb-4">
             <h1 className="text-3xl font-extrabold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-teal-300">
-              🐍 PYTHON Snake
+              🐍 Snake
             </h1>
           </div>
 
@@ -424,7 +591,7 @@ const PYTHONPage = () => {
           </div>
 
             <div className="px-3 py-2 bg-green-600 text-white text-sm font-bold rounded-md shadow border border-green-400">
-            ❓ {questionsCompleted}
+            ❓ {questionsCompleted} / {quizQuestions.length}
           </div>
         </div>
             <div className="mb-3 text-center text-sm font-medium bg-gray-700/70 p-2 rounded-md border border-gray-600 text-white">
@@ -443,7 +610,7 @@ const PYTHONPage = () => {
                 <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-10">
                   <div className="text-center bg-gray-800/90 p-4 rounded-lg border border-gray-600">
                     <h2 className="text-xl font-bold mb-3 text-blue-300">
-                      🐍 PYTHON Snake
+                      🐍 Snake
                     </h2>
                     <Button
                       onClick={startGame}
@@ -457,17 +624,20 @@ const PYTHONPage = () => {
 
               {gameOver && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-10">
-                  <div className="text-center bg-gray-800/90 p-4 rounded-lg border border-gray-600">
-                    <h2 className="text-xl font-bold mb-2 text-red-400">
-                      Game Over!
+                  <div className="text-center bg-gray-800/90 p-5 rounded-lg border border-gray-600">
+                    <h2 className="text-2xl font-bold mb-2 text-blue-300">
+                      Game Complete!
                     </h2>
-                    <p className="text-sm mb-3 text-white">Final Score: {score}</p>
-                    <Button
-                      onClick={startGame}
-                      className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-2 rounded-lg text-sm font-bold shadow hover:from-blue-600 hover:to-purple-600 transition-colors"
-                    >
-                      🔄 Play Again
-                    </Button>
+                    <p className="text-lg mb-4 text-white">Final Score: {score}</p>
+                    
+                    <div className="flex flex-col space-y-3">
+                      <Button
+                        onClick={handleBackToMenu}
+                        className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-lg text-sm font-bold shadow hover:from-blue-600 hover:to-purple-600 transition-colors"
+                      >
+                        ⬅️ Back to Menu
+                      </Button>
+                    </div>
                   </div>
                 </div>
               )}
@@ -479,14 +649,16 @@ const PYTHONPage = () => {
             </div>
           </div>
 
-          <div className="text-center mt-4 max-w-xs mx-auto"> 
-        <Button
-          onClick={handleBackToMenu}
-          className="bg-gradient-to-r from-red-500 to-purple-500 text-white px-6 py-2 rounded-lg text-sm font-bold shadow hover:from-blue-600 hover:to-red  -600 transition-colors"
-          >
-          ⬅️ Back to Menu
-        </Button>
-        </div>
+          {!gameOver && (
+            <div className="text-center mt-4 max-w-xs mx-auto"> 
+              <Button
+                onClick={handleBackToMenu}
+                className="bg-gradient-to-r from-red-500 to-purple-500 text-white px-6 py-2 rounded-lg text-sm font-bold shadow hover:from-blue-600 hover:to-red-600 transition-colors"
+              >
+                ⬅️ Back to Menu
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>
