@@ -3,7 +3,7 @@ run-name: ${{ github.actor }} is deploying MindCode on PRODUCTION ⭐
 on:
   push:
     branches:
-      - feature-fix-prod-server
+      - feature-upload-to-prod
 
 jobs:
   STOP-DOCKER:
@@ -129,6 +129,7 @@ jobs:
           echo "DB_PORT=${{ secrets.MYSQL_PORT }}" >> .env
           echo "DB_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
           echo "DB_DATABASE=mindcode" >> .env
+          echo "MONGO_URI=mongodb://${{ secrets.MONGO_ROOT_USER }}:${{ secrets.MONGO_ROOT_PASSWORD }}@mindcode-mongo:27017/" >> .env
           echo "DB_NAME=${{ secrets.MYSQL_DATABASE }}" >> .env          
           echo "AI_HOST=${{ secrets.AI_HOST }}" >> .env
           echo "SECRET_KEY=${{ secrets.JWT_KEY }}" >> .env

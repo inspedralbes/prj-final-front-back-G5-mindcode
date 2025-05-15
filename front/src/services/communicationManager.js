@@ -49,11 +49,13 @@ export async function createClass(name) {
       throw new Error('Name is required');
     }
 
+    const user = useAuthStore.getState().user_info
+
     const response = await fetch(`${URL}/api/class`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${user_info.token}`,
+        "Authorization": `Bearer ${user.token}`,
       },
       body: JSON.stringify({ name }),
     });
@@ -323,6 +325,8 @@ export async function addLanguageToClass(classId, language) {
 
 export async function updateLanguages(classId, languages) {
   try {
+    const user_info = useAuthStore.getState().user_info;
+
     if (!classId || !Array.isArray(languages)) {
       throw new Error('classId and languages array are required');
     }

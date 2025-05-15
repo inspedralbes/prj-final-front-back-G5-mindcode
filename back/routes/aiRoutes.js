@@ -1,3 +1,13 @@
+/**
+ * AI Routes for handling user interactions, AI responses, and quiz generation.
+ * 
+ * This module defines various endpoints for creating messages, generating quizzes,
+ * and processing quiz responses. It integrates with an AI service and MongoDB for
+ * storing and retrieving data.
+ * 
+ * @module aiRoutes
+ */
+
 import express from "express";
 import path from 'path';
 import fs from 'fs';
@@ -16,7 +26,17 @@ const AIHOST = process.env.AIHOST;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// post a message
+/**
+ * POST /create
+ * 
+ * Creates a new message, validates input, interacts with an AI service, and saves the response.
+ * If the user has sent 5 messages, a quiz is generated based on the messages.
+ * 
+ * @param {string} message - The user's message.
+ * @param {number} language_id - The ID of the language.
+ * @param {number} class_id - The ID of the class.
+ * @returns {Object} AI response or error message.
+ */
 router.post('/create', verifyTokenMiddleware, async (req, res) => {
     const { message, language_id, class_id } = req.body;
     const verified_user_id = req.verified_user_id;
@@ -218,10 +238,21 @@ router.post('/create', verifyTokenMiddleware, async (req, res) => {
   }
 });
 
+/**
+ * Sends a message to the AI service.
+ * 
+ * @async
+ * @function sendToAI
+ * @param {string} message - The user's message.
+ * @param {string} language - The language of the message.
+ * @param {string} restriction - Restrictions for the AI response.
+ * @returns {Object} AI response.
+ * @throws Will throw an error if the AI service responds with an error or no response.
+ */
 const sendToAI = async (message, language, restriction) => {
     console.log("sending message");
-    const response = await fetch(`${AIHOST}`, {
-        method: 'POST',
+    const response = await fetch(`http://${AIHOST}:4567`, {
+      method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -247,11 +278,26 @@ const sendToAI = async (message, language, restriction) => {
     return aiResponse;
 };
 
+/**
+ * Saves a message to MongoDB.
+ * 
+ * @async
+ * @function saveMessage
+ * @param {Object} obj - The message object to save.
+ */
 export async function saveMessage(obj) {
     const message = new Message(obj);
     await message.save();
 }
 
+/**
+ * POST /api/quiz
+ * 
+ * Generates a quiz based on the user's last 3 messages.
+ * 
+ * @param {number} class_id - The ID of the class.
+ * @returns {Object} Quiz data or error message.
+ */
 router.post('/api/quiz', verifyTokenMiddleware, async (req, res) => {
   try {
     const userId = req.verified_user_id;
@@ -300,6 +346,15 @@ router.post('/api/quiz', verifyTokenMiddleware, async (req, res) => {
   }
 });
 
+/**
+ * POST /api/quizResponse
+ * 
+ * Processes the user's quiz responses and updates the quiz in MongoDB.
+ * 
+ * @param {string} quizId - The ID of the quiz.
+ * @param {Array} answers - The user's answers to the quiz questions.
+ * @returns {Object} Quiz results or error message.
+ */
 router.post('/api/quizResponse', verifyTokenMiddleware, async (req, res) => {
   try {
     const { quizId, answers } = req.body; 
@@ -396,7 +451,15 @@ router.post('/api/quizResponse', verifyTokenMiddleware, async (req, res) => {
   }
 });
 
-
+/**
+ * Sends formatted messages to the AI service for quiz generation.
+ * 
+ * @async
+ * @function sendForQuiz
+ * @param {string} formattedMessages - The user's messages formatted as a single string.
+ * @returns {Object} AI-generated quiz.
+ * @throws Will throw an error if the AI service responds with an error or no response.
+ */
 const sendForQuiz = async (formattedMessages) => {
 console.log("Sending message to AI:", formattedMessages);
 console.log("AIHOST actual:", AIHOST);
@@ -427,6 +490,13 @@ console.log("answer sent back");
 return aiResponse;
 };
 
+/**
+ * GET /check-quiz
+ * 
+ * Checks if there is an unanswered quiz available for the user.
+ * 
+ * @returns {Object} Quiz availability and details or error message.
+ */
 router.get('/check-quiz', verifyTokenMiddleware, async (req, res) => {
   try {
     const userId = req.verified_user_id;

@@ -1,10 +1,33 @@
+/**
+ * Google Routes for handling user login and registration via Google authentication.
+ * 
+ * This module defines an endpoint for authenticating users using their Google accounts.
+ * It validates the user's email domain, determines their role (teacher or student),
+ * and manages user data in the database.
+ * 
+ * @module googleRoutes
+ */
 import express from "express";
 import { login } from '../tokens.js';
 import { getClassInfo, getClassesInfoWithTeacher, createConnection } from "../utils.js";
 
 const router = express.Router();
 
-// login/register with google
+/**
+ * POST /
+ * 
+ * Handles user login or registration via Google authentication.
+ * Validates the user's email domain, determines their role (teacher or student),
+ * and retrieves or creates their record in the database.
+ * 
+ * @param {string} uid - The unique Google ID of the user.
+ * @param {string} name - The name of the user.
+ * @param {string} gmail - The Gmail address of the user.
+ * @returns {Object} Authentication result, including a token, user details, and class information.
+ * 
+ * @throws {Error} Returns a 400 status if the email domain is invalid.
+ *                 Returns a 500 status if there is an internal server error.
+ */
 router.post('/', async (req, res) => {
     const { uid, name, gmail } = req.body;
 
