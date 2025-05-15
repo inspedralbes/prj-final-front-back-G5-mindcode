@@ -32,19 +32,19 @@ const FormInput = ({ question, question_id, type = 'MCQ', options = [], value, o
       {type === 'MCQ' && options && options.length > 0 ? (
         <div className="space-y-2">
           {options.map((option, index) => (
-            <label key={index} className="flex items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer transition-colors">
-              <input
-                type="radio"
-                name={`question_${question_id}`} 
-                value={option}
-                checked={value?.answer === option}
-                onChange={() => handleChange(option, index)}
-                required={required}
-                className="form-radio h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500 dark:border-gray-600"
-              />
-              <span className="ml-3 text-gray-700 dark:text-gray-300">{option}</span>
-            </label>
-          ))}
+          <label key={index} className="flex items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer transition-colors">
+            <input
+              type="radio"
+              name={`question_${question_id}`} 
+              value={index}
+              checked={value?.selected_option === index}
+              onChange={() => handleChange(option, index)}
+              required={required}
+              className="form-radio h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500 dark:border-gray-600"
+            />
+            <span className="ml-3 text-gray-700 dark:text-gray-300">{option}</span>
+          </label>
+        ))}
         </div>
       ) : (
         <input
