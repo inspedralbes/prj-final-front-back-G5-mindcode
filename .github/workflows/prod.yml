@@ -69,7 +69,7 @@ jobs:
           echo "${{ secrets.PROD_SECRET_KEY }}" > ~/prod_key.pem
           chmod 600 ~/prod_key.pem
           cd ${{ github.workspace }}
-          scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i "~/prod_key.pem" -r ./db ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }}:./mindcode/db
+          scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i "~/prod_key.pem" -r ./db/* ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }}:./mindcode/db
       - run: echo "🍏 This job's status is ${{ job.status }}."
 
 
