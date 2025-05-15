@@ -23,7 +23,7 @@ export function verifyTokenMiddleware(req, res, next) {
   }
   try {
       const decoded = jwt.verify(token, process.env.SECRET_KEY);
-      console.log("Token decodificado", decoded)
+      console.log(`${req.url}:`);
       req.verified_user_id = decoded.id; 
       next(); 
   } catch (err) {

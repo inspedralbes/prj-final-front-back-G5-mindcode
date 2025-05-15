@@ -47,7 +47,6 @@ app.use("/message", aiRoutes);
 app.use("/api/stats", statsRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/restriction", restrictionRoutes);
-
 testConnection();  
 
 connectMongo();
