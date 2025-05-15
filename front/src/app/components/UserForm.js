@@ -122,8 +122,11 @@ const UserForm = () => {
       if (results && results.results) {
         const updatedAnswers = {};
         results.results.forEach(result => {
+          const question = questions.find(q => q.question_id === result.question_id);
+          const selectedText = question ? question.options[result.selected_option] : ''; 
           updatedAnswers[result.question_id] = {
             selected_option: result.selected_option,
+            selected_text: selectedText,
             isCorrect: result.isCorrect
           };
         });
