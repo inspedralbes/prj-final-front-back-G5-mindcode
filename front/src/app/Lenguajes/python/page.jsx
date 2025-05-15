@@ -22,7 +22,7 @@ const PYTHONPage = () => {
 
   const handleBackToMenu = () => {
     setLoading(true);
-    router.push("/StPage");
+    router.push("/UserForm");
   };
   const [timeLeft, setTimeLeft] = useState(60);
   const [userAnswers, setUserAnswers] = useState([]);
@@ -97,7 +97,7 @@ const PYTHONPage = () => {
 
   const fetchQuestions = async () => {
     try {
-      const quizId = "68239e0402701ff75b8cbc98"; 
+      const quizId = localStorage.getItem('quizId');
       const data = await getQuiz(quizId);
       setQuizQuestions(data.questions);
       setQuestionsLoaded(true);
@@ -202,6 +202,14 @@ const PYTHONPage = () => {
     game.gameLoop = setInterval(gameUpdate, game.speed);
     setGameStarted(true);
   };
+
+  useEffect(() => {
+    const quizId = localStorage.getItem('quizId');
+    console.log("quizId", quizId)
+    if (quizId) {
+      fetchQuestions(quizId);
+    }
+  }, []);
 
   useEffect(() => {
     if (gameStarted && !gameOver) {
@@ -438,10 +446,10 @@ const PYTHONPage = () => {
       isCorrect: isCorrect,
     };
   });
-    console.log("respuestas transformadas", transformedAnswers);
     
     try { 
-      const result = await submitGameResults("68239e0402701ff75b8cbc98", transformedAnswers); 
+      const quizId = localStorage.getItem('quizId');
+      const result = await submitGameResults(quizId, transformedAnswers); 
       console.log("Resultados enviados con éxito:", result);
     } catch (err) {
       console.error("Error al enviar resultados:", err);
@@ -546,7 +554,7 @@ const PYTHONPage = () => {
         <div className="w-full max-w-md">
           <div className="text-center mb-4">
             <h1 className="text-3xl font-extrabold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-teal-300">
-              🐍 PYTHON Snake
+              🐍 Snake
             </h1>
           </div>
 
@@ -576,7 +584,7 @@ const PYTHONPage = () => {
                 <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-10">
                   <div className="text-center bg-gray-800/90 p-4 rounded-lg border border-gray-600">
                     <h2 className="text-xl font-bold mb-3 text-blue-300">
-                      🐍 PYTHON Snake
+                      🐍 Snake
                     </h2>
                     <Button
                       onClick={startGame}
@@ -590,17 +598,27 @@ const PYTHONPage = () => {
 
               {gameOver && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-10">
-                  <div className="text-center bg-gray-800/90 p-4 rounded-lg border border-gray-600">
-                    <h2 className="text-xl font-bold mb-2 text-red-400">
-                      Game Over!
+                  <div className="text-center bg-gray-800/90 p-5 rounded-lg border border-gray-600">
+                    <h2 className="text-2xl font-bold mb-2 text-blue-300">
+                      Game Complete!
                     </h2>
-                    <p className="text-sm mb-3 text-white">Final Score: {score}</p>
-                    <Button
-                      onClick={startGame}
-                      className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-2 rounded-lg text-sm font-bold shadow hover:from-blue-600 hover:to-purple-600 transition-colors"
-                    >
-                      🔄 Play Again
-                    </Button>
+                    <p className="text-lg mb-4 text-white">Final Score: {score}</p>
+                    
+                    <div className="flex flex-col space-y-3">
+                      <Button
+                        onClick={startGame}
+                        className="bg-gradient-to-r from-green-500 to-teal-500 text-white px-6 py-3 rounded-lg text-sm font-bold shadow hover:from-green-600 hover:to-teal-600 transition-colors"
+                      >
+                        🔄 Play Again
+                      </Button>
+                      
+                      <Button
+                        onClick={handleBackToMenu}
+                        className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-lg text-sm font-bold shadow hover:from-blue-600 hover:to-purple-600 transition-colors"
+                      >
+                        ⬅️ Back to Menu
+                      </Button>
+                    </div>
                   </div>
                 </div>
               )}
@@ -612,14 +630,16 @@ const PYTHONPage = () => {
             </div>
           </div>
 
-          <div className="text-center mt-4 max-w-xs mx-auto"> 
-        <Button
-          onClick={handleBackToMenu}
-          className="bg-gradient-to-r from-red-500 to-purple-500 text-white px-6 py-2 rounded-lg text-sm font-bold shadow hover:from-blue-600 hover:to-red  -600 transition-colors"
-          >
-          ⬅️ Back to Menu
-        </Button>
-        </div>
+          {!gameOver && (
+            <div className="text-center mt-4 max-w-xs mx-auto"> 
+              <Button
+                onClick={handleBackToMenu}
+                className="bg-gradient-to-r from-red-500 to-purple-500 text-white px-6 py-2 rounded-lg text-sm font-bold shadow hover:from-blue-600 hover:to-red-600 transition-colors"
+              >
+                ⬅️ Back to Menu
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>

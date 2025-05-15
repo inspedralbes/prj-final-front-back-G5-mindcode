@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useAuthStore } from "stores/authStore";
 import Button from "../atoms/Button";
 
-const QuizList = ({ quizzes, handleQuizSelect, userData, onViewResults }) => {
+const QuizList = ({ quizzes, handleQuizSelect, handleGameSelect, userData, onViewResults }) => {
   const class_info = useAuthStore((state) => state.class_info);
 
   const isQuizAnswered = (quiz_id) => {
@@ -62,14 +62,28 @@ const QuizList = ({ quizzes, handleQuizSelect, userData, onViewResults }) => {
                   >
                     Veure detalls
                   </Button>
+                  <Button
+                  onClick={() => handleGameSelect(quiz.quizId)}
+                  className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md transition-colors"
+                >
+                  Començar joc
+                </Button>
                 </div>
               ) : (
+                <div className="flex flex-col gap-2 mt-2">
                 <Button
                   onClick={() => handleQuizSelect(quiz.quizId)}
                   className="mt-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors"
                 >
                   Començar
                 </Button>
+                <Button
+                  onClick={() => handleGameSelect(quiz.quizId)}
+                  className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md transition-colors"
+                >
+                  Començar joc
+                </Button>
+                </div>
               )}
               </li>
             );
