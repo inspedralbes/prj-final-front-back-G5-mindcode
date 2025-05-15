@@ -116,24 +116,26 @@ const JocsPage = () => {
       <div className="flex flex-col w-full">
         <Navbar />
         <div className="flex-1 overflow-y-auto p-4">
-        <QuizList 
-          quizzes={quizList}
-          handleQuizSelect={(quizId) => loadSelectedQuiz(quizId)}
-          handleGameSelect={(quizId) => loadSelectedGame(quizId)}
-          userData={userData}
-          onViewResults={(quiz) => {
-            setQuestions(quiz.questions);
-            setQuizId(quiz.id);
-            setSelectedQuiz(quiz);
-            setShowResults(true);
-          }}
-          showGameButton={true}
-          showDetailsButton={false}
-          showQuizButton={false}
-          textGame={true}
-          textQuiz={false}
-        />
+        <div className="max-w-3xl mx-auto p-6 overflow-y-auto">
+          <QuizList 
+            quizzes={quizList}
+            handleQuizSelect={(quizId) => loadSelectedQuiz(quizId)}
+            handleGameSelect={(quizId) => loadSelectedGame(quizId)}
+            userData={userData}
+            onViewResults={(quiz) => {
+              setQuestions(quiz.questions);
+              setQuizId(quiz.id);
+              setSelectedQuiz(quiz);
+              setShowResults(true);
+            }}
+            showGameButton={true}
+            showDetailsButton={false}
+            showQuizButton={false}
+            textGame={true}
+            textQuiz={false}
+          />
         </div>
+      </div>
       </div>
     </div>
   );

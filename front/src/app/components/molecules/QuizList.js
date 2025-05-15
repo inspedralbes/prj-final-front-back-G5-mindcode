@@ -22,6 +22,26 @@ const QuizList = ({ quizzes, handleQuizSelect, handleGameSelect, userData, onVie
     };
   };
 
+    const hasPlayedGameThisSession = (quiz_id) => {
+    return sessionStorage.getItem(`played_${quiz_id}`) === 'true';
+  };
+
+    const markQuizAsPlayed = (quiz_id) => {
+    sessionStorage.setItem(`played_${quiz_id}`, 'true');
+  };
+
+    const hasPlayedGame = (quiz_id) => {
+    if (!class_info?.[0]?.quizz_info) return false;
+    const quizInfo = class_info[0].quizz_info.find(
+      (quiz) => quiz._id === quiz_id
+    );
+    const alreadyPlayed = quizInfo?.userAnswers?.length > 0;
+    const sessionPlayed = hasPlayedGameThisSession(quiz_id);
+    return alreadyPlayed || sessionPlayed;
+  };
+
+
+
   return (
     <div className="p-4">
       {textQuiz && (
@@ -71,10 +91,20 @@ const QuizList = ({ quizzes, handleQuizSelect, handleGameSelect, userData, onVie
               )}
                   {showGameButton && (
                     <Button
-                      onClick={() => handleGameSelect(quiz.quizId)}
-                      className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md transition-colors"
+                      onClick={() => {
+                        if (!hasPlayedGame(quiz.id)) {
+                          markQuizAsPlayed(quiz.id);
+                          handleGameSelect(quiz.quizId);
+                        }
+                      }}
+                      disabled={hasPlayedGame(quiz.id)}
+                      className={`mt-2 px-4 py-2 ${
+                        hasPlayedGame(quiz.id)
+                          ? 'bg-red-400 cursor-not-allowed'
+                          : 'bg-green-300 hover:bg-green-400'
+                      } text-white rounded-md transition-colors`}
                     >
-                      Començar joc
+                      {hasPlayedGame(quiz.id) ? 'Joc completat' : 'Començar joc'}
                     </Button>
                   )}
                 </div>
@@ -88,14 +118,6 @@ const QuizList = ({ quizzes, handleQuizSelect, handleGameSelect, userData, onVie
                   Començar
                 </Button>
                 )}
-                {showGameButton && (
-                    <Button
-                      onClick={() => handleGameSelect(quiz.quizId)}
-                      className="px-4 py-2 bg-green-300 hover:bg-green-400 text-white rounded-md transition-colors"
-                    >
-                      Començar joc
-                    </Button>
-                  )}
                 </div>
               )}
               </li>
