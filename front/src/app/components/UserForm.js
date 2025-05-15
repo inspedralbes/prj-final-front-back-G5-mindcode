@@ -50,10 +50,10 @@ const UserForm = () => {
       const data = await checkQuizAvailability(quizId);
       if (data.quiz) {
         setQuestions(data.quiz);
-        setQuizId(quizId);
+        setQuizId(data.quizId);
         setSelectedQuiz({
           ...data,
-          quizId: quizId
+          quiz_id: quizId
         });
       } else {
         const quizzes = class_info?.[0]?.quizz_info || [];
