@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS USER (
     googleId TEXT,
     class INT,
     img TEXT,
+    message_count INT DEFAULT 0,
     FOREIGN KEY (class) REFERENCES CLASS (idclass)
 );
 
