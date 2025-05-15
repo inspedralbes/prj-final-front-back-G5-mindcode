@@ -41,29 +41,36 @@ const QuizList = ({ quizzes, handleQuizSelect, userData, onViewResults }) => {
                   Total preguntes: {quiz.totalQuestions}
                 </p>
                 {isAnswered ? (
-                  <div className="mt-2">
-                    <p className="text-sm font-medium text-green-600 dark:text-green-400">
-                      Resultat: {result.correctAnswers} de {result.totalQuestions} correctes
-                      ({Math.round((result.correctAnswers / result.totalQuestions) * 100)}%)
-                      <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-                        <div className="bg-green-600 h-2.5 rounded-full" style={{ width: `${Math.round((result.correctAnswers / result.totalQuestions) * 100)}%` }}></div>
-                      </div>
-                    </p>
-                    <Button
-                      onClick={() => onViewResults(quiz)}
-                      className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-                    >
-                      Veure detalls
-                    </Button>
+                <div className="mt-2">
+                  <p className="text-sm font-medium text-green-600 dark:text-green-400">
+                    Resultat: {result.correctAnswers} de {result.totalQuestions} correctes
+                    ({Math.round((result.correctAnswers / result.totalQuestions) * 100)}%)
+                  </p>
+                  <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                    <div
+                      className="bg-green-600 h-2.5 rounded-full"
+                      style={{
+                        width: `${Math.round(
+                          (result.correctAnswers / result.totalQuestions) * 100
+                        )}%`,
+                      }}
+                    ></div>
                   </div>
-                ) : (
                   <Button
-                    onClick={() => handleQuizSelect(quiz.quizId)}
-                    className="mt-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors"
+                    onClick={() => onViewResults(quiz)}
+                    className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
                   >
-                    Començar
+                    Veure detalls
                   </Button>
-                )}
+                </div>
+              ) : (
+                <Button
+                  onClick={() => handleQuizSelect(quiz.quizId)}
+                  className="mt-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors"
+                >
+                  Començar
+                </Button>
+              )}
               </li>
             );
           })}
