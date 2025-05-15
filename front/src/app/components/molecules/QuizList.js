@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useAuthStore } from "stores/authStore";
 import Button from "../atoms/Button";
 
-const QuizList = ({ quizzes, handleQuizSelect, handleGameSelect, userData, onViewResults }) => {
+const QuizList = ({ quizzes, handleQuizSelect, handleGameSelect, userData, onViewResults, showGameButton = true, showDetailsButton = true, textGame = true, textQuiz = true, showQuizButton = true }) => {
   const class_info = useAuthStore((state) => state.class_info);
 
   const isQuizAnswered = (quiz_id) => {
@@ -24,7 +24,12 @@ const QuizList = ({ quizzes, handleQuizSelect, handleGameSelect, userData, onVie
 
   return (
     <div className="p-4">
+      {textQuiz && (
       <h1 className="text-2xl font-bold mb-4">Llistat de qüestionaris</h1>
+      )}
+      {textGame && (
+      <h1 className="text-2xl font-bold mb-4">Llistat de qüestionaris per jugar</h1>
+      )}
       {quizzes?.length > 0 ? (
         <ul className="space-y-4">
           {quizzes.map((quiz) => {
@@ -56,33 +61,41 @@ const QuizList = ({ quizzes, handleQuizSelect, handleGameSelect, userData, onVie
                       }}
                     ></div>
                   </div>
+                  {showDetailsButton && (
                   <Button
                     onClick={() => onViewResults(quiz)}
                     className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
                   >
                     Veure detalls
                   </Button>
-                  <Button
-                  onClick={() => handleGameSelect(quiz.quizId)}
-                  className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md transition-colors"
-                >
-                  Començar joc
-                </Button>
+              )}
+                  {showGameButton && (
+                    <Button
+                      onClick={() => handleGameSelect(quiz.quizId)}
+                      className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md transition-colors"
+                    >
+                      Començar joc
+                    </Button>
+                  )}
                 </div>
               ) : (
                 <div className="flex flex-col gap-2 mt-2">
+                {showQuizButton && (
                 <Button
                   onClick={() => handleQuizSelect(quiz.quizId)}
                   className="mt-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors"
                 >
                   Començar
                 </Button>
-                <Button
-                  onClick={() => handleGameSelect(quiz.quizId)}
-                  className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md transition-colors"
-                >
-                  Començar joc
-                </Button>
+                )}
+                {showGameButton && (
+                    <Button
+                      onClick={() => handleGameSelect(quiz.quizId)}
+                      className="px-4 py-2 bg-green-300 hover:bg-green-400 text-white rounded-md transition-colors"
+                    >
+                      Començar joc
+                    </Button>
+                  )}
                 </div>
               )}
               </li>

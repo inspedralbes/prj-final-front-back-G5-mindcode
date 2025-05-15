@@ -22,7 +22,7 @@ const PYTHONPage = () => {
 
   const handleBackToMenu = () => {
     setLoading(true);
-    router.push("/UserForm");
+    router.push("/Jocs");
   };
   const [timeLeft, setTimeLeft] = useState(60);
   const [userAnswers, setUserAnswers] = useState([]);
@@ -143,15 +143,41 @@ const PYTHONPage = () => {
     const maxX = game.playableWidth - 1;
     const maxY = game.playableHeight - 1;
   
+    // Get the snake's head position and the next position based on current direction
+    const head = game.snake[0];
+    const nextHeadPosition = { ...head };
+    
+    switch (game.direction) {
+      case 'up': nextHeadPosition.y--; break;
+      case 'down': nextHeadPosition.y++; break;
+      case 'left': nextHeadPosition.x--; break;
+      case 'right': nextHeadPosition.x++; break;
+    }
+  
     const foodColors = ['#3b82f6', '#6366f1', '#8b5cf6'];
     const foods = selectedQuestion.options.map((option, index) => {
       let x, y;
+      let attempts = 0;
+      const maxAttempts = 50; // Prevent infinite loop
+      
       do {
         x = Math.floor(Math.random() * (maxX - 2 * borderPadding)) + borderPadding;
         y = Math.floor(Math.random() * (maxY - 2 * borderPadding)) + borderPadding;
+        attempts++;
+        
+        // Break out of loop if can't find a valid position after many attempts
+        if (attempts > maxAttempts) {
+          // Try a position further away from the snake
+          x = (head.x + 10) % (maxX - 2 * borderPadding) + borderPadding;
+          y = (head.y + 10) % (maxY - 2 * borderPadding) + borderPadding;
+          break;
+        }
       } while (
-        isPositionOccupied(x, y) ||
-        game.foods.some(f => f.x === x && f.y === y)
+        isPositionOccupied(x, y) || 
+        game.foods.some(f => f.x === x && f.y === y) ||
+        // Check if this position is the next head position or too close to snake head
+        (x === nextHeadPosition.x && y === nextHeadPosition.y) ||
+        (Math.abs(x - head.x) < 3 && Math.abs(y - head.y) < 3)
       );
   
       return {
@@ -605,13 +631,6 @@ const PYTHONPage = () => {
                     <p className="text-lg mb-4 text-white">Final Score: {score}</p>
                     
                     <div className="flex flex-col space-y-3">
-                      <Button
-                        onClick={startGame}
-                        className="bg-gradient-to-r from-green-500 to-teal-500 text-white px-6 py-3 rounded-lg text-sm font-bold shadow hover:from-green-600 hover:to-teal-600 transition-colors"
-                      >
-                        🔄 Play Again
-                      </Button>
-                      
                       <Button
                         onClick={handleBackToMenu}
                         className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-lg text-sm font-bold shadow hover:from-blue-600 hover:to-purple-600 transition-colors"

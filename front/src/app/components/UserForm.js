@@ -230,6 +230,11 @@ const UserForm = () => {
               setSelectedQuiz(quiz);
               setShowResults(true);
             }}
+            showGameButton={false}
+            showDetailsButton={true}
+            showQuizButton={true}
+            textGame={false}
+            textQuiz={true}
           />
         )}
       </div>
