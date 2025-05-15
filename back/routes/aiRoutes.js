@@ -22,7 +22,7 @@ dotenv.config();
 
 const router = express.Router();
 
-const AIHOST = process.env.AIHOST;
+const AIHOST = process.env.AIHOST || "https://ia.inspedralbes.cat";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
