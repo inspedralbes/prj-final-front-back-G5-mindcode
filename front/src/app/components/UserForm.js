@@ -5,7 +5,7 @@ import FormFields from './organisms/FormFields';
 import FormButton from './atoms/FormButton';
 import { useAuthStore } from '../../stores/authStore';
 import { useRouter } from 'next/navigation';
-import { checkQuizAvailability, getQuiz, submitQuizResults } from '../../services/communicationManager';
+import { checkQuizAvailability, getClassMain, submitQuizResults } from '../../services/communicationManager';
 import QuizList from './molecules/QuizList';
 
 const UserForm = () => {
@@ -195,6 +195,8 @@ const UserForm = () => {
                     setSelectedQuiz(null);
                     setShowResults(false);
                     setAnswers({});
+                    getClassMain();
+
                   }} 
                   className="mt-4" 
                 />
