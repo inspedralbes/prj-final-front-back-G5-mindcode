@@ -4,15 +4,18 @@ import React, { useState } from "react";
 import { joinClass } from "../../../services/communicationManager";
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '../../../stores/authStore';
+import LoadingScreen from "app/components/LoadingScreen";
 
-const JoinClassForm = ({setLoading}) => {
+
+const JoinClassForm = ({setLoad}) => {
   const router = useRouter();
   const [classCode, setClassCode] = useState("");
   const userInfo = useAuthStore((state) => state.user_info);
+  const [loading, setLoading] = useState(false);
 
   const handleJoin = async () => {
     if (classCode) {
-      setLoading(true);
+      setLoad(true);
       try {
         const response = await joinClass(classCode);
         if (response.class_info) {
@@ -24,7 +27,7 @@ const JoinClassForm = ({setLoading}) => {
         console.error("Error joining class:", error);
         alert("An error occurred while joining the class.");
       } finally {
-        setLoading(false);
+        setLoad(false);
       }
     } else {
       alert("Please enter the class code.");
@@ -32,7 +35,8 @@ const JoinClassForm = ({setLoading}) => {
   };
 
   return (
-    <div className="min-h-[100px] bg-gray-900  ml-[240px] flex items-center justify-center p-10 relative overflow-hidden">
+    <div className="min-h-[100px] bg-gray-900  ml-[219px] flex items-center justify-center p-10 relative overflow-hidden">
+            {loading && <LoadingScreen />} 
             <div className=" absolute inset-0 overflow-hidden">
         {[...Array(15)].map((_, i) => (
           <motion.div

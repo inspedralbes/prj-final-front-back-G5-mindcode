@@ -6,6 +6,7 @@ import Navbar from "../components/organisms/Navbar";
 import ContentArea from "../components/ContentArea";
 import SidebarProf from "app/components/SidebarProf";
 import { useAuthStore } from '../../stores/authStore';
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useRef } from "react";
@@ -20,10 +21,29 @@ const Page = () => {
   const [restrictions, setRestrictions] = useState(null);
   const [selectedClassPosition, setSelectedClassPosition] = useState(0);
   const [loading, setLoading] = useState(true); // Loading state
-
   const classInfo = useAuthStore((state) => state.class_info);
-
+  const user_info = useAuthStore.getState().user_info;
   const childRef = useRef(null);
+  const router = useRouter();
+  
+  const checkUserRole = async () => {
+          try {
+            if (!user_info) {
+              return;
+            }
+            if (user_info.role === 0) {
+              sessionStorage.setItem("fromStudentDashboard", "true");
+              router.push("/Login");
+            }
+          } catch (error) {
+            console.error("Error checking user role:", error);
+            router.push("/Login");  
+          }
+        };
+    
+      useEffect(() => {
+        checkUserRole();
+         }, [user_info]);
 
   useEffect(() => {
     const fetchData = async () => {
