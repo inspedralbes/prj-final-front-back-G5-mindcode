@@ -1,0 +1,58 @@
+{
+    "endpoint": "/api/language/class",
+    "method": "PUT",
+    "description": "Update languages for a given class",
+    "parameters": {
+        "classId": {
+            "type": "integer",
+            "description": "The ID of the class to modify languages for"
+        },
+        "languages": {
+            "type": "array",
+            "description": "Array of language objects",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "ID of the language"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Name of the language"
+                    },
+                    "restrictionId": {
+                        "type": "string",
+                        "description": "Restriction ID for the language"
+                    }
+                },
+                "required": ["name", "restrictionId"]
+            }
+        }
+    },
+    "responses": {
+        "200": {
+            "description": "Languages modified successfully",
+            "body": {
+                "classId": "int",
+                "languages": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "idlanguage": "int",
+                            "name": "string",
+                            "restrictionId": "integer"
+                        }
+                    }
+                }
+            }
+        },
+        "400": {
+            "description": "Invalid input"
+        },
+        "404": {
+            "description": "Class not found"
+        }
+    }
+}

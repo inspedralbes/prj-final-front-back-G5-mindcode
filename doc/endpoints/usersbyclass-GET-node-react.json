@@ -1,0 +1,22 @@
+{
+    "endpoint": "/api/user",
+    "method": "GET",
+    "description": "Retrieve a list of class users",
+    "request":{
+        "body":{
+            "class_id": "int"
+        }
+    },
+    "response": {
+        "200": {
+            "status": "success",
+            "description": "Users class retrieved successfully",
+            "body": [
+                {
+                    "name": "string",
+                    "gmail": "string"
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,164 @@
+name: MindCode Deploy Actions
+run-name: ${{ github.actor }} is deploying MindCode on PRODUCTION ⭐
+on:
+  push:
+    branches:
+      - no-main
+
+jobs:
+  STOP-DOCKER:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Conexión al servidor y stop de docker-compose
+        run: |
+          echo "${{ secrets.PROD_SECRET_KEY }}" > ~/prod_key.pem
+          chmod 600 ~/prod_key.pem
+          
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} "cd mindcode"
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} "docker compose down"
+      - run: echo "🍏 This job's status is ${{ job.status }}."
+
+  # ------------------------------------------------------
+  # scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i "~/prod_key.pem" -r ./docker-compose.yml ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }}:docker-compose.yml
+
+
+  FILL-DOCKER-COMPOSE:
+    needs: [STOP-DOCKER]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtaining repository code
+        uses: actions/checkout@v4
+
+      - name: Update Docker Compose
+        run: |
+          echo "Connecting to the server and running docker-compose commands"
+          echo "${{ secrets.PROD_SECRET_KEY }}" > ~/prod_key.pem
+          chmod 600 ~/prod_key.pem
+
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} "rm -f ./mindcode/compose.production.yaml"
+
+          echo "MYSQL_USER=${{ secrets.MYSQL_USER }}}" > .env
+          echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
+          echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
+          echo "MONGO_ROOT_USER=${{ secrets.MONGO_ROOT_USER }}" >> .env
+          echo "MONGO_ROOT_PASSWORD=${{ secrets.MONGO_ROOT_PASSWORD }}" >> .env        
+          echo "NEXT_PUBLIC_URL=${{ secrets.PRODUCTION_API_URI }}" >> .env
+          echo "NEXT_PUBLIC_API_KEY=${{ secrets.PRODUCTION_FIREBASE_KEY }}" >> .env
+
+          scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i "~/prod_key.pem" -r ./.env ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }}:./mindcode/
+
+
+
+          scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i "~/prod_key.pem" -r ./compose.production.yaml ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }}:./mindcode/compose.yaml
+      - run: echo "🍏 This job's status is ${{ job.status }}."
+
+  # ------------------------------------------------------
+
+  COPY-DB-INIT:
+    needs: [FILL-DOCKER-COMPOSE]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtaining repository code
+        uses: actions/checkout@v4
+
+      - name: Copy DB init
+        run: |
+          echo "${{ secrets.PROD_SECRET_KEY }}" > ~/prod_key.pem
+          chmod 600 ~/prod_key.pem
+          cd ${{ github.workspace }}
+          scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i "~/prod_key.pem" -r ./db ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }}:./mindcode/db
+      - run: echo "🍏 This job's status is ${{ job.status }}."
+
+
+          # rm -rf ./node_modules
+          # npm install
+          # npm run build
+
+  FRONT-DEPLOY:
+    needs: [FILL-DOCKER-COMPOSE]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtaining repository code
+        uses: actions/checkout@v4
+
+      - name: Front Deploy
+        run: |
+          echo "${{ secrets.PROD_SECRET_KEY }}" > ~/prod_key.pem
+          chmod 600 ~/prod_key.pem
+          cd ${{ github.workspace }}
+          cd front
+
+          touch .env
+
+          echo "NEXT_PUBLIC_URL=${{ secrets.PRODUCTION_API_URI }}" > .env
+          echo "NEXT_PUBLIC_API_KEY=${{ secrets.PRODUCTION_FIREBASE_KEY }}" >> .env
+
+
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} "if [ -d ./mindcode/front ] 
+                                                                                                                                              then
+                                                                                                                                                sudo rm -r ./mindcode/front
+                                                                                                                                              else
+                                                                                                                                                echo 'No existe la carpeta front'
+                                                                                                                                              fi"
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} "mkdir ./mindcode/front"
+          scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i "~/prod_key.pem" -r ./* ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }}:./mindcode/front
+          scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i "~/prod_key.pem" -r ./.env ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }}:./mindcode/front
+      - run: echo "🍏 This job's status is ${{ job.status }}."
+
+  BACK-DEPLOY:
+    needs: [FILL-DOCKER-COMPOSE]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtaining repository code
+        uses: actions/checkout@v4
+
+      - name: Back Deploy
+        run: |
+          echo "${{ secrets.PROD_SECRET_KEY }}" > ~/prod_key.pem
+          chmod 600 ~/prod_key.pem
+          cd ${{ github.workspace }}
+          cd back
+          touch .env
+
+          echo "PORT=${{ secrets.BACK_PORT }}" >> .env
+          echo "DB_HOST=${{ secrets.MYSQL_HOST }}" >> .env
+          echo "DB_USER=${{ secrets.MYSQL_ROOT_USER }}" >> .env
+          echo "DB_PORT=${{ secrets.MYSQL_PORT }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
+          echo "DB_DATABASE=mindcode" >> .env
+          echo "DB_NAME=${{ secrets.MYSQL_DATABASE }}" >> .env          
+          echo "AIHOST=${{ secrets.AI_HOST }}" >> .env
+          echo "SECRET_KEY=${{ secrets.JWT_KEY }}" >> .env
+
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} "if [ -d ./mindcode/back ] 
+                                                                                                                                              then
+                                                                                                                                                sudo rm -r ./mindcode/back
+                                                                                                                                              else
+                                                                                                                                                echo 'No existe la carpeta back'
+                                                                                                                                              fi"
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} "mkdir ./mindcode/back"
+          scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i "~/prod_key.pem" -r ./* ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }}:./mindcode/back
+          scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i "~/prod_key.pem" -r ./.env ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }}:./mindcode/back
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} "cp ./serviceaccount/serviceaccount.json ./mindcode/back/serviceaccount.json"
+
+      - run: echo "🍏 This job's status is ${{ job.status }}."
+
+  START-DOCKER:
+    needs: [FRONT-DEPLOY, BACK-DEPLOY, COPY-DB-INIT]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start Docker
+        run: |
+          echo "${{ secrets.PROD_SECRET_KEY }}" > ~/prod_key.pem
+          chmod 600 ~/prod_key.pem
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} "docker network inspect mindcode-network >/dev/null 2>&1 || docker network create --driver bridge mindcode-network"
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} "docker compose -f ./mindcode/compose.yaml build"
+
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} "docker compose -f ./mindcode/compose.yaml up -d "
+      - name: Iniciar Portainer
+        run: |
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/prod_key.pem ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} "docker start portainer"
+      - run: echo "🍏 This job's status is ${{ job.status }}."

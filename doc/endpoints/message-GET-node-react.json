@@ -1,0 +1,21 @@
+{
+    "endpoint": "api/message",
+    "method": "GET",
+    "description": "Retrieve a list of message's",
+    "request": {
+        "body": {
+            "user_id": "string"
+        }
+    },
+    "response": {
+        "200": {
+            "status": "success",
+            "description": "Message's retrieved successfully",
+            "body": [
+                {
+                    "message": "string"
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,77 @@
+services:
+  mindcode-back: 
+    build: 
+      dockerfile: ./back/develop.Dockerfile
+      context: .
+    working_dir: /home/node/app
+    volumes:
+      - ./back:/home/node/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mindcode-mysql
+      - mindcode-mongo
+    command: sh -c "npm install && nodemon -L index.js"
+  
+  mindcode-front:
+    image: node:23-alpine3.20
+    command: sh -c "npm install && npm run dev"
+    volumes:
+      - ./front:/app
+      - /app/node_modules
+    working_dir: /app
+    ports: 
+      - 5173:3000
+    environment:
+      - WATCHPACK_POLLING=true
+
+  mindcode-mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    volumes:
+      - mongodb:/data/db
+  mindcode-mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+      ME_CONFIG_MONGODB_URL: mongodb://root:root@mindcode-mongo:27017/
+      ME_CONFIG_BASICAUTH: false
+    depends_on:
+      - mindcode-mongo
+
+  mindcode-mysql:
+    image: mysql:9.2
+    restart: always
+    environment:
+      MYSQL_DATABASE: mindcode
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysqldb:/var/lib/mysql:rw
+      - ./db/create.sql:/docker-entrypoint-initdb.d/create.sql
+      - ./db/inserts.sql:/docker-entrypoint-initdb.d/inserts.sql
+      
+  mindcode-adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+      ADMINER_DEFAULT_SERVER: mindcode-mysql
+    depends_on:
+      - mindcode-mysql
+    
+volumes:
+  mongodb:
+  mysqldb:
+  

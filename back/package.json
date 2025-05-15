@@ -1,0 +1,25 @@
+{
+  "name": "back",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.6",
+    "express": "^4.21.2",
+    "firebase-admin": "^13.0.2",
+    "google-auth-library": "^9.15.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.8.2",
+    "mysql2": "^3.11.5",
+    "short-unique-id": "^5.2.0",
+    "uuid": "^11.0.3"
+  }
+}

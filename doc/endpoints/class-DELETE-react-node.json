@@ -1,0 +1,22 @@
+{
+    "endpoint": "/api/class",
+    "method": "DELETE",
+    "description": "Delete an existing class",
+    "request": {
+        "contentType": "application/json",
+        "body": {
+            "class_id": "string"
+        }
+    },
+    "response": {
+        "200": {
+            "description": "Class deleted successfully"
+        },
+        "400": {
+            "description": "Invalid input"
+        },
+        "404": {
+            "description": "Class not found"
+        }
+    }
+}

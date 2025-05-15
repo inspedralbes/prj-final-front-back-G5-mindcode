@@ -1,0 +1,24 @@
+{
+    "endpoint": "/api/userStats",
+    "method": "GET",
+    "description": "Retrieve a list of user stats",
+    "request":{
+        "body":{
+            "user_id": "int"
+        }
+    },
+    "response": {
+        "200": {
+            "status": "success",
+            "description": "User stats retrieved successfully",
+            "body": [
+                {
+                    "language_info": "string",
+                    "quiz_answered": "string",
+                    "quiz_results": "string",
+                    "date": "date"
+                }
+            ]
+        }
+    }
+}
