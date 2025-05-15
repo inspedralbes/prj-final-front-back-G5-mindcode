@@ -45,6 +45,12 @@ const SidebarStudent = ({ handleSetCurrentLanguage,onOpenLanguageList }) => {
     if (classInfo?.length > 0 && classInfo[0]?.language_info) {
       setLanguages(classInfo[0].language_info);
     }
+    if(classInfo?.[0]?.quizz_info?.length > 0){
+      console.log('Quizzes available:', classInfo[0].quizz_info);
+      setIsQuizAvailable(true);
+    } else {
+      setIsQuizAvailable(false);
+    }
   }, [classInfo]);
 
   useEffect(() => {
@@ -59,20 +65,6 @@ const SidebarStudent = ({ handleSetCurrentLanguage,onOpenLanguageList }) => {
 
     fetchUserImage();
   }, [user_info]);
-
-  useEffect(() => {
-    const checkForQuiz = async () => {
-      try {
-        const data = await checkQuizAvailability();
-        setIsQuizAvailable(data.quizAvailable);
-      } catch (error) {
-        console.error('Error checking quiz:', error);
-      }
-    };
-
-    checkForQuiz();
-  }, []);
-
 
   return (
     <div className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white w-1/4 relative h-full p-4 border-r border-gray-300 dark:border-gray-700">
