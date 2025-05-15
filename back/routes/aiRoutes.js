@@ -408,6 +408,7 @@ router.post('/api/quizResponse', verifyTokenMiddleware, async (req, res) => {
           return {
             ...baseAnswer,
             selected_option: answer.selected_option,
+            selected_text:answer.selected_text,
             isCorrect: answer.selected_option === question.correct_option,
             correct_option: question.correct_option
           };

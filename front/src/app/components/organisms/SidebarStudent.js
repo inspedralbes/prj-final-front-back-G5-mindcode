@@ -127,7 +127,7 @@ const SidebarStudent = ({ handleSetCurrentLanguage,onOpenLanguageList }) => {
           className={`w-full px-4 py-3 rounded-lg text-left flex items-center justify-between font-medium transition-all ${
             isQuizAvailable
               ? 'bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 text-white shadow-lg'
-              : 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed opacity-50'
+              : 'bg-gray-300 dark:bg-gray-700  opacity-50'
           }`}
         >
           <span>📝 Qüestionari</span>

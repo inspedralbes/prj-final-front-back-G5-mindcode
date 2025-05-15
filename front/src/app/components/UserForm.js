@@ -81,7 +81,11 @@ const UserForm = () => {
   const handleAnswerChange = (questionId, answer) => {
     setAnswers(prev => ({
       ...prev,
-      [questionId]: answer
+      [questionId]: {
+        selected_option: answer.selected_option,
+        selected_text: answer.answer,
+        isCorrect: false
+      }
     }));
   };
 
@@ -101,7 +105,8 @@ const UserForm = () => {
 
         return {
           question_id: question.question_id,
-          selected_option: answer.selected_option
+          selected_option: answer.selected_option,
+          selected_text: answer.selected_text,
         };
       }).filter(Boolean);
 
@@ -206,6 +211,20 @@ const UserForm = () => {
               setQuestions(quiz.questions);
               setQuizId(quiz.id);
               setSelectedQuiz(quiz);
+              
+              if (quiz.userAnswers) {
+                const formattedAnswers = {};
+                quiz.userAnswers.forEach(answer => {
+                  const question = quiz.questions.find(q => q.question_id === answer.question_id);
+                  formattedAnswers[answer.question_id] = {
+                    selected_option: answer.selected_option,
+                    selected_text: question.options[answer.selected_option],
+                    isCorrect: answer.isCorrect
+                  };
+                });
+                setAnswers(formattedAnswers);
+              }
+              
               setShowResults(true);
             }}
           />

@@ -16,6 +16,7 @@ const quizSchema = new mongoose.Schema({
   userAnswers: [{
     question_id: { type: Number, required: true },
     selected_option: { type: Number },
+    selected_text: { type: String,required: true },
     isCorrect: { type: Boolean, default: false },
     question_type: { type: String, required: true, enum: ['MCQ', 'short_answer'] }
   }],
