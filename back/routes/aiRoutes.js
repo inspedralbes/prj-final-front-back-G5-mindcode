@@ -22,8 +22,6 @@ dotenv.config();
 
 const router = express.Router();
 
-process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
-
 const AIHOST = "https://ia.inspedralbes.cat";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
