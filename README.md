@@ -8,6 +8,9 @@
 ### NOM DEL PROJECTE :
  MINDCODE.
   Referència a l'us de la ment i la intel·lecte per a desenvolupar coneixements de programació i codificació
+
+
+  ### PRESENTACIÓ CANVA: https://www.canva.com/design/DAGnabO73Jg/__eqY1m0BbSRgjTNXNqpWQ/view?utm_content=DAGnabO73Jg&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hf45802d1d0
   
 ### DESCRIPCIÓ DEL PROJECTE :
   - Aquest projecte sorgeix de la necessitat de crear una eina capaç d'ajudar els alumnes amb els diferents llenguatges de programació
