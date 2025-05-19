@@ -75,7 +75,7 @@ const ClassSettings = ({ name, teacher, classMates, onLeaveClass, isStudent = tr
             <Button
               children="Sortir de la classe"
               className="px-6 py-3 rounded-xl bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 border border-red-400 dark:border-red-500 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-300 font-medium shadow-md hover:shadow-lg"
-              onClick={handleLeaveClass}
+              onClick={onLeaveClass}
             />
           ) : (
             <Button
@@ -86,6 +86,7 @@ const ClassSettings = ({ name, teacher, classMates, onLeaveClass, isStudent = tr
           )}
         </div>
       </div>
+
 
     </div>
   );
