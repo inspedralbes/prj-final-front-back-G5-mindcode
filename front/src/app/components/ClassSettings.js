@@ -60,7 +60,7 @@ const ClassSettings = ({ name, teacher, classMates, onLeaveClass, isStudent, onK
                   <Button
                     children="Eliminar"
                     className="inline-flex items-center justify-center px-2 py-1 rounded-md text-xs bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 transition-all duration-300 shadow-sm hover:shadow-md w-auto"
-                    onClick={() => handleKickUser(user)}
+                    onClick={() => onKickUser(user)}
                   />
                 )}
               </div>
@@ -79,7 +79,7 @@ const ClassSettings = ({ name, teacher, classMates, onLeaveClass, isStudent, onK
             />
           ) : (
             <Button
-              children="Tancar Classe"
+              children="Sortir de la Classe"
               className="px-6 py-3 rounded-xl bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 border border-red-400 dark:border-red-500 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-300 font-medium shadow-md hover:shadow-lg"
               onClick={onLeaveClass}
             />

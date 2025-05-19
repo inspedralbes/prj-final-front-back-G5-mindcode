@@ -105,14 +105,14 @@ useEffect(() => {
 
   const handleKickUser = (user) => {
     setSelectedUser(user);
-    setIsDialogOpen(true);
+    setIsKickStudentOpen(true);
   };
 
   const confirmKickUser = async () => {
     try {
       if (!selectedUser) return;
-
-      await kickClass(selectedUser.id);
+      const classId = selectedClass || classInfo[0]?.class_id;
+      await kickClass(selectedUser.id, classId);
 
       setClassSettings((prevSettings) => ({
         ...prevSettings,
@@ -120,7 +120,7 @@ useEffect(() => {
       }));
 
       toast.success(`L'alumne ha estat expulsat correctament`);
-      setIsDialogOpen(false);
+      setIsKickStudentOpen(false);
       setSelectedUser(null);
     } catch (error) {
       console.error("Error kicking user from class:", error);
@@ -176,6 +176,7 @@ useEffect(() => {
                     teacher={classSettings.teacher}
                     classMates={classSettings.classMates}
                     onLeaveClass={() => setIsDialogOpen(true)}
+                    onKickUser={handleKickUser}
                     isStudent={false}
                     className="w-full md:w-5/12 lg:w-5/12"
                   />
@@ -190,7 +191,7 @@ useEffect(() => {
             <Dialog
               title="Confirmació"
               message={`Estàs segur que vols sortir de la classe?`}
-              onConfirm={confirmKickUser}
+              onConfirm={handleCloseClass}
               onCancel={() => setIsDialogOpen(false)}
               className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3"
             />
