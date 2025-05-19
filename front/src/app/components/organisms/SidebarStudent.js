@@ -7,8 +7,9 @@ import Button from "../atoms/Button";
 import LoadingScreen from "../LoadingScreen";
 import { useAuthStore } from "stores/authStore";
 import { getUserImage, checkQuizAvailability } from '../../../services/communicationManager';
+import { toast } from "react-toastify";
 
-const SidebarStudent = ({ handleSetCurrentLanguage,onOpenLanguageList }) => {
+const SidebarStudent = ({ handleSetCurrentLanguage, onOpenLanguageList }) => {
   const [isLlenguatgesOpen, setIsLlenguatgesOpen] = useState(false);
   const [languages, setLanguages] = useState([]);
   const [userImage, setUserImage] = useState(null);
@@ -26,29 +27,33 @@ const SidebarStudent = ({ handleSetCurrentLanguage,onOpenLanguageList }) => {
     }
   }, [classInfo]);
 
-  const handleRedirect = () =>{
-    if (pathname === '/StSettings') return
+  const handleRedirect = () => {
+    if (pathname === '/StSettings') return;
     setLoading(true);
     router.push('/StSettings');
-
   };
+
   const handleFormClick = () => {
     if (pathname === '/UserForm') return;
-    setLoading(true); 
-    router.push('/UserForm'); 
+    if (!isQuizAvailable) {
+      toast.info("El qüestionari no està disponible ara mateix.");
+      return;
+    }
+    setLoading(true);
+    router.push('/UserForm');
   };
-  const handleGoToGames = () =>{
-    if (pathname === '/Jocs') return
-    setLoading(true); 
-    router.push('/Jocs');
-  } 
 
+  const handleGoToGames = () => {
+    if (pathname === '/Jocs') return;
+    setLoading(true);
+    router.push('/Jocs');
+  };
 
   useEffect(() => {
     if (classInfo?.length > 0 && classInfo[0]?.language_info) {
       setLanguages(classInfo[0].language_info);
     }
-    if(classInfo?.[0]?.quizz_info?.length > 0){
+    if (classInfo?.[0]?.quizz_info?.length > 0) {
       setIsQuizAvailable(true);
     } else {
       setIsQuizAvailable(false);
@@ -62,6 +67,7 @@ const SidebarStudent = ({ handleSetCurrentLanguage,onOpenLanguageList }) => {
         setUserImage(img);
       } catch (error) {
         console.error("Error fetching user image:", error);
+        toast.error("No s'ha pogut carregar la imatge d'usuari.");
       }
     };
 
@@ -70,7 +76,7 @@ const SidebarStudent = ({ handleSetCurrentLanguage,onOpenLanguageList }) => {
 
   return (
     <div className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white w-1/4 relative h-full p-4 border-r border-gray-300 dark:border-gray-700">
-      {loading && <LoadingScreen />} 
+      {loading && <LoadingScreen />}
 
       <div className="text-center mb-6">
         <button  
@@ -81,7 +87,7 @@ const SidebarStudent = ({ handleSetCurrentLanguage,onOpenLanguageList }) => {
             <img src={userImage} alt="avatar" className="w-full h-full object-cover" />
           ) : (
             <img
-              src={user_info?.photoURL? user_info.photoURL : '/default-avatar.png'}
+              src={user_info?.photoURL ? user_info.photoURL : '/default-avatar.png'}
               alt="avatar"
               className="w-full h-full object-cover"
             />
@@ -121,11 +127,11 @@ const SidebarStudent = ({ handleSetCurrentLanguage,onOpenLanguageList }) => {
           className={`w-full px-4 py-3 rounded-lg text-left flex items-center justify-between font-medium transition-all ${
             isQuizAvailable
               ? 'bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 text-white shadow-lg'
-              : 'bg-gray-300 dark:bg-gray-700  opacity-50'
+              : 'bg-gray-300 dark:bg-gray-700 opacity-50 cursor-not-allowed'
           }`}
+          disabled={!isQuizAvailable}
         >
           <span>📝 Qüestionari</span>
-          {/* {isQuizAvailable && <span className="animate-pulse text-yellow-300">⚡</span>} */}
         </button>
       </nav>
     </div>
