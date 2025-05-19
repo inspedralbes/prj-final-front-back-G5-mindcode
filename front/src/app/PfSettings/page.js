@@ -16,6 +16,7 @@ const PfSettings = () => {
   const [userSettings, setUserSettings] = useState(null);
   const [classSettings, setClassSettings] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isKickStudentOpen, setIsKickStudentOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedField, setSelectedField] = useState("stats");
   const [selectedClass, setSelectedClass] = useState(null);
@@ -201,7 +202,7 @@ useEffect(() => {
               title="Confirmació"
               message={`Estàs segur que vols expulsar a l'alumne de la classe?`}
               onConfirm={confirmKickUser}
-              onCancel={() => setIsDialogOpen(false)}
+              onCancel={() => setIsKickStudentOpen(false)}
               className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3"
             />
           </div>
