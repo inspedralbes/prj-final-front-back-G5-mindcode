@@ -264,6 +264,7 @@ const SidebarProf = forwardRef((props, ref) => {
   }
 
   const handleRedirect = async () => {
+    if (pathname === '/PfSettings') return
     router.push('/PfSettings');
   }
 

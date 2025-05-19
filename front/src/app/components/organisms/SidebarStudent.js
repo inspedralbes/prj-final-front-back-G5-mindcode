@@ -27,15 +27,18 @@ const SidebarStudent = ({ handleSetCurrentLanguage,onOpenLanguageList }) => {
   }, [classInfo]);
 
   const handleRedirect = () =>{
+    if (pathname === '/StSettings') return
     setLoading(true);
     router.push('/StSettings');
 
   };
   const handleFormClick = () => {
+    if (pathname === '/UserForm') return;
     setLoading(true); 
     router.push('/UserForm'); 
   };
   const handleGoToGames = () =>{
+    if (pathname === '/Jocs') return
     setLoading(true); 
     router.push('/Jocs');
   } 
