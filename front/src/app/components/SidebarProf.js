@@ -319,8 +319,9 @@ const SidebarProf = forwardRef((props, ref) => {
 
       <nav className="space-y-2 flex-1 overflow-y-auto items-center justify-center">
         {class_info && class_info.length > 0 ? (
-          class_info.map(({ class_id, name, classmate_info }, index) => (
+          class_info.map(({ class_id, name, classmate_info, class_code }, index) => (
             <div key={class_id}>
+              <div> { class_code } </div>
               <button
                 className="w-full px-4 py-3 bg-gradient-to-r from-emerald-900 to-purple-900 hover:from-emerald-700 hover:to-purple-700 text-white rounded-lg flex justify-between items-center transition-all shadow-md"
                 onClick={() => handleClassClick(class_id, index)}

@@ -109,7 +109,7 @@ export function getClassInfo(class_id, user_id) {
         try {
             const connection = await createConnection();
             const [rows] = await connection.execute(
-                'SELECT name, language, teacher_id FROM CLASS WHERE idclass = ?',
+                'SELECT name, language, code, teacher_id FROM CLASS WHERE idclass = ?',
                 [class_id]
             );
             await connection.end();
@@ -129,7 +129,7 @@ export function getClassInfo(class_id, user_id) {
                 const classmate_info = classmates.map(({ id, name }) => ({ id, name }));
 
 
-                const { name, language, teacher_id } = rows[0];
+                const { name, language, teacher_id, code } = rows[0];
 
 
                 const parsed_teacher_id = JSON.parse(teacher_id);
@@ -172,7 +172,7 @@ export function getClassInfo(class_id, user_id) {
 
                  const quizz_info = await getUserQuizInfo(user_id, class_id);
 
-                resolve({ class_id, name, language_info: messagesByLanguage, teacher_info, classmate_info, quizz_info });
+                resolve({ class_id, name, language_info: messagesByLanguage, teacher_info, classmate_info, quizz_info, class_code: code });
 
             }
         } catch (error) {
