@@ -158,12 +158,12 @@ router.get('/getimg/:id', verifyTokenMiddleware, async (req, res) => {
       return res.status(200).json({ img: null }); 
     }
 
-    const imgPath = `http://localhost:3000/uploads/${img}`;
+    const imgPath = `https://mindcode.cat/back/uploads/${img}`;
     res.status(200).json({ img: imgPath }); 
   } catch (error) {
     console.error('Error fetching image:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-  
+
 export default router;
