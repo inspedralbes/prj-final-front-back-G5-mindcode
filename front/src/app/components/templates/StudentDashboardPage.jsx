@@ -93,7 +93,6 @@ const StudentDashboardPage = () => {
   const parseReceivedMessages = (language_info) => {
 
 
-    console.log("language_info: ", language_info);
     language_info.forEach(language => {
 
       let parsedMessages = [];
@@ -119,7 +118,6 @@ const StudentDashboardPage = () => {
       });
       parsedMessages.push(...parsedLanguage);
 
-      console.log("Parsed messages: ", parsedMessages);
 
       language.messages = parsedMessages;
 

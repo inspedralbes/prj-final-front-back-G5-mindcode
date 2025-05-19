@@ -28,7 +28,6 @@ const UserForm = () => {
     setShowResults(false);
     
     const quizzes = class_info?.[0]?.quizz_info || [];
-    console.log('Quizzes from userData:', quizzes);
     
     const formattedQuizzes = quizzes.map(quiz => ({
       id: quiz._id,
@@ -39,7 +38,6 @@ const UserForm = () => {
       totalQuestions: quiz.questions.length
     }));
     
-    console.log('Formatted quizzes:', formattedQuizzes);
     setQuizList(formattedQuizzes);
     setLoading(false);
   };
@@ -47,7 +45,6 @@ const UserForm = () => {
   const loadSelectedQuiz = async (quizId) => {
     setLoading(true);
     setError(null);
-    console.log("Quiz selected:", quizId);
     try {
       const data = await checkQuizAvailability(quizId);
       if (data.quiz) {
@@ -84,7 +81,6 @@ const UserForm = () => {
     setLoading(true);
     setError(null);
     try {
-      console.log("📦 Resultado de getQuiz:", quizId);
       localStorage.setItem('quizId', quizId);
       router.push(`/Lenguajes/python`);
 
@@ -138,7 +134,6 @@ const UserForm = () => {
       }
 
       const results = await submitQuizResults(quizId, answersArray);
-      console.log('Quiz results:', results);
       
       if (results && results.results) {
         const updatedAnswers = {};

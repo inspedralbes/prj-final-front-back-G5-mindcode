@@ -62,7 +62,6 @@ const Signup = () => {
         photoURL
       });
 
-      console.log("checking ONLY quizzes:", userData.userData.class_info[0]?.quizz_info);
 
       useAuthStore.setState((state) => ({
         user_info: {

@@ -122,7 +122,6 @@ const PYTHONPage = () => {
     }
   
     if (usedQuestions.length >= quizQuestions.length) {
-      console.log("Resetting used questions"); 
       setUsedQuestions([]);
     }
   
@@ -231,7 +230,6 @@ const PYTHONPage = () => {
 
   useEffect(() => {
     const quizId = localStorage.getItem('quizId');
-    console.log("quizId", quizId)
     if (quizId) {
       fetchQuestions(quizId);
     }
@@ -292,7 +290,6 @@ const PYTHONPage = () => {
 
         setQuestionsCompleted(prev => {
           const newCount = prev + 1;
-          console.log(`Completed ${newCount} out of ${quizQuestions.length} questions`);
           
           // End game if all questions are answered
           if (newCount >= quizQuestions.length) {
@@ -454,7 +451,6 @@ const PYTHONPage = () => {
     setMessage(allQuestionsUsed 
       ? `🏁 Completed all questions! Final Score: ${score}`
       : `🏁 Final Score: ${score}`);
-    console.log("respuestas",  userAnswersRef.current);
 
     const transformedAnswers = userAnswersRef.current.map(item => {
     const question = quizQuestions.find(q => q.question_id === item.question_id);
@@ -476,7 +472,6 @@ const PYTHONPage = () => {
     try { 
       const quizId = localStorage.getItem('quizId');
       const result = await submitGameResults(quizId, transformedAnswers); 
-      console.log("Resultados enviados con éxito:", result);
     } catch (err) {
       console.error("Error al enviar resultados:", err);
     }

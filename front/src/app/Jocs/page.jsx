@@ -30,7 +30,6 @@ const JocsPage = () => {
     setShowResults(false);
     
     const quizzes = class_info?.[0]?.quizz_info || [];
-    console.log('Quizzes from userData:', quizzes);
     
     const formattedQuizzes = quizzes.map(quiz => ({
       id: quiz._id,
@@ -41,7 +40,6 @@ const JocsPage = () => {
       totalQuestions: quiz.questions.length
     }));
     
-    console.log('Formatted quizzes:', formattedQuizzes);
     setQuizList(formattedQuizzes);
     setLoading(false);
   };
@@ -49,7 +47,6 @@ const JocsPage = () => {
   const loadSelectedQuiz = async (quizId) => {
     setLoading(true);
     setError(null);
-    console.log("Quiz selected:", quizId);
     try {
       const data = await checkQuizAvailability(quizId);
       if (data.quiz) {
@@ -86,7 +83,6 @@ const JocsPage = () => {
       setLoading(true);
       setError(null);
       try {
-        console.log("📦 Resultado de getQuiz:", quizId);
         localStorage.setItem('quizId', quizId);
         router.push(`/Lenguajes/python`);
   

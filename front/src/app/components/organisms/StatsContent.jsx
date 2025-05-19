@@ -56,9 +56,7 @@ const StatsContent = ({ classId, mode, index }) => {
     useEffect(() => {
         if (classStats && class_info?.[index]?.language_info && filteredClassData) {
             const result = filterMessageCount(filteredClassData, class_info[index].language_info);
-            console.log("This is the class position in the class array: ", index);
             setLanguageStats(result);
-            console.log("This is the language stats: ", result);
             const messageCountByDate = filterDate(filteredClassData);
             setMessageCountByDate(messageCountByDate);
 
@@ -97,7 +95,6 @@ const StatsContent = ({ classId, mode, index }) => {
             messageCount: messageCountMap[language.id] || 0,
         }));
 
-        // console.log(result);
         return result;
     };
 
@@ -119,7 +116,6 @@ const StatsContent = ({ classId, mode, index }) => {
         result.sort((a, b) => new Date(a.date) - new Date(b.date));
 
 
-        // console.log("Date results: ", result);
         return result;
     }
 
@@ -130,8 +126,6 @@ const StatsContent = ({ classId, mode, index }) => {
     // Function to check if quizzes are answered
     const checkAnsweredQuizzes = (data) => {
         
-        console.log(data);
-
         const totalQuizzes = data.length;
 
         const answeredQuizzes = data.reduce((acc, curr) => {

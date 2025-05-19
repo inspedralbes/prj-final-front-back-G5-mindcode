@@ -44,7 +44,6 @@ const SidebarProf = forwardRef((props, ref) => {
   };
 
   const handleSaveEdit = async (restrictionId) => {
-    console.log(restrictionId);
     if (!editingLanguage.classId || editingLanguage.index === null || restrictionId == null) {
       console.error("Error: Invalid input for editing language.");
       return;
@@ -93,7 +92,6 @@ const SidebarProf = forwardRef((props, ref) => {
   useEffect(() => {
     const initialLanguages = {};
     class_info.forEach((classItem) => {
-      console.log(classItem.language_info);
       initialLanguages[classItem.class_id] = classItem.language_info
         .map((lang) => ({
           id: lang.id,
@@ -102,7 +100,6 @@ const SidebarProf = forwardRef((props, ref) => {
           isActive: lang.isActive ?? true,
         }));
 
-      console.log("initial languages", initialLanguages[classItem.class_id]);
     });
     setLanguagesByClass(initialLanguages);
   }, [class_info]);

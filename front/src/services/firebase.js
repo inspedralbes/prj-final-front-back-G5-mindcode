@@ -29,7 +29,6 @@ export const googleLogin = async () => {
     const photoURL = user.photoURL;
 
     if (!gmail.endsWith("@inspedralbes.cat")) {
-      console.log("Incorrect Credentials");
       return null;
     }
 

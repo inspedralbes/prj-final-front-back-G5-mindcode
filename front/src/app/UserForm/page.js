@@ -15,7 +15,6 @@ const ChatForm = (questions,loading,setLoading,handleAnswerSelect,handleSubmit,e
     const router = useRouter();
 
   const handleSetCurrentLanguage = (language) => {
-    console.log(language);
     setHighlitedLanguage(language);
     setHighlitedLanguageIndex(classInfo[0].language_info.findIndex(lang => lang.id === language.id));
     router.push("/StPage");

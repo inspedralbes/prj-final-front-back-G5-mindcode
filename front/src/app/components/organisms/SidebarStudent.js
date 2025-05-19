@@ -49,7 +49,6 @@ const SidebarStudent = ({ handleSetCurrentLanguage,onOpenLanguageList }) => {
       setLanguages(classInfo[0].language_info);
     }
     if(classInfo?.[0]?.quizz_info?.length > 0){
-      console.log('Quizzes available:', classInfo[0].quizz_info);
       setIsQuizAvailable(true);
     } else {
       setIsQuizAvailable(false);

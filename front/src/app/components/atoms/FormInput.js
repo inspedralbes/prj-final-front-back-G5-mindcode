@@ -5,7 +5,6 @@ import React from 'react';
 const FormInput = ({ question, question_id, type = 'MCQ', options = [], value, onChange, required = false, className = '' }) => {
   const handleChange = (type === 'MCQ') 
     ? (option, index) => {
-        console.log('MCQ selected:', { option, index });
         onChange({
           answer: option,
           question_id: question_id,
@@ -14,7 +13,6 @@ const FormInput = ({ question, question_id, type = 'MCQ', options = [], value, o
         });
       }
     : (textValue) => {
-        console.log('Text answer:', textValue);
         onChange({
           answer: textValue,
           question_id: question_id, 
