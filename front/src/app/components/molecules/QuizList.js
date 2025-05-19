@@ -52,7 +52,7 @@ const QuizList = ({ quizzes, handleQuizSelect, handleGameSelect, userData, onVie
       )}
       {quizzes?.length > 0 ? (
         <ul className="space-y-4">
-          {quizzes.map((quiz) => {
+          {quizzes.map((quiz, index) => {
             const isAnswered = isQuizAnswered(quiz.id);
             const result = getQuizResult(quiz);
 
@@ -61,7 +61,7 @@ const QuizList = ({ quizzes, handleQuizSelect, handleGameSelect, userData, onVie
                 key={quiz.id}
                 className={`p-4 rounded-md shadow ${isAnswered ? 'bg-green-50 dark:bg-green-900' : 'bg-gray-100 dark:bg-gray-800'}`}
               >
-                <h2 className="text-lg font-semibold">Qüestionari {quiz.id}</h2>
+                <h2 className="text-lg font-semibold">Qüestionari {index + 1}</h2>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   Total preguntes: {quiz.totalQuestions}
                 </p>
