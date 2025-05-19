@@ -2,12 +2,13 @@
 import { motion } from "framer-motion";
 import React, { useState } from "react";
 import { joinClass } from "../../../services/communicationManager";
-import { useRouter } from 'next/navigation';
-import { useAuthStore } from '../../../stores/authStore';
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "../../../stores/authStore";
 import LoadingScreen from "app/components/LoadingScreen";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-
-const JoinClassForm = ({setLoad}) => {
+const JoinClassForm = ({ setLoad }) => {
   const router = useRouter();
   const [classCode, setClassCode] = useState("");
   const userInfo = useAuthStore((state) => state.user_info);
@@ -19,25 +20,27 @@ const JoinClassForm = ({setLoad}) => {
       try {
         const response = await joinClass(classCode);
         if (response.class_info) {
-          router.push(response.isTeacher? '/PfPage' : '/StPage');
+          toast.success("¡Te has unido a la clase!");
+          router.push(response.isTeacher ? "/PfPage" : "/StPage");
         } else {
-          alert("Failed to join class. Please check your details.");
+          toast.error("No se pudo unir a la clase. Revisa tus datos.");
         }
       } catch (error) {
         console.error("Error joining class:", error);
-        alert("An error occurred while joining the class.");
+        toast.error("Ocurrió un error al unirte a la clase.");
       } finally {
         setLoad(false);
       }
     } else {
-      alert("Please enter the class code.");
+      toast.error("Por favor, ingresa el código de la clase.");
     }
   };
 
   return (
     <div className="min-h-[100px] bg-gray-900  ml-[219px] flex items-center justify-center p-10 relative overflow-hidden">
-            {loading && <LoadingScreen />} 
-            <div className=" absolute inset-0 overflow-hidden">
+      {loading && <LoadingScreen />}
+      <ToastContainer />
+      <div className=" absolute inset-0 overflow-hidden">
         {[...Array(15)].map((_, i) => (
           <motion.div
             key={i}
@@ -45,7 +48,7 @@ const JoinClassForm = ({setLoad}) => {
             initial={{
               x: Math.random() * 100,
               y: Math.random() * 100,
-              scale: Math.random() * 0.5 + 0.5
+              scale: Math.random() * 0.5 + 0.5,
             }}
             animate={{
               y: [0, -50, 0],
@@ -53,8 +56,8 @@ const JoinClassForm = ({setLoad}) => {
               transition: {
                 duration: Math.random() * 10 + 10,
                 repeat: Infinity,
-                delay: Math.random() * 5
-              }
+                delay: Math.random() * 5,
+              },
             }}
             style={{
               width: `${Math.random() * 10 + 5}px`,
@@ -72,8 +75,8 @@ const JoinClassForm = ({setLoad}) => {
       >
         <div className="absolute inset-0 rounded-xl border-t border-l border-purple-400/10 pointer-events-none"></div>
         <div className="absolute inset-0 rounded-xl border-b border-r border-purple-500/20 pointer-events-none"></div>
-        
-        <motion.h1 
+
+        <motion.h1
           className="text-3xl font-bold mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-purple-200"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -115,13 +118,12 @@ const JoinClassForm = ({setLoad}) => {
           </motion.button>
         </motion.div>
 
-        <motion.div 
+        <motion.div
           className="mt-6 text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-        >
-        </motion.div>
+        ></motion.div>
       </motion.div>
     </div>
   );
