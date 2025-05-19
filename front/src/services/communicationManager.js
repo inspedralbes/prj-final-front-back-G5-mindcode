@@ -784,7 +784,7 @@ export async function getUserById(userId) {
   }
 }
 
-export async function kickClass(targetUserId) {
+export async function kickClass(targetUserId, classId) {
   try {
     const user_info = useAuthStore.getState().user_info;
 
@@ -792,8 +792,8 @@ export async function kickClass(targetUserId) {
       throw new Error("No token provided");
     }
 
-    if (!targetUserId) {
-      throw new Error("No target user ID provided");
+    if (!targetUserId || !classId) {
+      throw new Error("User ID and Class ID are required");
     }
 
     const response = await fetch(`${URL}/api/class/leave`, {
@@ -802,7 +802,7 @@ export async function kickClass(targetUserId) {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${user_info.token}`,
       },
-      body: JSON.stringify({ id: targetUserId }),
+      body: JSON.stringify({ id: targetUserId, class_id: classId }),
     });
 
     if (!response.ok) {
@@ -817,6 +817,7 @@ export async function kickClass(targetUserId) {
     throw error;
   }
 }
+
 export async function checkQuizAvailability() {
   try {
     const user_info = useAuthStore.getState().user_info;
