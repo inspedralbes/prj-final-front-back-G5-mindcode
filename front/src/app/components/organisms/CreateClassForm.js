@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import React, { useState } from "react";
 import { createClass } from "../../../services/communicationManager";
 import { useRouter } from 'next/navigation';
+import { toast } from "react-toastify";
 
 const CreateClassForm = () => {
   const router = useRouter();
@@ -13,21 +14,22 @@ const CreateClassForm = () => {
       try {
         const response = await createClass(className);
         if (response) {
+          toast.success("Classe creada amb èxit!");
           router.push('/PfPage');
         } else {
-          alert("Failed to create class. Please check your details.");
+          toast.error("No s'ha pogut crear la classe. Revisa les teves dades.");
         }
       } catch (error) {
         console.error("Error creating class:", error);
-        alert("An error occurred while creating the class.");
+        toast.error("S'ha produït un error al crear la classe.");
       }
     } else {
-      alert("Please enter the class name.");
+      toast.warn("Si us plau, introdueix el nom de la classe.");
     }
   };
 
   return (
-<div className="min-h-[150px] w-[550px] bg-gray-900 flex items-center justify-center p-10 relative overflow-hidden">
+    <div className="min-h-[150px] w-[550px] bg-gray-900 flex items-center justify-center p-10 relative overflow-hidden">
       <div className="absolute inset-0 overflow-hidden">
         {[...Array(15)].map((_, i) => (
           <motion.div
@@ -47,7 +49,6 @@ const CreateClassForm = () => {
                 delay: Math.random() * 5
               }
             }}
-
           />
         ))}
       </div>
