@@ -87,34 +87,6 @@ const ClassSettings = ({ name, teacher, classMates, onLeaveClass, isStudent = tr
         </div>
       </div>
 
-      {isDialogOpen && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 w-64 mx-auto overflow-hidden">
-            <div className="p-4">
-              <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Confirmació</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                {isStudent 
-                  ? "Estàs segur que vols sortir d'aquesta classe?" 
-                  : `Estàs segur que vols eliminar l'usuari ${userToKick?.name} de la classe?`}
-              </p>
-            </div>
-            <div className="flex justify-end space-x-2 p-3 bg-gray-50 dark:bg-gray-900">
-              <button 
-                onClick={() => setIsDialogOpen(false)}
-                className="px-3 py-1 text-xs rounded-md bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600"
-              >
-                Cancel·lar
-              </button>
-              <button 
-                onClick={isStudent ? onLeaveClass : confirmKickUser}
-                className="px-3 py-1 text-xs rounded-md bg-red-500 text-white hover:bg-red-600"
-              >
-                Confirmar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
