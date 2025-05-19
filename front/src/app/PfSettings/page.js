@@ -175,7 +175,7 @@ useEffect(() => {
                     teacher={classSettings.teacher}
                     classMates={classSettings.classMates}
                     onLeaveClass={() => setIsDialogOpen(true)}
-                    isStudent={true}
+                    isStudent={false}
                     className="w-full md:w-5/12 lg:w-5/12"
                   />
                 )}
@@ -185,6 +185,17 @@ useEffect(() => {
         </div>
 
         {isDialogOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <Dialog
+              title="Confirmació"
+              message={`Estàs segur que vols sortir de la classe?`}
+              onConfirm={confirmKickUser}
+              onCancel={() => setIsDialogOpen(false)}
+              className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3"
+            />
+          </div>
+        )}
+        {isKickStudentOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <Dialog
               title="Confirmació"

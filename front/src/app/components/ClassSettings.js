@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Button from "app/components/atoms/Button";
 import Dialog from "app/components/atoms/Dialog";
 
-const ClassSettings = ({ name, teacher, classMates, onLeaveClass, isStudent = true, onKickUser }) => {
+const ClassSettings = ({ name, teacher, classMates, onLeaveClass, isStudent, onKickUser }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [userToKick, setUserToKick] = useState(null);
 
