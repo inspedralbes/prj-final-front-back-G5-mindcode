@@ -40,7 +40,7 @@ const FormFields = ({ questions, answers, onAnswerChange, showResults }) => {
               <div className="flex items-center justify-between">
                 <div className="text-sm text-gray-600 dark:text-gray-300">
                   <div className="space-y-1">
-                    <div>La teva opció: {question.options[answer?.selected_option]}</div>
+                    <div>La teva opció: {answer?.selected_text || question.options[answer?.selected_option]}</div>
                     {!isCorrect && (
                       <div className="text-red-600 dark:text-red-400">
                         Opció correcta: {question.options[question.correct_option]}

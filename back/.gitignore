@@ -1,7 +1,8 @@
 .env
 node_modules
 serviceaccount.json
+/uploads/*.png
 /uploads/*.jpg
 /uploads/*.jpeg
-/uploads/*.png
+/uploads/*.gif
 /uploads/*.svg

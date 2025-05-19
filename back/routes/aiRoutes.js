@@ -411,6 +411,7 @@ router.post('/api/quizResponse', verifyTokenMiddleware, async (req, res) => {
           return {
             ...baseAnswer,
             selected_option: answer.selected_option,
+            selected_text:answer.selected_text,
             isCorrect: answer.selected_option === question.correct_option,
             correct_option: question.correct_option
           };
@@ -519,5 +520,20 @@ router.get('/check-quiz', verifyTokenMiddleware, async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+router.get('/getQuiz/:quizId', verifyTokenMiddleware, async (req, res) => {
+  try {
+    const { quizId } = req.params;
+    const quiz = await Quiz.findById(quizId);
+    if (!quiz) {
+      return res.status(404).json({ error: 'Quiz not found' });
+    }
+    res.status(200).json(quiz);
+  } catch (error) {
+    console.error('Error fetching quiz:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+);
 
 export default router;

@@ -874,18 +874,32 @@ export async function getUserImage(userId) {
   }
 }
 
-export async function uploadUserImage(userId, imageFile) {
-  const formData = new FormData();
-  formData.append('image', imageFile);
-
+export async function uploadUserImage(userId, imageFileOrUrl) {
+  const userToken = useAuthStore.getState().user_info.token;
   try {
-    const response = await fetch(`${URL}/api/user/uploadimg/${userId}`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${useAuthStore.getState().user_info.token}`,
-      },
-      body: formData,
-    });
+    let response;
+
+    if (typeof imageFileOrUrl === "string") {
+      response = await fetch(`${URL}/api/user/uploadimg/${userId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userToken}`,
+        },
+        body: JSON.stringify({ photoURL: imageFileOrUrl }),
+      });
+    } else {
+      const formData = new FormData();
+      formData.append("image", imageFileOrUrl);
+
+      response = await fetch(`${URL}/api/user/uploadimg/${userId}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+        body: formData,
+      });
+    }
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -893,9 +907,69 @@ export async function uploadUserImage(userId, imageFile) {
     }
 
     const data = await response.json();
-    return `${URL}/uploads/${data.fileName}`;
+    return `${URL}/uploads/${data.img}`;
   } catch (error) {
-    console.error('Error uploading image:', error);
+    console.error("Error uploading image:", error);
+    throw error;
+  }
+}
+
+export async function submitGameResults(quizId, answers) {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+    if (!user_info || !user_info.token) {
+      throw new Error('No token provided. User not authenticated.');
+    }
+    const response = await fetch(`${URL}/message/api/quizResponse`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user_info.token}`
+      },
+      body: JSON.stringify({
+        quizId,
+        answers
+      })
+    });
+
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      throw new Error(`Error ${response.status}: ${errorResponse.description || 'Invalid request'}`);
+    }
+
+    const data = await response.json();
+    console.log('Quiz results received:', data);
+    return data;
+  } catch (error) {
+    console.error('Error submitting quiz results:', error);
+    throw error;
+  }
+}
+
+export async function getQuiz(quizId) {
+  try {
+    const user_info = useAuthStore.getState().user_info;
+    if (!user_info || !user_info.token) {
+      throw new Error('No token provided. User not authenticated.');
+    }
+    const response = await fetch(`${URL}/message/getQuiz/${quizId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user_info.token}`
+      }
+    });
+
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      throw new Error(`Error ${response.status}: ${errorResponse.description || 'Invalid request'}`);
+    }
+
+    const data = await response.json();
+    console.log('Quiz received:', data);
+    return data;
+  } catch (error) {
+    console.error('Error fetching quiz:', error);
     throw error;
   }
 }

@@ -5,7 +5,8 @@ import FormFields from './organisms/FormFields';
 import FormButton from './atoms/FormButton';
 import { useAuthStore } from '../../stores/authStore';
 import { useRouter } from 'next/navigation';
-import { checkQuizAvailability, submitQuizResults } from '../../services/communicationManager';
+import { checkQuizAvailability, getClassMain, submitQuizResults } from '../../services/communicationManager';
+import QuizList from './molecules/QuizList';
 
 const UserForm = () => {
   const [questions, setQuestions] = useState([]); 
@@ -15,41 +16,97 @@ const UserForm = () => {
   const [results, setResults] = useState(null); 
   const [showResults, setShowResults] = useState(false);
   const [quizId, setQuizId] = useState(null);
-  const classInfo = useAuthStore((state) => state.class_info);
+  const [quizList, setQuizList] = useState([]);
+  const [selectedQuiz, setSelectedQuiz] = useState(null);
+  const userData = useAuthStore((state) => state);
+  const class_info = useAuthStore((state) => state.class_info);
   const router = useRouter();
 
-  const loadQuiz = async () => {
+  const loadQuizzes = () => {
     setLoading(true);
     setError(null);
     setShowResults(false);
     
+    const quizzes = class_info?.[0]?.quizz_info || [];
+    console.log('Quizzes from userData:', quizzes);
+    
+    const formattedQuizzes = quizzes.map(quiz => ({
+      id: quiz._id,
+      quizId: quiz._id,
+      questions: quiz.questions,
+      userAnswers: quiz.userAnswers,
+      correctAnswers: quiz.correctAnswers,
+      totalQuestions: quiz.questions.length
+    }));
+    
+    console.log('Formatted quizzes:', formattedQuizzes);
+    setQuizList(formattedQuizzes);
+    setLoading(false);
+  };
+
+  const loadSelectedQuiz = async (quizId) => {
+    setLoading(true);
+    setError(null);
+    console.log("Quiz selected:", quizId);
     try {
-      const data = await checkQuizAvailability();
-      console.log('Quiz data:', data);
-      if (data.quizAvailable && data.quiz && data.quizId) {
+      const data = await checkQuizAvailability(quizId);
+      if (data.quiz) {
         setQuestions(data.quiz);
         setQuizId(data.quizId);
-        setLoading(false);
+        setSelectedQuiz({
+          ...data,
+          quiz_id: quizId
+        });
       } else {
-        setError('No hi ha questionari disponible');
-        setLoading(false);
-        setTimeout(() => router.push('/'), 2000);
+        const quizzes = class_info?.[0]?.quizz_info || [];
+        const selectedQuiz = quizzes.find(quiz => quiz.quizId === quizId);
+        
+        if (selectedQuiz && selectedQuiz.questions) {
+          setQuestions(selectedQuiz.questions);
+          setQuizId(quizId);
+          setSelectedQuiz(selectedQuiz);
+        } else {
+          throw new Error('Quiz no trobat');
+        }
       }
     } catch (error) {
-      console.error('Error fetching questions:', error);
-      setError('Error fetching questions: ');
-      setLoading(false);
+      console.error('Error loading quiz:', error);
+      setError('Error carregant el qüestionari');
     }
+    setLoading(false);
   };
 
   useEffect(() => {
-    loadQuiz();
-  }, []);
+    loadQuizzes();
+  }, [userData]); 
+
+  const loadSelectedGame = async (quizId) => {
+    setLoading(true);
+    setError(null);
+    try {
+      console.log("📦 Resultado de getQuiz:", quizId);
+      localStorage.setItem('quizId', quizId);
+      router.push(`/Lenguajes/python`);
+
+    } catch (error) {
+      console.error('Error loading game:', error);
+      setError('Error carregant el joc');
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadQuizzes();
+  }, [userData]);
 
   const handleAnswerChange = (questionId, answer) => {
     setAnswers(prev => ({
       ...prev,
-      [questionId]: answer
+      [questionId]: {
+        selected_option: answer.selected_option,
+        selected_text: answer.answer,
+        isCorrect: false
+      }
     }));
   };
 
@@ -69,7 +126,8 @@ const UserForm = () => {
 
         return {
           question_id: question.question_id,
-          selected_option: answer.selected_option
+          selected_option: answer.selected_option,
+          selected_text: answer.selected_text,
         };
       }).filter(Boolean);
 
@@ -85,8 +143,11 @@ const UserForm = () => {
       if (results && results.results) {
         const updatedAnswers = {};
         results.results.forEach(result => {
+          const question = questions.find(q => q.question_id === result.question_id);
+          const selectedText = question ? question.options[result.selected_option] : ''; 
           updatedAnswers[result.question_id] = {
             selected_option: result.selected_option,
+            selected_text: selectedText,
             isCorrect: result.isCorrect
           };
         });
@@ -107,44 +168,98 @@ const UserForm = () => {
   return (
     <div className="flex-grow overflow-y-auto p-4 space-y-4 rounded-md">
       <div className="max-w-3xl mx-auto p-6 overflow-y-auto">
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span className="block sm:inline">{error}</span>
+          </div>
+        )}
+
         {loading ? (
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-            <p className="mt-4 text-gray-600 dark:text-gray-300">Carregant preguntes...</p>
+            <p className="mt-4 text-gray-600 dark:text-gray-300">Carregant...</p>
           </div>
-        ) : error ? (
-          <div className="text-center text-gray-600 dark:text-gray-300">
-            <p>{error}</p>
-            <FormButton text="Tornar a provar" onClick={loadQuiz} className="mt-4" />
-          </div>
-        ) : showResults ? (
-          <div className="space-y-6">
-            <FormFields
-              questions={questions}
-              answers={answers}
-              onAnswerChange={handleAnswerChange}
-              showResults={true}
-            />
-            <div className="text-center">
-              <FormButton text="Tornar a provar" onClick={loadQuiz} className="mt-4" />
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-8">
-            <FormFields
-              questions={questions}
-              answers={answers}
-              onAnswerChange={handleAnswerChange}
-            />
-            <div className="sticky bottom-0 bg-white dark:bg-gray-900 py-4">
-              <FormButton
-                text="Enviar"
-                onClick={handleSubmit}
-                disabled={Object.keys(answers).length !== questions.length}
-                className="w-full sm:w-auto"
+        ) : selectedQuiz ? (
+          showResults ? (
+            <div className="space-y-6">
+              <FormFields
+                questions={questions}
+                answers={answers}
+                onAnswerChange={handleAnswerChange}
+                showResults={true}
               />
+              <div className="text-center">
+                <FormButton 
+                  text="Tornar als qüestionaris" 
+                  onClick={() => {
+                    setSelectedQuiz(null);
+                    setShowResults(false);
+                    setAnswers({});
+                    getClassMain();
+
+                  }} 
+                  className="mt-4" 
+                />
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="space-y-8">
+              <button
+                onClick={() => {
+                  setSelectedQuiz(null);
+                  setAnswers({});
+                }}
+                className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100 mb-4"
+              >
+                ← Tornar als qüestionaris
+              </button>
+              <FormFields
+                questions={questions}
+                answers={answers}
+                onAnswerChange={handleAnswerChange}
+              />
+              <div className="sticky bottom-0 bg-white dark:bg-gray-900 py-4">
+                <FormButton
+                  text="Enviar"
+                  onClick={handleSubmit}
+                  disabled={Object.keys(answers).length !== questions.length}
+                  className="w-full sm:w-auto"
+                />
+              </div>
+            </div>
+          )
+        ) : (
+          <QuizList 
+            quizzes={quizList}
+            handleQuizSelect={(quizId) => loadSelectedQuiz(quizId)}
+            handleGameSelect={(quizId) => loadSelectedGame(quizId)}
+            userData={userData}
+            onViewResults={(quiz) => {
+              setQuestions(quiz.questions);
+              setQuizId(quiz.id);
+              setSelectedQuiz(quiz);
+              
+              if (quiz.userAnswers) {
+                const formattedAnswers = {};
+                quiz.userAnswers.forEach(answer => {
+                  const question = quiz.questions.find(q => q.question_id === answer.question_id);
+                  formattedAnswers[answer.question_id] = {
+                    selected_option: answer.selected_option,
+                    selected_text: question.options[answer.selected_option],
+                    isCorrect: answer.isCorrect
+                  };
+                });
+                setAnswers(formattedAnswers);
+              }
+              
+              setShowResults(true);
+            }}
+            showGameButton={false}
+            showDetailsButton={true}
+            showQuizButton={true}
+            textGame={false}
+            textQuiz={true}
+          />
         )}
       </div>
     </div>

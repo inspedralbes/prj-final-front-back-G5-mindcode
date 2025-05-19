@@ -56,6 +56,7 @@ const StudentDashboardPage = () => {
           newMessages[highlightedLanguageIndex].messages.push(aiMessage);
           return newMessages;
         });
+        getClassMain();
       }
     } catch (error) {
       console.error("Error sending message:", error);
@@ -98,11 +99,10 @@ const StudentDashboardPage = () => {
       let parsedMessages = [];
 
       let parsedLanguage = [];
-      console.log("Language: ", language);
+
 
       language.messages.forEach(message => {
-        console.log("Message: ", message);
-        console.log("Language ID: ", language.id);
+
         if (message.languageId !== language.id) return; 
         const parsedMessage = {
           sender: "user",
@@ -163,6 +163,7 @@ const StudentDashboardPage = () => {
               messages={messages[highlightedLanguageIndex]?.messages || []}
               handleSendMessage={handleSendMessage}
               handleChangeMessage={setMessage}
+              getClassMain={getClassMain}
             />
           ) : (
             <div className="text-purple-500 dark:text-purple-300 text-lg text-center font-medium">

@@ -7,6 +7,10 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { useAuthStore } from '../../stores/authStore';
 import dynamic from "next/dynamic";
+import Tilt from "react-parallax-tilt";
+import { uploadUserImage } from "services/communicationManager";
+
+import LoginPanel from "../components/organisms/LoginPanel";
 import LoadingScreen from "../components/LoadingScreen";
 
 const RobotModel = dynamic(() => import("../components/RobotModel"), { ssr: false });
@@ -43,6 +47,15 @@ const Signup = () => {
       setLoading(true);
       const { userData, photoURL } = await googleLogin();
       if (!userData) return;
+      const userId = userData.userData.id;
+      let uploadedPhotoURL = photoURL;
+      if (photoURL) {
+        try {
+          uploadedPhotoURL = await uploadUserImage(userId, photoURL);
+        } catch (error) {
+          console.error("Error uploading user image:", error);
+        }
+      }
 
       setUserInfo({
         ...userData,
@@ -53,12 +66,15 @@ const Signup = () => {
 
       useAuthStore.setState((state) => ({
         user_info: {
-          ...state.user_info,
-          photoURL,
+          ...state.user_info, 
+          photoURL: uploadedPhotoURL,          
         },
       }));
 
-      console.log("USER BEING LOGGED IN", user);
+      setUserInfo({
+        ...userData,
+        photoURL: uploadedPhotoURL,
+      });
 
       const userDataParsed = userData.userData;
       if (userDataParsed.teacher === 1) {

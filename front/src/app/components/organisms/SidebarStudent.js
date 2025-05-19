@@ -45,6 +45,12 @@ const SidebarStudent = ({ handleSetCurrentLanguage,onOpenLanguageList }) => {
     if (classInfo?.length > 0 && classInfo[0]?.language_info) {
       setLanguages(classInfo[0].language_info);
     }
+    if(classInfo?.[0]?.quizz_info?.length > 0){
+      console.log('Quizzes available:', classInfo[0].quizz_info);
+      setIsQuizAvailable(true);
+    } else {
+      setIsQuizAvailable(false);
+    }
   }, [classInfo]);
 
   useEffect(() => {
@@ -59,22 +65,6 @@ const SidebarStudent = ({ handleSetCurrentLanguage,onOpenLanguageList }) => {
 
     fetchUserImage();
   }, [user_info]);
-
-  useEffect(() => {
-    const checkForQuiz = async () => {
-      try {
-        const data = await checkQuizAvailability();
-        setIsQuizAvailable(data.quizAvailable);
-      } catch (error) {
-        console.error('Error checking quiz:', error);
-      }
-    };
-
-    checkForQuiz();
-    const interval = setInterval(checkForQuiz, 10000);
-    return () => clearInterval(interval);
-  }, []);
-
 
   return (
     <div className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white w-1/4 relative h-full p-4 border-r border-gray-300 dark:border-gray-700">
@@ -126,15 +116,14 @@ const SidebarStudent = ({ handleSetCurrentLanguage,onOpenLanguageList }) => {
 
         <button 
           onClick={handleFormClick}
-          disabled={!isQuizAvailable}
           className={`w-full px-4 py-3 rounded-lg text-left flex items-center justify-between font-medium transition-all ${
             isQuizAvailable
               ? 'bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 text-white shadow-lg'
-              : 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed opacity-50'
+              : 'bg-gray-300 dark:bg-gray-700  opacity-50'
           }`}
         >
           <span>📝 Qüestionari</span>
-          {isQuizAvailable && <span className="animate-pulse text-yellow-300">⚡</span>}
+          {/* {isQuizAvailable && <span className="animate-pulse text-yellow-300">⚡</span>} */}
         </button>
       </nav>
     </div>
