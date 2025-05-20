@@ -468,7 +468,7 @@ const sendForQuiz = async (formattedMessages) => {
   console.log("Sending message to AI:", formattedMessages);
   console.log("AIHOST actual:", AIHOST);
 
-  const response = await fetch(`${AIHOST}/generateQuiz`, {
+  const response = await fetch(`http://${AIHOST}:4567/generateQuiz`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
