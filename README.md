@@ -50,7 +50,8 @@ Carpeta [/doc](./doc)
 
 ## Manual Usuari
 
-## Pitch
+## Pitch 
+https://www.youtube.com/shorts/9hZZWGzDAjE
 
 # Manual d'Ús
 
