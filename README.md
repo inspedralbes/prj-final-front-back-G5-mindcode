@@ -14,7 +14,7 @@
 
 ### GESTOR DE TASQUES : 
   - El gestor de tasques utilitzat serà Taiga, amb metodologia SCRUM, separat per sprints.
-    [Taiga](https://www.example.com)
+    [Taiga](https://tree.taiga.io/project/arnfergil-mindcode/backlog)
 
 ### PROTOTIP GRÀFIC :
   - Els prototips gràfics com els Mockups i Wireframes els realitzarem amb Penpot.
@@ -33,7 +33,8 @@
 ## Presentació resum
 
 ## Planificació
-
+  - [Planificació del projecte](https://docs.google.com/document/d/1MbChJ_Kye6GWNxwI8cFC5LiyzKjEMq_fJoHIx_NFn2E/edit?usp=sharing)
+    
 ## Disseny
 
 ## CodiFont
@@ -43,16 +44,21 @@
 Carpeta [/doc](./doc)
 
 ## Presentació Funcional / Comercial 
+  - [Power Point presentació comercial](https://www.canva.com/design/DAGnabO73Jg/__eqY1m0BbSRgjTNXNqpWQ/viewutm_content=DAGnabO73Jg&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hf45802d1d0)
+    
+## Vídeo comercial
+[Vídeo comercial](https://youtu.be/Mv5bAkg1rGc?feature=shared )
 
 ## Demo
 
 ## Presentacio Tècnica 
+  - [Power Point presentacio tècnica](https://www.canva.com/design/DAGnaIuBOTU/FkV6VUsf959k6Z3Ph3bPFg/view?utm_content=DAGnaIuBOTU&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h6ae6fc1524)
 
 ## Manual Usuari
 
-## Pitch 
-https://www.youtube.com/shorts/9hZZWGzDAjE
-
+## Pitch
+ - [Video elevator pitch](https://www.youtube.com/shorts/9hZZWGzDAjE )
+   
 # Manual d'Ús
 
 ## 1. Introducció
