@@ -29,7 +29,8 @@
     URL Penpot: https://design.penpot.app/#/view?file-id=790b4dba-cade-8121-8005-9e86d2d59af8&page-id=790b4dba-cade-8121-8005-9e86d2d59af9&section=interactions&index=0
 
 ### URL Video PITCH: 
-https://youtu.be/Mv5bAkg1rGc?feature=shared
+https://youtu.be/Mv5bAkg1rGc?feature=shared App
+https://www.youtube.com/shorts/9hZZWGzDAjE  Pitch
 
 
 ### URL DE PRODUCCIÓ : 
