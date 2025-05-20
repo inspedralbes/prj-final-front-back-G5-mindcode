@@ -89,7 +89,10 @@ const QuizList = ({ quizzes, handleQuizSelect, handleGameSelect, userData, onVie
                     Veure detalls
                   </Button>
               )}
-                  {showGameButton && (
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2 mt-2">
+                {showGameButton && (
                     <Button
                       onClick={() => {
                         if (!hasPlayedGame(quiz.id)) {
@@ -107,9 +110,6 @@ const QuizList = ({ quizzes, handleQuizSelect, handleGameSelect, userData, onVie
                       {hasPlayedGame(quiz.id) ? 'Joc completat' : 'Començar joc'}
                     </Button>
                   )}
-                </div>
-              ) : (
-                <div className="flex flex-col gap-2 mt-2">
                 {showQuizButton && (
                 <Button
                   onClick={() => handleQuizSelect(quiz.quizId)}
