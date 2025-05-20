@@ -253,7 +253,7 @@ router.post('/create', verifyTokenMiddleware, async (req, res) => {
  */
 const sendToAI = async (message, language, restriction) => {
   console.log("sending message");
-  const response = await fetch(`${AIHOST}`, {
+    const response = await fetch(`http://${AIHOST}:4567`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -521,6 +521,14 @@ router.get('/check-quiz', verifyTokenMiddleware, async (req, res) => {
   }
 });
 
+/**
+ * GET /getQuiz/:quizId
+ * 
+ * Retrieves a quiz by its ID.
+ * 
+ * @param {string} quizId - The ID of the quiz to retrieve.
+ * @returns {Object} Quiz data or error message.
+ */
 router.get('/getQuiz/:quizId', verifyTokenMiddleware, async (req, res) => {
   try {
     const { quizId } = req.params;
