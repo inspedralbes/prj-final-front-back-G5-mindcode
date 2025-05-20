@@ -27,7 +27,10 @@
 ### PROTOTIP GRÀFIC :
   - Els prototips gràfics com els Mockups i Wireframes els realitzarem amb Penpot.
     URL Penpot: https://design.penpot.app/#/view?file-id=790b4dba-cade-8121-8005-9e86d2d59af8&page-id=790b4dba-cade-8121-8005-9e86d2d59af9&section=interactions&index=0
-    
+
+### URL Video PITCH: 
+https://youtu.be/Mv5bAkg1rGc?feature=shared
+
 
 ### URL DE PRODUCCIÓ : 
 
