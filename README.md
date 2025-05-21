@@ -18,18 +18,17 @@
 
 ### PROTOTIP GRÀFIC :
   - Els prototips gràfics com els Mockups i Wireframes els realitzarem amb Penpot.
-    URL Penpot: https://design.penpot.app/#/view?file-id=790b4dba-cade-8121-8005-9e86d2d59af8&page-id=790b4dba-cade-8121-8005-9e86d2d59af9&section=interactions&index=0
+    URL Penpot: [penpot](https://design.penpot.app/#/view?file-id=790b4dba-cade-8121-8005-9e86d2d59af8&page-id=790b4dba-cade-8121-8005-9e86d2d59af9&section=interactions&index=0) 
 
 ### URL Video PITCH: 
-https://youtu.be/Mv5bAkg1rGc?feature=shared App
-https://www.youtube.com/shorts/9hZZWGzDAjE  Pitch
-
+  - [App](https://youtu.be/Mv5bAkg1rGc?feature=shared)
+  - [Pitch](https://www.youtube.com/shorts/9hZZWGzDAjE)
 
 ### URL DE PRODUCCIÓ : 
   - [Mindcode.cat](Mindcode.cat)
 
 ### ESTAT :
-  Projecte en fase de documentació
+  Projecte finalitzat
 
 ### URL Diagrama entitat relació: 
 
@@ -58,11 +57,10 @@ Carpeta [/doc](./doc)
 
 ## Presentació resum
 
-  - [Planificació resum](https://docs.google.com/presentation/d/1OsLFj9LcIzN8_MqK2-udVEhgA0os3ScjVtbCwyK2fQg/edit?usp=sharing)
+  - [Presentació resum](./doc/resum_2425_mindcode.pdf)
 
 ## Presentació Funcional / Comercial 
-  - [Power Point presentacio comercial](https://www.canva.com/design/DAGnabO73Jg/__eqY1m0BbSRgjTNXNqpWQ/view?utm_content=DAGnabO73Jg&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hf45802d1d0
-)
+  - [Power Point presentacio comercial](https://www.canva.com/design/DAGnabO73Jg/__eqY1m0BbSRgjTNXNqpWQ/view?utm_content=DAGnabO73Jg&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hf45802d1d0)
  
 ## Vídeo comercial
   - [Vídeo comercial](https://youtu.be/Mv5bAkg1rGc?feature=shared )
@@ -71,7 +69,7 @@ Carpeta [/doc](./doc)
   - [Vídeo demo](https://youtu.be/QhfQCKYPrh8)
 
 ## Presentacio Tècnica 
-  - [Power Point presentacio tècnica](https://www.canva.com/design/DAGnaIuBOTU/FkV6VUsf959k6Z3Ph3bPFg/view?utm_content=DAGnaIuBOTU&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h6ae6fc1524)
+  - [Power Point presentacio tècnica](./doc/tecnica_2425_mindcode.pdf)
 
 ## Pitch
  - [Video elevator pitch](https://www.youtube.com/shorts/9hZZWGzDAjE )
