@@ -26,22 +26,34 @@
 ### ESTAT :
   Projecte en fase de documentació
 
-### URL Diagrama entitat relació: https://app.diagrams.net/#G1TKbrb3gLTKSwPoLYVMBvoF4VPat1ewLT#%7B%22pageId%22%3A%22KMXDIqi0qLqnxIe9qrFn%22%7D
+### URL Diagrama entitat relació: 
+
+[Enllaç](https://viewer.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=Entidad%20relacion%20TRF.drawio&dark=auto#Uhttps%3A%2F%2Fdrive.google.com%2Fuc%3Fid%3D1TKbrb3gLTKSwPoLYVMBvoF4VPat1ewLT%26export%3Ddownload)
 
 # Documentació
-
-## Presentació resum
 
 ## Planificació
   - [Planificació del projecte](https://docs.google.com/document/d/1MbChJ_Kye6GWNxwI8cFC5LiyzKjEMq_fJoHIx_NFn2E/edit?usp=sharing)
     
 ## Disseny
 
-## CodiFont
+### PROTOTIP GRÀFIC :
+  - Els prototips gràfics com els Mockups i Wireframes els realitzarem amb Penpot.
+    Aquest es el Mockup: 
+    
+    ![Mockup](./doc/images/Mockup.png)
+
+    Aquest es el Wireframe:
+
+    ![Wireframe](./doc/images/Wireframe.png)
 
 ## Documentacio tècnica
 
 Carpeta [/doc](./doc)
+
+## Presentació resum
+
+  - [Planificació resum](https://docs.google.com/presentation/d/1OsLFj9LcIzN8_MqK2-udVEhgA0os3ScjVtbCwyK2fQg/edit?usp=sharing)
 
 ## Presentació Funcional / Comercial 
   - [Power Point presentacio comercial](https://www.canva.com/design/DAGnabO73Jg/__eqY1m0BbSRgjTNXNqpWQ/view?utm_content=DAGnabO73Jg&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hf45802d1d0
@@ -51,11 +63,10 @@ Carpeta [/doc](./doc)
   - [Vídeo comercial](https://youtu.be/Mv5bAkg1rGc?feature=shared )
 
 ## Demo
+  - [Vídeo demo](https://youtu.be/QhfQCKYPrh8)
 
 ## Presentacio Tècnica 
   - [Power Point presentacio tècnica](https://www.canva.com/design/DAGnaIuBOTU/FkV6VUsf959k6Z3Ph3bPFg/view?utm_content=DAGnaIuBOTU&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h6ae6fc1524)
-
-## Manual Usuari
 
 ## Pitch
  - [Video elevator pitch](https://www.youtube.com/shorts/9hZZWGzDAjE )
