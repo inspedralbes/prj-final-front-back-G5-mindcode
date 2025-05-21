@@ -46,7 +46,7 @@ https://www.youtube.com/shorts/9hZZWGzDAjE  Pitch
   - Els prototips gràfics com els Mockups i Wireframes els realitzarem amb Penpot.
     Aquest es el Mockup: 
     
-    ![Mockup](./doc/images/Mockup.png)
+    ![Mockup](./doc/images/MockUp.png)
 
     Aquest es el Wireframe:
 
