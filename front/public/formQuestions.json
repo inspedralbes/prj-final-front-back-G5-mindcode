@@ -1,0 +1,27 @@
+{
+    "status": "success",
+    "description": "Form questions retrieved successfully",
+    "body": [
+        {
+            "question_id": 1,
+            "question_text": "Cual es tu color favorito?",
+            "question_type": "multiple-choice",
+            "options": ["Rojo", "Azul", "Verde", "Amarillo"],
+            "required": true
+        },
+        {
+            "question_id": 2,
+            "question_text": "Ingresa tu nombre?",
+            "question_type": "select_one",
+            "options": [],
+            "required": true
+        },
+        {
+            "question_id": 3,
+            "question_text": "Ingresa tu correo",
+            "question_type": "select_one",
+            "options": [],
+            "required": true
+        }
+    ]
+}

@@ -1,0 +1,19 @@
+{
+    "endpoint": "/api/language",
+    "method": "GET",
+    "description": "Retrieve a list of languages",
+    "response": {
+        "200": {
+            "description": "Languages retrieved successfully",
+            "body": [
+                {
+                    "idlanguage": "int",
+                    "name": "string"
+                }
+            ]
+        },
+        "400": {
+            "description": "Invalid request"
+        }
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "endpoint": "api/quizResponse",
+    "method": "POST",
+    "description": "Response of quiz",
+    "request":{
+        "body":{
+            "quiz_id": "int",
+            "questions": "[string]"
+        }
+    },
+    "response": {
+        "200": {
+            "status": "success",
+            "description": "Quiz response successfully",
+            "body": [
+                {
+                    "answered": "[int]"
+                }
+            ]
+        }
+    }
+}

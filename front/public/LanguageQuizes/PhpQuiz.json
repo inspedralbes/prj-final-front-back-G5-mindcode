@@ -1,0 +1,150 @@
+{
+    "_id": { "$oid": "680b40e8fbdcf9cf00b6c700" },
+    "correctAnswers": 0,
+    "userId": 6,
+    "classId": 1,
+    "questions": [
+      {
+        "isAnswered": false,
+        "question_id": 1,
+        "question_text": "What does PHP stand for?",
+        "question_type": "MCQ",
+        "options": [
+          "Personal Home Page",
+          "PHP: Hypertext Preprocessor",
+          "Preprocessed Hypertext Page"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c701" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 2,
+        "question_text": "What is the default file extension for PHP files?",
+        "question_type": "MCQ",
+        "options": [
+          ".html",
+          ".php",
+          ".xml"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c702" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 3,
+        "question_text": "Which superglobal variable holds information about headers, paths, and script locations?",
+        "question_type": "MCQ",
+        "options": [
+          "$_GET",
+          "$_SERVER",
+          "$_ENV"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c703" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 4,
+        "question_text": "How do you concatenate strings in PHP?",
+        "question_type": "MCQ",
+        "options": [
+          "Using the + operator",
+          "Using the . operator",
+          "Using the & operator"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c704" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 5,
+        "question_text": "Which function outputs text in PHP?",
+        "question_type": "MCQ",
+        "options": [
+          "print()",
+          "echo()",
+          "Both echo and print"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c705" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 6,
+        "question_text": "What is the correct way to start a PHP session?",
+        "question_type": "MCQ",
+        "options": [
+          "session_start();",
+          "start_session();",
+          "session_begin();"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c706" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 7,
+        "question_text": "Which operator is used to check if two values are equal and of the same type?",
+        "question_type": "MCQ",
+        "options": [
+          "==",
+          "===",
+          "="
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c707" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 8,
+        "question_text": "What is the correct way to create a function in PHP?",
+        "question_type": "MCQ",
+        "options": [
+          "function myFunction()",
+          "create myFunction()",
+          "new function myFunction()"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c708" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 9,
+        "question_text": "Which function is used to redirect a user to a different page?",
+        "question_type": "MCQ",
+        "options": [
+          "redirect()",
+          "header()",
+          "location()"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c709" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 10,
+        "question_text": "What is the correct way to include a file in PHP?",
+        "question_type": "MCQ",
+        "options": [
+          "include 'file.php';",
+          "require 'file.php';",
+          "Both include and require"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c710" }
+      }
+    ],
+    "userAnswers": [],
+    "__v": 0
+}

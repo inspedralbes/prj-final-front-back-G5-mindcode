@@ -1,0 +1,150 @@
+{
+    "_id": { "$oid": "680b40e8fbdcf9cf00b6c800" },
+    "correctAnswers": 0,
+    "userId": 6,
+    "classId": 1,
+    "questions": [
+      {
+        "isAnswered": false,
+        "question_id": 1,
+        "question_text": "Which of the following is the correct way to declare a variable in Python?",
+        "question_type": "MCQ",
+        "options": [
+          "var x = 5",
+          "x = 5",
+          "int x = 5"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c801" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 2,
+        "question_text": "What is the output of `print(type(3.14))` in Python?",
+        "question_type": "MCQ",
+        "options": [
+          "<class 'int'>",
+          "<class 'float'>",
+          "<class 'decimal'>"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c802" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 3,
+        "question_text": "Which keyword is used to define a function in Python?",
+        "question_type": "MCQ",
+        "options": [
+          "def",
+          "function",
+          "func"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c803" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 4,
+        "question_text": "How do you create a single-line comment in Python?",
+        "question_type": "MCQ",
+        "options": [
+          "// This is a comment",
+          "# This is a comment",
+          "/* This is a comment */"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c804" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 5,
+        "question_text": "Which of the following is NOT a valid data structure in Python?",
+        "question_type": "MCQ",
+        "options": [
+          "List",
+          "Tuple",
+          "Array"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c805" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 6,
+        "question_text": "What is the output of `print(2 ** 3)` in Python?",
+        "question_type": "MCQ",
+        "options": [
+          "6",
+          "8",
+          "9"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c806" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 7,
+        "question_text": "Which method is used to add an item to the end of a list?",
+        "question_type": "MCQ",
+        "options": [
+          "append()",
+          "add()",
+          "insert()"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c807" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 8,
+        "question_text": "What is the correct way to create a dictionary in Python?",
+        "question_type": "MCQ",
+        "options": [
+          "{'name': 'John', 'age': 30}",
+          "['name': 'John', 'age': 30]",
+          "('name': 'John', 'age': 30)"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c808" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 9,
+        "question_text": "Which keyword is used for conditional execution in Python?",
+        "question_type": "MCQ",
+        "options": [
+          "if",
+          "when",
+          "case"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c809" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 10,
+        "question_text": "What does the `range(5)` function return?",
+        "question_type": "MCQ",
+        "options": [
+          "[0, 1, 2, 3, 4]",
+          "[1, 2, 3, 4, 5]",
+          "[0, 1, 2, 3, 4, 5]"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c810" }
+      }
+    ],
+    "userAnswers": [],
+    "__v": 0
+}

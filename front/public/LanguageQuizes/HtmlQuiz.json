@@ -1,0 +1,150 @@
+{
+    "_id": { "$oid": "680b40e8fbdcf9cf00b6c300" },
+    "correctAnswers": 0,
+    "userId": 6,
+    "classId": 1,
+    "questions": [
+      {
+        "isAnswered": false,
+        "question_id": 1,
+        "question_text": "What does HTML stand for?",
+        "question_type": "MCQ",
+        "options": [
+          "Hyper Text Markup Language",
+          "High Tech Markup Language",
+          "Hyperlinks and Text Markup Language"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c301" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 2,
+        "question_text": "Which tag is used to create a hyperlink in HTML?",
+        "question_type": "MCQ",
+        "options": [
+          "<link>",
+          "<a>",
+          "<href>"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c302" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 3,
+        "question_text": "What is the correct HTML element for the largest heading?",
+        "question_type": "MCQ",
+        "options": [
+          "<h6>",
+          "<heading>",
+          "<h1>"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c303" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 4,
+        "question_text": "Which HTML element is used to define paragraph text?",
+        "question_type": "MCQ",
+        "options": [
+          "<para>",
+          "<p>",
+          "<text>"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c304" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 5,
+        "question_text": "Which attribute is used to specify an alternate text for an image?",
+        "question_type": "MCQ",
+        "options": [
+          "src",
+          "alt",
+          "title"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c305" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 6,
+        "question_text": "What is the correct HTML for inserting a line break?",
+        "question_type": "MCQ",
+        "options": [
+          "<br>",
+          "<lb>",
+          "<break>"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c306" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 7,
+        "question_text": "Which HTML element is used to define a table row?",
+        "question_type": "MCQ",
+        "options": [
+          "<tr>",
+          "<td>",
+          "<th>"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c307" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 8,
+        "question_text": "Which HTML5 element is used for navigation links?",
+        "question_type": "MCQ",
+        "options": [
+          "<nav>",
+          "<links>",
+          "<navigate>"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c308" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 9,
+        "question_text": "What is the correct HTML for creating a checkbox?",
+        "question_type": "MCQ",
+        "options": [
+          "<input type='check'>",
+          "<checkbox>",
+          "<input type='checkbox'>"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c309" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 10,
+        "question_text": "Which HTML element is used to define a list item?",
+        "question_type": "MCQ",
+        "options": [
+          "<li>",
+          "<list>",
+          "<ul>"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c310" }
+      }
+    ],
+    "userAnswers": [],
+    "__v": 0
+}

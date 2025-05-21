@@ -1,0 +1,22 @@
+{
+    "endpoint": "/message/create",
+    "method": "POST",
+    "description": "Create a new message",
+    "request": {
+        "body": {
+            "message": "string",
+            "language": "string"
+        }
+    },
+    "response": {
+        "201": {
+            "description": "Message created successfully",
+            "body": {
+                "message": "string"
+            }
+        },
+        "400": {
+            "description": "Invalid request"
+        }
+    }
+}

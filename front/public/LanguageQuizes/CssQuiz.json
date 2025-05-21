@@ -1,0 +1,151 @@
+{
+    "_id": { "$oid": "680b40e8fbdcf9cf00b6c199" },
+    "correctAnswers": 0,
+    "userId": 6,
+    "classId": 1,
+    "questions": [
+      {
+        "isAnswered": false,
+        "question_id": 1,
+        "question_text": "What does the 'color' property in CSS affect?",
+        "question_type": "MCQ",
+        "options": [
+          "Background color of an element",
+          "Text color of an element",
+          "Border color of an element"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c201" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 2,
+        "question_text": "Which CSS property is used to change the font of text?",
+        "question_type": "MCQ",
+        "options": [
+          "font-weight",
+          "font-family",
+          "font-style"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c202" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 3,
+        "question_text": "What does 'margin' do in CSS?",
+        "question_type": "MCQ",
+        "options": [
+          "Adds space inside the element's border",
+          "Adds space outside the element's border",
+          "Changes the background of an element"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c203" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 4,
+        "question_text": "Which value of 'display' makes an element not appear on the page?",
+        "question_type": "MCQ",
+        "options": [
+          "none",
+          "block",
+          "inline-block"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c204" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 5,
+        "question_text": "What does the 'position: absolute;' rule do?",
+        "question_type": "MCQ",
+        "options": [
+          "Places the element relative to the browser window",
+          "Removes the element from normal flow and positions it relative to the nearest positioned ancestor",
+          "Centers the element horizontally"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c205" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 6,
+        "question_text": "Which property controls the transparency of an element?",
+        "question_type": "MCQ",
+        "options": [
+          "z-index",
+          "visibility",
+          "opacity"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c206" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 7,
+        "question_text": "How do you make text bold in CSS?",
+        "question_type": "MCQ",
+        "options": [
+          "font-style: italic;",
+          "font-weight: bold;",
+          "text-decoration: bold;"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c207" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 8,
+        "question_text": "What does the 'z-index' property affect?",
+        "question_type": "MCQ",
+        "options": [
+          "Element rotation",
+          "Stacking order of overlapping elements",
+          "Font size"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c208" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 9,
+        "question_text": "Which syntax is correct for a class selector?",
+        "question_type": "MCQ",
+        "options": [
+          "#myClass",
+          ".myClass",
+          "myClass"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c209" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 10,
+        "question_text": "Which CSS unit is relative to the font-size of the parent element?",
+        "question_type": "MCQ",
+        "options": [
+          "px",
+          "em",
+          "cm"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c210" }
+      }
+    ],
+    "userAnswers": [],
+    "__v": 0
+  }
+  

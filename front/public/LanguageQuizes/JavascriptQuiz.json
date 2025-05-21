@@ -1,0 +1,150 @@
+{
+    "_id": { "$oid": "680b40e8fbdcf9cf00b6c500" },
+    "correctAnswers": 0,
+    "userId": 6,
+    "classId": 1,
+    "questions": [
+      {
+        "isAnswered": false,
+        "question_id": 1,
+        "question_text": "Which keyword is used to declare a variable in JavaScript?",
+        "question_type": "MCQ",
+        "options": [
+          "var",
+          "let",
+          "All of the above"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c501" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 2,
+        "question_text": "What will typeof null return?",
+        "question_type": "MCQ",
+        "options": [
+          "null",
+          "object",
+          "undefined"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c502" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 3,
+        "question_text": "Which method adds one or more elements to the end of an array?",
+        "question_type": "MCQ",
+        "options": [
+          "push()",
+          "pop()",
+          "shift()"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c503" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 4,
+        "question_text": "What does the '===' operator check?",
+        "question_type": "MCQ",
+        "options": [
+          "Value only",
+          "Value and type",
+          "Type only"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c504" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 5,
+        "question_text": "Which function executes a callback after a specified delay?",
+        "question_type": "MCQ",
+        "options": [
+          "setImmediate()",
+          "setTimeout()",
+          "setInterval()"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c505" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 6,
+        "question_text": "What is the result of 3 + '3' in JavaScript?",
+        "question_type": "MCQ",
+        "options": [
+          "6",
+          "33",
+          "TypeError"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c506" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 7,
+        "question_text": "Which method converts JSON string to a JavaScript object?",
+        "question_type": "MCQ",
+        "options": [
+          "JSON.parse()",
+          "JSON.stringify()",
+          "JSON.toObject()"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c507" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 8,
+        "question_text": "What is a closure in JavaScript?",
+        "question_type": "MCQ",
+        "options": [
+          "A function with no parameters",
+          "A function that remembers its lexical scope",
+          "A built-in JavaScript method"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c508" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 9,
+        "question_text": "Which keyword is used to declare a constant in JavaScript?",
+        "question_type": "MCQ",
+        "options": [
+          "const",
+          "let",
+          "var"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c509" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 10,
+        "question_text": "What does the 'this' keyword refer to in a method?",
+        "question_type": "MCQ",
+        "options": [
+          "The function itself",
+          "The global object",
+          "The object the method belongs to"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c510" }
+      }
+    ],
+    "userAnswers": [],
+    "__v": 0
+}

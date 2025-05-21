@@ -1,0 +1,86 @@
+@layer demo {
+  /* .gameBackground {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #c2e9fb, #a1c4fd);
+    background-size: 200% 200%;
+    animation: gradientShift 15s ease infinite;
+  } */
+
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .cardsContainer {
+    position: relative;
+    width: 500px;
+    height: 500px;
+    padding: 2rem;
+  }
+
+  .circleWrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    perspective: 1000px;
+  }
+
+  .cards {
+    position: absolute;
+    inset: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-radius: 50%;
+    transform-style: preserve-3d;
+    transition: transform 0.8s ease;
+  }
+
+  .cards li {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    transform-origin: center;
+    transform: rotate(calc(var(--i) * 360deg / var(--items)));
+    pointer-events: none;
+  }
+
+  .cards li > label {
+    pointer-events: auto;
+    transform: translateY(-200px);
+    cursor: pointer;
+  }
+
+  .cards li > label img {
+    width: 84px;
+    height: 84px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+  }
+
+  .cards li > label:hover img {
+    transform: scale(1.2);
+  }
+
+  .centerImage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 150px;
+    height: 150px;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+  }
+
+  .centerImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
