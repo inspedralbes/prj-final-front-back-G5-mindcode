@@ -18,7 +18,12 @@
 
 ### PROTOTIP GRÀFIC :
   - Els prototips gràfics com els Mockups i Wireframes els realitzarem amb Penpot.
-    URL Penpot: https://design.penpot.app/#/workspace/f5fe9278-89db-81e9-8004-fb0eecd41217/96c4bd8e-df43-800f-8005-9d499dc21428?page-id=96c4bd8e-df43-800f-8005-9d499dc21429
+    URL Penpot: https://design.penpot.app/#/view?file-id=790b4dba-cade-8121-8005-9e86d2d59af8&page-id=790b4dba-cade-8121-8005-9e86d2d59af9&section=interactions&index=0
+
+### URL Video PITCH: 
+https://youtu.be/Mv5bAkg1rGc?feature=shared App
+https://www.youtube.com/shorts/9hZZWGzDAjE  Pitch
+
 
 ### URL DE PRODUCCIÓ : 
   - [Mindcode.cat](Mindcode.cat)
