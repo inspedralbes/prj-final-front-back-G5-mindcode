@@ -60,7 +60,7 @@ Carpeta [/doc](./doc)
   - [Presentació resum](./doc/resum_2425_mindcode.pdf)
 
 ## Presentació Funcional / Comercial 
-  - [Power Point presentacio comercial](./doc/)
+  - [Power Point presentacio comercial](./doc/MINDCODE.pdf)
  
 ## Vídeo comercial
   - [Vídeo comercial](https://youtu.be/Mv5bAkg1rGc?feature=shared )
