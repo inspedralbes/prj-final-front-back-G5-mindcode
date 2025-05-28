@@ -7,7 +7,7 @@ services:
     volumes:
       - ./back:/home/node/app
     ports:
-      - "3000:3000"
+      - "3001:3000"
     depends_on:
       - mindcode-mysql
       - mindcode-mongo
@@ -38,7 +38,7 @@ services:
     image: mongo
     restart: always
     ports:
-      - 27017:27017
+      - 27018:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
@@ -68,7 +68,7 @@ services:
       MYSQL_DATABASE: mindcode
       MYSQL_ROOT_PASSWORD: root
     ports:
-      - '3306:3306'
+      - '3307:3306'
     volumes:
       - mysqldb:/var/lib/mysql:rw
       # - ./db/create.sql:/docker-entrypoint-initdb.d/create.sql

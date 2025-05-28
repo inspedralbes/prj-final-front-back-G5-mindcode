@@ -22,7 +22,7 @@ services:
     volumes:
       - ./back:/usr/src/app
     ports:
-      - 3000:3000
+      - 3001:3000
     tmpfs:
       - /tmp
     restart: always
@@ -35,7 +35,7 @@ services:
     image: mongo
     restart: always
     ports:
-      - 27017:27017
+      - 27018:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
@@ -52,7 +52,7 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_ROOT_USER}
       ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_ROOT_PASSWORD}
-      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_ROOT_USER}:${MONGO_ROOT_PASSWORD}@mindcode-mongo:27017/
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_ROOT_USER}:${MONGO_ROOT_PASSWORD}@mindcode-mongo:27018/
       ME_CONFIG_BASICAUTH: false
     depends_on:
       - mindcode-mongo
@@ -64,7 +64,7 @@ services:
     container_name: mindcode-mysql
     restart: always
     ports:
-      - 3306:3306
+      - 3307:3306
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_USER: ${MYSQL_USER}
