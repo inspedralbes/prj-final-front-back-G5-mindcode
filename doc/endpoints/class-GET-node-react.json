@@ -1,0 +1,29 @@
+{
+    "endpoint": "/api/class",
+    "method": "GET",
+    "description": "Retrieve a list of all classes",
+    "request":{
+        "body": [
+            {
+                "user_id": "int"
+            }
+        ]
+    },
+    "response": {
+        "200": {
+            "status": "success",
+            "description": "Classes retrieved successfully",
+            "body": [
+                {
+                    "classStats": {
+                        "class_id": "int",
+                        "name": "string",
+                        "teachers": "string",
+                        "classmates": "string",
+                        "language": "string"
+                    }
+                }
+            ]
+        }
+    }
+}

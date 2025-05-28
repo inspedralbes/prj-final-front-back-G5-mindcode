@@ -1,0 +1,22 @@
+{
+    "endpoint": "/message/delete",
+    "method": "DELETE",
+    "description": "Delete an existing message",
+    "request": {
+        "contentType": "application/json",
+        "body": {
+            "message_id": "string"
+        }
+    },
+    "response": {
+        "200": {
+            "description": "Message deleted successfully"
+        },
+        "400": {
+            "description": "Invalid input"
+        },
+        "404": {
+            "description": "Chat not found"
+        }
+    }
+}

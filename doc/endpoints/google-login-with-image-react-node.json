@@ -1,0 +1,25 @@
+{
+    "endpoint": "/api/auth/google",
+    "method": "POST",
+    "description": "Login with google",
+    "request": {
+        "contentType": "form-encoded",
+        "body": {
+            "uid": "string",
+            "name": "string",
+            "gmail": "string",
+            "image": "file"
+        }
+    },
+    "response": {
+        "200": {
+            "description": "Class deleted successfully"
+        },
+        "400": {
+            "description": "Invalid input"
+        },
+        "404": {
+            "description": "Class not found"
+        }
+    }
+}

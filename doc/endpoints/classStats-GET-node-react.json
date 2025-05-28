@@ -1,0 +1,23 @@
+{
+    "endpoint": "api/classStats",
+    "method": "GET",
+    "description": "Retrieve a list of a class stats",
+    "request":{
+        "body": {
+            "class_id": "int"
+        }
+    },
+    "response": {
+        "200": {
+            "status": "success",
+            "description": "Class stats retrieved successfully",
+            "body": [
+                {
+                    "language_info": "string",
+                    "quiz_answered": "string",
+                    "data": "date"
+                }
+            ]
+        }
+    }
+}

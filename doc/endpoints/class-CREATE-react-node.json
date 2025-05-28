@@ -1,0 +1,23 @@
+{
+    "endpoint": "/api/class",
+    "method": "POST",
+    "description": "Create a new class",
+    "request": {
+        "contentType": "application/json",
+        "body": {
+            "teacher_id": "string",
+            "name": "string"
+        }
+    },
+    "response": {
+        "201": {
+            "description": "Class created successfully",
+            "body": {
+                "class_info": ["object"]
+            }
+        },
+        "400": {
+            "description": "Invalid input"
+        }
+    }
+}

@@ -1,0 +1,17 @@
+{
+    "class_id": "integer",
+    "name": "string",
+    "language_info": {
+        "id": "integer",
+        "name": "string",
+        "restriction":  "integer"
+    },
+    "teacher_info": {
+        "id": "integer",
+        "name": "string"
+    },
+    "classmate_info":{
+        "id": "integer",
+        "name": "string"
+    }
+}

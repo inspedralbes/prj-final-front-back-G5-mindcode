@@ -1,0 +1,32 @@
+{
+    "endpoint": "/api/class",
+    "method": "GET",
+    "description": "Retrieve all classes or a specific class by class_id",
+    "request": {
+        "contentType": "application/json",
+        "queryParameters": {
+            "class_id": {
+                "type": "string",
+                "description": "Optional. The ID of the class to retrieve."
+            }
+        }
+    },
+    "response": {
+        "200": {
+            "description": "Successful response",
+            "body": {
+                "class_id": "string",
+                "name": "string",
+                "teacher_id": ["array of strings"],
+                "language": ["array of strings"],
+                "class_code": "string"
+            }
+        },
+        "400": {
+            "description": "Invalid input"
+        },
+        "404": {
+            "description": "Class not found"
+        }
+    }
+}

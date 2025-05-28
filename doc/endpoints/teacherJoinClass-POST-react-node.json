@@ -1,0 +1,37 @@
+{
+    "endpoint": "/teacher/join-class",
+    "method": "POST",
+    "description": "Endpoint for a teacher to join a class using their ID and class code.",
+    "request": {
+        "body": {
+            "id": {
+                "type": "integer",
+                "description": "The ID of the teacher"
+            },
+            "classCode": {
+                "type": "string",
+                "description": "The code of the class to join"
+            }
+        }
+    },
+    "response": {
+        "200": {
+            "description": "Successfully joined the class",
+            "body": {
+                "message": "Teacher successfully joined the class"
+            }
+        },
+        "400": {
+            "description": "Invalid input data",
+            "body": {
+                "error": "Invalid teacher ID or class code"
+            }
+        },
+        "500": {
+            "description": "Internal server error",
+            "body": {
+                "error": "An error occurred while processing the request"
+            }
+        }
+    }
+}

@@ -1,0 +1,58 @@
+{
+    "endpoint": "/api/language/class/add",
+    "method": "POST",
+    "description": "Adds a new language to a class",
+    "parameters": {
+        "classId": {
+            "type": "integer",
+            "description": "The ID of the class to add a language to"
+        },
+        "language": {
+            "type": "object",
+            "description": "The language object to be added",
+            "properties": {
+                "idlanguage": {
+                    "type": "integer",
+                    "description": "ID of the language from LANGUAGE table"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the language"
+                },
+                "restrictionId": {
+                    "type": "integer",
+                    "description": "Restriction ID (1, 2, or 3)"
+                }
+            },
+            "required": ["idlanguage", "name", "restrictionId"]
+        }
+    },
+    "responses": {
+        "200": {
+            "description": "Language added successfully",
+            "body": {
+                "classId": "int",
+                "languages": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "idlanguage": "int",
+                            "name": "string",
+                            "restrictionId": "integer"
+                        }
+                    }
+                }
+            }
+        },
+        "400": {
+            "description": "Invalid input"
+        },
+        "404": {
+            "description": "Class or Language not found"
+        },
+        "409": {
+            "description": "Language already exists in class"
+        }
+    }
+}

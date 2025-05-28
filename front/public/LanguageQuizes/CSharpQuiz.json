@@ -1,0 +1,150 @@
+{
+    "_id": { "$oid": "680b40e8fbdcf9cf00b6c600" },
+    "correctAnswers": 0,
+    "userId": 6,
+    "classId": 1,
+    "questions": [
+      {
+        "isAnswered": false,
+        "question_id": 1,
+        "question_text": "What is the entry point of a C# program?",
+        "question_type": "MCQ",
+        "options": [
+          "Main()",
+          "Start()",
+          "Initialize()"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c601" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 2,
+        "question_text": "Which keyword is used to declare a constant in C#?",
+        "question_type": "MCQ",
+        "options": [
+          "const",
+          "final",
+          "readonly"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c602" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 3,
+        "question_text": "What is the base class for all classes in C#?",
+        "question_type": "MCQ",
+        "options": [
+          "Object",
+          "Base",
+          "Super"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c603" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 4,
+        "question_text": "Which access modifier provides the most restrictive access level?",
+        "question_type": "MCQ",
+        "options": [
+          "public",
+          "protected",
+          "private"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c604" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 5,
+        "question_text": "What is the purpose of the 'using' statement in C#?",
+        "question_type": "MCQ",
+        "options": [
+          "To include namespaces",
+          "To properly dispose IDisposable objects",
+          "Both of the above"
+        ],
+        "correct_option": 3,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c605" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 6,
+        "question_text": "Which type is used to store true/false values in C#?",
+        "question_type": "MCQ",
+        "options": [
+          "bool",
+          "bit",
+          "boolean"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c606" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 7,
+        "question_text": "What is the default value of an int in C#?",
+        "question_type": "MCQ",
+        "options": [
+          "0",
+          "1",
+          "null"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c607" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 8,
+        "question_text": "Which keyword is used to prevent a class from being inherited?",
+        "question_type": "MCQ",
+        "options": [
+          "static",
+          "sealed",
+          "private"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c608" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 9,
+        "question_text": "What is the purpose of the 'virtual' keyword in C#?",
+        "question_type": "MCQ",
+        "options": [
+          "To allow a method to be overridden",
+          "To make a method static",
+          "To prevent inheritance"
+        ],
+        "correct_option": 1,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c609" }
+      },
+      {
+        "isAnswered": false,
+        "question_id": 10,
+        "question_text": "Which collection class represents a last-in-first-out (LIFO) structure?",
+        "question_type": "MCQ",
+        "options": [
+          "Queue",
+          "Stack",
+          "List"
+        ],
+        "correct_option": 2,
+        "required": true,
+        "_id": { "$oid": "680b40e9fbdcf9cf00b6c610" }
+      }
+    ],
+    "userAnswers": [],
+    "__v": 0
+}

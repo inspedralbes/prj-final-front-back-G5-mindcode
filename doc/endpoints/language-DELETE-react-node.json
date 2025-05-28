@@ -1,0 +1,22 @@
+{
+    "endpoint": "/api/language",
+    "method": "DELETE",
+    "description": "Delete an existing language",
+    "request": {
+        "contentType": "application/json",
+        "body": {
+            "idlanguage": "int"
+        }
+    },
+    "response": {
+        "200": {
+            "description": "Language deleted successfully"
+        },
+        "400": {
+            "description": "Invalid input"
+        },
+        "404": {
+            "description": "Language not found"
+        }
+    }
+}
