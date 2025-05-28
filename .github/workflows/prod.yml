@@ -129,7 +129,7 @@ jobs:
           echo "DB_PORT=3306" >> .env
           echo "DB_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
           echo "DB_DATABASE=mindcode" >> .env
-          echo "MONGO_URI=mongodb://${{ secrets.MONGO_ROOT_USER }}:${{ secrets.MONGO_ROOT_PASSWORD }}@mindcode-mongo:27018/" >> .env
+          echo "MONGO_URI=mongodb://${{ secrets.MONGO_ROOT_USER }}:${{ secrets.MONGO_ROOT_PASSWORD }}@mindcode-mongo:27017/" >> .env
           echo "DB_NAME=${{ secrets.MYSQL_DATABASE }}" >> .env          
           echo "AIHOST=${{ secrets.AI_HOST }}" >> .env
           echo "SECRET_KEY=${{ secrets.JWT_KEY }}" >> .env
